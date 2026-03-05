@@ -7,14 +7,11 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class () extends Migration {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('organizations', static function (Blueprint $table): void {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->index();
+            $table->uuid('user_id')->index();
             $table->string('name');
             $table->boolean('personal_team');
             $table->integer('billable_rate')->unsigned()->nullable();
@@ -38,9 +35,6 @@ return new class () extends Migration {
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('organizations');

@@ -7,9 +7,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class () extends Migration {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         DB::table('oauth_clients')->update(['provider' => 'users']); // Change default provider if necessary
@@ -71,9 +68,6 @@ return new class () extends Migration {
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('oauth_clients', static function (Blueprint $table): void {

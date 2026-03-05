@@ -16,7 +16,7 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::table('users', static function (Blueprint $table): void {
-            $table->foreign('current_team_id')
+            $table->foreign('current_team_id', 'users_current_team_id_foreign')
                 ->references('id')
                 ->on('organizations')
                 ->restrictOnDelete()
@@ -24,13 +24,10 @@ return new class () extends Migration {
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('users', static function (Blueprint $table): void {
-            $table->dropForeign(['current_team_id']);
+            $table->dropForeign('users_current_team_id_foreign');
         });
     }
 };

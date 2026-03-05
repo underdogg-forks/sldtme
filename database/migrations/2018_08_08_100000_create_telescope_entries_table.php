@@ -15,9 +15,6 @@ return new class () extends Migration {
         return config('telescope.storage.database.connection');
     }
 
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         if ( ! App::isLocal()) {
@@ -60,9 +57,6 @@ return new class () extends Migration {
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         if ( ! App::isLocal()) {

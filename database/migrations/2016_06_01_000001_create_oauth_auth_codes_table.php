@@ -7,9 +7,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class () extends Migration {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('oauth_auth_codes', static function (Blueprint $table): void {
@@ -20,23 +17,18 @@ return new class () extends Migration {
             $table->boolean('revoked');
             $table->dateTime('expires_at')->nullable();
 
-            // Foreign keys with restrict on delete
+            // Foreign key to users - can be added here (users already exist)
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
-            $table->foreign('client_id')
-                ->references('id')
-                ->on('oauth_clients')
-                ->restrictOnDelete()
-                ->cascadeOnUpdate();
+
+            // Foreign key to oauth_clients added in separate migration
+            // (oauth_clients created after this table)
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('oauth_auth_codes');

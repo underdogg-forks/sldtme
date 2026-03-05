@@ -10,15 +10,15 @@ return new class () extends Migration {
     /**
      * Run the migrations.
      *
-     * Add foreign key constraint for user_id in organizations table.
-     * This is done as a separate migration after users table is created.
+     * Add foreign key constraint for client_id in oauth_auth_codes table.
+     * This is done as a separate migration after oauth_clients table is created.
      */
     public function up(): void
     {
-        Schema::table('organizations', static function (Blueprint $table): void {
-            $table->foreign('user_id', 'organizations_user_id_foreign')
+        Schema::table('oauth_auth_codes', static function (Blueprint $table): void {
+            $table->foreign('client_id')
                 ->references('id')
-                ->on('users')
+                ->on('oauth_clients')
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
         });
@@ -26,8 +26,8 @@ return new class () extends Migration {
 
     public function down(): void
     {
-        Schema::table('organizations', static function (Blueprint $table): void {
-            $table->dropForeign('organizations_user_id_foreign');
+        Schema::table('oauth_auth_codes', static function (Blueprint $table): void {
+            $table->dropForeign(['client_id']);
         });
     }
 };

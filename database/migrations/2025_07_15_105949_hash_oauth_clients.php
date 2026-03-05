@@ -5,9 +5,6 @@ declare(strict_types=1);
 use Illuminate\Database\Migrations\Migration;
 
 return new class () extends Migration {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         // This could be optimized to run all the updates in the eachById
@@ -24,9 +21,6 @@ return new class () extends Migration {
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         // This can not be reversed without a backup of the original secrets, for security reasons.
