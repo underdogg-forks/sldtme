@@ -35,7 +35,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 |
 */
 
-Route::prefix('v1')->name('v1.')->group(static function (): void {
+/*Route::prefix('v1')->name('v1.')->group(static function (): void {
     Route::middleware([
         'auth:api',
         'verified',
@@ -181,7 +181,7 @@ Route::prefix('v1')->name('v1.')->group(static function (): void {
     Route::name('public.')->prefix('/public')->group(static function (): void {
         Route::get('/reports', [PublicReportController::class, 'show'])->name('reports.show');
     });
-});
+});*/
 
 /*
  * Fallback routes, to prevent a rendered HTML page in /api/* routes

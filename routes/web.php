@@ -25,7 +25,13 @@ Route::get('/shared-report', static function () {
     return Inertia::render('SharedReport');
 })->name('shared-report');
 
-Route::middleware([
+// Authentication routes - redirect to Filament admin panel
+// Filament handles these automatically, but we provide legacy redirects for compatibility
+Route::redirect('/login', '/admin/login')->name('login');
+Route::redirect('/register', '/admin/register')->name('register');
+Route::redirect('/forgot-password', '/admin/forgot-password')->name('password.request');
+
+/*Route::middleware([
     'auth:web',
     config('jetstream.auth_session'),
     'verified',
@@ -81,4 +87,4 @@ Route::middleware([
     Route::get('/import', static function () {
         return Inertia::render('Import');
     })->name('import');
-});
+});*/

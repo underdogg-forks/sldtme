@@ -33,6 +33,9 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Disable Fortify views - Filament will handle authentication UI
+        Fortify::viewPrefix('');
+
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);

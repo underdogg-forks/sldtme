@@ -15,6 +15,6 @@ class HomeController extends Controller
             return redirect()->route('dashboard');
         }
 
-        return redirect('login');
+        return redirect()->route('filament.admin.auth.login');
     }
 }

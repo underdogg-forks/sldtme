@@ -19,7 +19,6 @@ use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
  * @property int|null    $billable_rate
  * @property string      $project_id    Project ID
  * @property string      $member_id     Member ID
- * @property string      $user_id       User ID (legacy)
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Project     $project
@@ -60,10 +59,10 @@ class ProjectMember extends Model implements AuditableContract
      *
      * @return BelongsTo<User, $this>
      */
-    public function user(): BelongsTo
+    /*public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
-    }
+    }*/
 
     /**
      * @return BelongsTo<Member, $this>

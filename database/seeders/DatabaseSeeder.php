@@ -89,8 +89,8 @@ class DatabaseSeeder extends Seeder
             'name'  => 'Acme Manager',
             'email' => 'test@example.com',
         ]);
-        $userAcmeManager->createToken('Testing Token 1')->accessToken;
-        $userAcmeManager->createToken('Testing Token 2')->accessToken;
+        /*$userAcmeManager->createToken('Testing Token 1')->accessToken;
+        $userAcmeManager->createToken('Testing Token 2')->accessToken;*/
         $userAcmeAdmin = User::factory()->withPersonalOrganization()->create([
             'name'  => 'Acme Admin',
             'email' => 'admin@acme.test',
@@ -146,9 +146,9 @@ class DatabaseSeeder extends Seeder
         $bigCompanyProject = Project::factory()->forOrganization($organizationAcme)->forClient($acmeClient)->create([
             'name' => 'Big Company Project',
         ]);
-        ProjectMember::factory()->forProject($bigCompanyProject)->forMember($userAcmeEmployeeMember)->create();
-        ProjectMember::factory()->forProject($bigCompanyProject)->forMember($userAcmeAdminMember)->create();
-        ProjectMember::factory()->forProject($bigCompanyProject)->forMember($userWithMultipleOrganizationsAcmeMember)->create();
+        ProjectMember::factory()->forProject($bigCompanyProject)->forVerifiedMember($userAcmeEmployeeMember)->create();
+        ProjectMember::factory()->forProject($bigCompanyProject)->forVerifiedMember($userAcmeAdminMember)->create();
+        ProjectMember::factory()->forProject($bigCompanyProject)->forVerifiedMember($userWithMultipleOrganizationsAcmeMember)->create();
 
         TimeEntry::factory()
             ->count(3)
@@ -184,8 +184,8 @@ class DatabaseSeeder extends Seeder
         $otherCompanyProject = Project::factory()->forOrganization($organizationRival)->forClient($rivalClient)->create([
             'name' => 'Scale Company - Project ABC',
         ]);
-        ProjectMember::factory()->forProject($otherCompanyProject)->forMember($userRivalManagerMember)->create();
-        ProjectMember::factory()->forProject($otherCompanyProject)->forMember($userWithMultipleOrganizationsRivalMember)->create();
+        ProjectMember::factory()->forProject($otherCompanyProject)->forVerifiedMember($userRivalManagerMember)->create();
+        ProjectMember::factory()->forProject($otherCompanyProject)->forVerifiedMember($userWithMultipleOrganizationsRivalMember)->create();
         TimeEntry::factory()
             ->count(5)
             ->forMember($userWithMultipleOrganizationsRivalMember)

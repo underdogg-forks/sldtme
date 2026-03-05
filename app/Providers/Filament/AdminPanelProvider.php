@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Auth\Login;
 use App\Filament\Widgets\ActiveUserOverview;
 use App\Filament\Widgets\ServerOverview;
 use App\Filament\Widgets\TimeEntriesCreated;
@@ -35,6 +36,7 @@ class AdminPanelProvider extends PanelProvider
         $panel->default()
             ->id('admin')
             ->path('admin')
+            ->login(Login::class)
             ->colors([
                 'primary' => Color::Amber,
             ])
