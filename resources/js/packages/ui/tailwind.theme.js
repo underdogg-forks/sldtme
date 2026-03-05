@@ -101,8 +101,8 @@ export const solidtimeTheme = {
         'input-select-active-hover': 'var(--theme-color-input-select-active-hover)',
         foreground: 'var(--foreground)',
         card: {
-            DEFAULT: 'var(--card))',
-            foreground: 'var(--card-foreground))',
+            DEFAULT: 'var(--card)',
+            foreground: 'var(--card-foreground)',
         },
         popover: {
             DEFAULT: 'var(--popover)',

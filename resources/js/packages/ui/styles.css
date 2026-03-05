@@ -108,7 +108,7 @@
 }
 
 :root.dark {
-    /* Dark theme overrides if needed */
+    /* Dark theme overrides */
     --chart-1: var(--color-accent-200);
     --chart-2: var(--color-accent-300);
     --chart-3: var(--color-accent-400);
@@ -183,14 +183,9 @@ body {
 }
 
 @layer base {
-    * {
-        @apply border-border;
-    }
     body {
         @apply bg-background text-foreground;
     }
 }
-
-
 
 
