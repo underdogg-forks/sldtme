@@ -207,7 +207,7 @@ onMounted(async () => {
                     </div>
                     <div class="grid items-center" style="grid-template-columns: 1fr 100px 150px">
                         <div
-                            class="contents [&>*]:border-card-background-separator [&>*]:border-b [&>*]:bg-tertiary [&>*]:pb-1.5 [&>*]:pt-1 text-text-secondary text-sm">
+                            class="contents [&>*]:border-card-background-separator *:border-b [&>*]:bg-tertiary *:pb-1.5 *:pt-1 text-text-secondary text-sm">
                             <div class="pl-6">Name</div>
                             <div class="text-right">Duration</div>
                             <div class="text-right pr-6">Cost</div>
@@ -225,7 +225,7 @@ onMounted(async () => {
                                 :show-cost="true"
                                 :entry="entry"></ReportingRow>
                             <div
-                                class="contents [&>*]:transition text-text-tertiary [&>*]:h-[50px]">
+                                class="contents *:transition text-text-tertiary *:h-[50px]">
                                 <div class="flex items-center pl-6 font-medium">
                                     <span>Total</span>
                                 </div>

@@ -96,7 +96,7 @@ function updateValue(client: { id: string | null; name: string }) {
                     </ComboboxAnchor>
                     <ComboboxContent>
                         <ComboboxViewport
-                            class="w-[--reka-popper-anchor-width] max-h-60 overflow-y-scroll p-1">
+                            class="w-(--reka-popper-anchor-width) max-h-60 overflow-y-scroll p-1">
                             <ComboboxItem
                                 :value="{ id: null, name: 'No Client' }"
                                 class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground">

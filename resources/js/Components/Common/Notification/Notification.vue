@@ -13,7 +13,7 @@
             class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg border border-card-border bg-card-background shadow-lg ring-1 ring-black text-text-primary ring-opacity-5">
             <div class="p-4">
                 <div class="flex items-start">
-                    <div class="flex-shrink-0">
+                    <div class="shrink-0">
                         <CheckCircleIcon
                             v-if="type === 'success'"
                             class="h-6 w-6 text-green-400"
@@ -31,7 +31,7 @@
                             {{ message }}
                         </p>
                     </div>
-                    <div class="ml-4 flex flex-shrink-0">
+                    <div class="ml-4 flex shrink-0">
                         <button
                             type="button"
                             class="inline-flex rounded-md bg-card-background text-text-secondary hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

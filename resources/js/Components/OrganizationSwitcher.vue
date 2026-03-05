@@ -46,7 +46,7 @@ const switchToTeam = (organization: Organization) => {
             <button data-testid="organization_switcher">
                 <div class="flex flex-1 space-x-2 items-center w-[calc(100%-30px)]">
                     <div
-                        class="rounded bg-blue-900 font-medium text-xs flex-shrink-0 text-white w-5 h-5 flex items-center justify-center">
+                        class="rounded bg-blue-900 font-medium text-xs shrink-0 text-white w-5 h-5 flex items-center justify-center">
                         {{ page.props.auth.user.current_team.name.slice(0, 1).toUpperCase() }}
                     </div>
                     <span class="text-xs flex-1 truncate font-medium">
@@ -55,7 +55,7 @@ const switchToTeam = (organization: Organization) => {
                 </div>
                 <div class="w-[30px]">
                     <div class="p-1 rounded-full flex items-center w-6 h-6">
-                        <ChevronDownIcon class="w-4 sm:w-full mt-[1px]"></ChevronDownIcon>
+                        <ChevronDownIcon class="w-4 sm:w-full mt-px"></ChevronDownIcon>
                     </div>
                 </div>
             </button>

@@ -1,5 +1,8 @@
-/* Import shared solidtime styles from UI package */
+/* Import shared solidtime styles from UI package - contains CSS variables */
 @import '../js/packages/ui/styles.css';
+
+/* Import Tailwind CSS after variables are defined */
+@import 'tailwindcss';
 
 /* Main app specific styles - Inter font */
 @font-face {

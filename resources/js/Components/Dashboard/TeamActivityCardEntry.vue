@@ -11,7 +11,7 @@ defineProps<{
         <div class="col-span-2">
             <div class="flex justify-between">
                 <p
-                    class="text-xs min-w-0 overflow-ellipsis overflow-hidden flex-1 text-text-secondary">
+                    class="text-xs min-w-0 text-ellipsis overflow-hidden flex-1 text-text-secondary">
                     {{ name }}
                 </p>
                 <div v-if="working" class="flex space-x-1.5 items-center justify-end">

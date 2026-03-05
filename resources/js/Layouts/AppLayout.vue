@@ -135,7 +135,7 @@ const page = usePage<{
                     ? 'max-lg:translate-x-0 max-lg:shadow-xl'
                     : 'max-lg:-translate-x-full',
             ]"
-            class="flex-shrink-0 h-screen fixed w-[280px] px-2.5 py-4 hidden lg:flex flex-col justify-between bg-background border-r border-default-background-separator max-lg:z-50 max-lg:transition-transform max-lg:duration-200 max-lg:ease-in-out lg:w-[230px] 2xl:w-[250px] 2xl:px-3 lg:border-r-0"
+            class="shrink-0 h-screen fixed w-[280px] px-2.5 py-4 hidden lg:flex flex-col justify-between bg-background border-r border-default-background-separator max-lg:z-50 max-lg:transition-transform max-lg:duration-200 max-lg:ease-in-out lg:w-[230px] 2xl:w-[250px] 2xl:px-3 lg:border-r-0"
             :style="showSidebarMenu ? { display: 'flex' } : undefined">
             <div class="flex flex-col h-full">
                 <div
@@ -146,7 +146,7 @@ const page = usePage<{
                     <Button
                         variant="ghost"
                         size="icon"
-                        class="h-7 w-7 flex-shrink-0"
+                        class="h-7 w-7 shrink-0"
                         data-testid="command_palette_button"
                         @click="openPalette">
                         <MagnifyingGlassIcon class="h-4 w-4 text-icon-default" />
@@ -154,7 +154,7 @@ const page = usePage<{
                     <Button
                         variant="ghost"
                         size="icon"
-                        class="h-7 w-7 flex-shrink-0 lg:hidden"
+                        class="h-7 w-7 shrink-0 lg:hidden"
                         @click="closeSidebar">
                         <XMarkIcon class="h-4 w-4 text-icon-default" />
                     </Button>

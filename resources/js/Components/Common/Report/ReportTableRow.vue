@@ -65,12 +65,12 @@ async function deleteReport() {
     <TableRow>
         <div
             class="whitespace-nowrap min-w-0 flex items-center space-x-5 3xl:pl-12 py-4 pr-3 text-sm font-medium text-text-primary pl-4 sm:pl-6 lg:pl-8 3xl:pl-12">
-            <span class="overflow-ellipsis overflow-hidden">
+            <span class="text-ellipsis overflow-hidden">
                 {{ report.name }}
             </span>
         </div>
         <div class="whitespace-nowrap min-w-0 px-3 py-4 text-sm text-text-secondary">
-            <span class="overflow-ellipsis overflow-hidden">
+            <span class="text-ellipsis overflow-hidden">
                 {{ report.description }}
             </span>
         </div>

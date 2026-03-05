@@ -70,7 +70,7 @@ function handleDateSelect(newDate: DateValue | undefined) {
                     size="sm"
                     :tabindex="tabindex"
                     :class="['w-full px-2 gap-1.5', props.class]">
-                    <CalendarIcon class="!size-3 text-muted-foreground" />
+                    <CalendarIcon class="size-3! text-muted-foreground" />
                     <span>{{ displayDate || 'Pick a date' }}</span>
                 </Button>
             </PopoverTrigger>

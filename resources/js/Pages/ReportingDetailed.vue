@@ -438,7 +438,7 @@ async function downloadExport(format: ExportFormat) {
                         <div class="px-2">&#8230;</div>
                     </PaginationEllipsis>
                 </template>
-                <div class="!ml-2 pl-2 flex items-center space-x-1 border-l border-border-primary">
+                <div class="ml-2! pl-2 flex items-center space-x-1 border-l border-border-primary">
                     <PaginationNext class="navigation-item">
                         <ChevronRightIcon
                             class="w-4 text-text-tertiary hover:text-text-primary"></ChevronRightIcon>

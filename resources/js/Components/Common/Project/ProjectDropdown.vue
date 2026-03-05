@@ -115,7 +115,7 @@ function updateValue(project: Project) {
                     </ComboboxAnchor>
                     <ComboboxContent>
                         <ComboboxViewport
-                            class="w-[--reka-popper-anchor-width] max-h-60 overflow-y-scroll p-1">
+                            class="w-(--reka-popper-anchor-width) max-h-60 overflow-y-scroll p-1">
                             <ComboboxItem
                                 v-for="project in shownProjects"
                                 :key="project.id"

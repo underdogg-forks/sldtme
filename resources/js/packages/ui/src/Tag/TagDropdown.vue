@@ -157,7 +157,7 @@ const showCreateTagModal = ref(false);
                             open = false;
                             showCreateTagModal = true;
                         ">
-                        <PlusCircleIcon class="w-4 h-4 flex-shrink-0 text-icon-default" />
+                        <PlusCircleIcon class="w-4 h-4 shrink-0 text-icon-default" />
                         <span>Create new Tag</span>
                     </Button>
                 </div>

@@ -57,7 +57,7 @@ const iconSizeWrapperClasses = props.size === 'small' ? 'w-6 sm:w-8 h-6 sm:h-8' 
                         twMerge(
                             iconColorClasses,
                             iconSizeWrapperClasses,
-                            'flex-shrink-0 ring-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring transition focus:bg-card-background-separator hover:bg-card-background-separator rounded-full flex items-center justify-center',
+                            'shrink-0 ring-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring transition focus:bg-card-background-separator hover:bg-card-background-separator rounded-full flex items-center justify-center',
                             faded
                                 ? 'opacity-50 group-hover:opacity-100 focus-visible:opacity-100'
                                 : ''

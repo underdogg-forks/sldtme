@@ -38,7 +38,7 @@ defineProps<{
                 :class="
                     twMerge(
                         iconColorClasses,
-                        'relative flex-shrink-0 ring-0 focus:outline-none focus:ring-2 focus:ring-ring transition focus-visible:bg-card-background-separator hover:bg-card-background-separator rounded-full w-10 h-10 flex items-center justify-center'
+                        'relative shrink-0 ring-0 focus:outline-none focus:ring-2 focus:ring-ring transition focus-visible:bg-card-background-separator hover:bg-card-background-separator rounded-full w-10 h-10 flex items-center justify-center'
                     )
                 ">
                 <TagIcon class="w-5 h-5 lg:h-6 lg:w-6"></TagIcon>

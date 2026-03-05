@@ -399,7 +399,7 @@ const tableData = computed(() => {
                     class="grid items-center"
                     :style="`grid-template-columns: 1fr 100px ${showBillableRate ? '150px' : ''}`">
                     <div
-                        class="contents [&>*]:border-card-background-separator [&>*]:border-b [&>*]:bg-secondary [&>*]:pb-1.5 [&>*]:pt-1 text-text-tertiary text-sm">
+                        class="contents [&>*]:border-card-background-separator *:border-b [&>*]:bg-secondary *:pb-1.5 *:pt-1 text-text-tertiary text-sm">
                         <div class="pl-6">Name</div>
                         <div class="text-right" :class="!showBillableRate ? 'pr-6' : ''">
                             Duration
@@ -418,7 +418,7 @@ const tableData = computed(() => {
                             :type="aggregatedTableTimeEntries.grouped_type"
                             :show-cost="showBillableRate"
                             :entry="entry"></ReportingRow>
-                        <div class="contents [&>*]:transition text-text-tertiary [&>*]:h-[50px]">
+                        <div class="contents *:transition text-text-tertiary *:h-[50px]">
                             <div class="flex items-center pl-6 font-medium">
                                 <span>Total</span>
                             </div>

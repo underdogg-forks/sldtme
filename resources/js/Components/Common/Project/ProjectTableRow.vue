@@ -78,13 +78,13 @@ const showEditProjectModal = ref(false);
                     boxShadow: `var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) ${project.color}30`,
                 }"
                 class="w-3 h-3 rounded-full"></div>
-            <span class="overflow-ellipsis overflow-hidden">
+            <span class="text-ellipsis overflow-hidden">
                 {{ project.name }}
             </span>
             <span class="text-text-secondary"> {{ projectTasksCount }} Tasks </span>
         </div>
         <div class="whitespace-nowrap min-w-0 px-3 py-4 text-sm text-text-secondary">
-            <div v-if="project.client_id" class="overflow-ellipsis overflow-hidden">
+            <div v-if="project.client_id" class="text-ellipsis overflow-hidden">
                 {{ client?.name }}
             </div>
             <div v-else>No client</div>

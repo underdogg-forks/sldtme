@@ -96,7 +96,7 @@ const shownTasks = computed(() => {
                         <div
                             class="flex items-center space-x-3 text-text-primary font-semibold text-base">
                             <ChevronRightIcon
-                                class="h-5 w-5 flex-shrink-0 text-text-secondary"
+                                class="h-5 w-5 shrink-0 text-text-secondary"
                                 aria-hidden="true" />
                             <div class="flex space-x-3 items-center">
                                 <div

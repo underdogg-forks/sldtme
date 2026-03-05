@@ -159,7 +159,7 @@ function onSelectChange(checked: boolean) {
                         </button>
                     </div>
                     <button
-                        class="text-text-primary !mr-2 min-w-[80px] px-1.5 py-1.5 bg-transparent text-right hover:bg-card-background rounded-lg border border-transparent hover:border-card-border text-sm font-medium focus-visible:outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:bg-tertiary"
+                        class="text-text-primary mr-2! min-w-[80px] px-1.5 py-1.5 bg-transparent text-right hover:bg-card-background rounded-lg border border-transparent hover:border-card-border text-sm font-medium focus-visible:outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:bg-tertiary"
                         @click="expanded = !expanded">
                         {{
                             formatHumanReadableDuration(

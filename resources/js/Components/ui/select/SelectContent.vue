@@ -50,7 +50,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
                     cn(
                         'p-1',
                         position === 'popper' &&
-                            'h-[--reka-select-trigger-height] w-full min-w-[--reka-select-trigger-width]'
+                            'h-(--reka-select-trigger-height) w-full min-w-(--reka-select-trigger-width)'
                     )
                 ">
                 <slot />
