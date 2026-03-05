@@ -31,6 +31,9 @@ Route::redirect('/login', '/admin/login')->name('login');
 Route::redirect('/register', '/admin/register')->name('register');
 Route::redirect('/forgot-password', '/admin/forgot-password')->name('password.request');
 
+// Dashboard redirects to Filament admin dashboard
+Route::redirect('/dashboard', '/admin', 301)->name('dashboard');
+
 /*Route::middleware([
     'auth:web',
     config('jetstream.auth_session'),

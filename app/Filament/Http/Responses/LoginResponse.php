@@ -7,11 +7,12 @@ namespace App\Filament\Http\Responses;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse as LoginResponseContract;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Features\SupportRedirects\Redirector;
 use Log;
 
 class LoginResponse implements LoginResponseContract
 {
-    public function toResponse($request): RedirectResponse
+    public function toResponse($request): RedirectResponse|Redirector
     {
         $user = Auth::user();
 
@@ -20,7 +21,7 @@ class LoginResponse implements LoginResponseContract
             'email'   => $user?->email,
         ]);
 
-        // Redirect to dashboard
-        return redirect()->intended(route('dashboard'));
+        // Redirect to admin dashboard
+        return redirect()->intended(route('filament.admin.pages.dashboard'));
     }
 }
