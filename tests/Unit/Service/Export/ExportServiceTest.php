@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Tests\Unit\Service\Export;
 
 use App\Models\Client;

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Filament\Pages\Auth;
 
 use App\Filament\Http\Responses\LoginResponse;

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Tests\Unit\Console\Commands\Correction;
 
 use App\Console\Commands\Correction\CorrectionPlaceholderMembersCommand;

@@ -69,17 +69,15 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Scramble
-        /*
-                Scramble::extendOpenApi(function (OpenApi $openApi): void {
-                    $openApi->secure(
-                        SecurityScheme::oauth2()
-                            ->flow('authorizationCode', static function (OAuthFlow $flow): void {
-                                $flow
-                                    ->authorizationUrl('https://solidtime.test/oauth/authorize');
-                            })
-                    );
-                });
-        */
+        Scramble::extendOpenApi(function (OpenApi $openApi): void {
+            $openApi->secure(
+                SecurityScheme::oauth2()
+                    ->flow('authorizationCode', static function (OAuthFlow $flow): void {
+                        $flow
+                            ->authorizationUrl('https://solidtime.test/oauth/authorize');
+                    })
+            );
+        });
 
         $this->app->scoped(PermissionStore::class, static function (Application $app): PermissionStore {
             return new PermissionStore();

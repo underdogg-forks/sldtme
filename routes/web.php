@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\HomeController;
 use Illuminate\Support\Facades\Route;

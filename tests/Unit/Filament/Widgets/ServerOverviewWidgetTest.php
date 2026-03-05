@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Tests\Unit\Filament\Widgets;
 
 use App\Filament\Widgets\ServerOverview;

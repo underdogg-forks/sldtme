@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Tests\Unit\Console\Commands\Auth;
 
 use App\Console\Commands\Auth\AuthSendReminderForExpiringApiTokensCommand;
