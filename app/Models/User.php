@@ -7,7 +7,7 @@ namespace App\Models;
 use App\Enums\Weekday;
 use App\Models\Concerns\CustomAuditable;
 use App\Models\Concerns\HasUuids;
-use App\Models\Passport\Token;
+//use App\Models\Passport\Token;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -24,9 +24,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
-use Laravel\Fortify\TwoFactorAuthenticatable;
-use Laravel\Jetstream\HasProfilePhoto;
-use Laravel\Jetstream\HasTeams;
+//use Laravel\Fortify\TwoFactorAuthenticatable;
+//use Laravel\Jetstream\HasProfilePhoto;
+//use Laravel\Jetstream\HasTeams;
 use Laravel\Passport\AuthCode;
 use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
@@ -68,11 +68,11 @@ class User extends Authenticatable implements AuditableContract, FilamentUser, M
     /** @use HasFactory<UserFactory> */
     use HasFactory;
 
-    use HasProfilePhoto;
-    use HasTeams;
+    //use HasProfilePhoto;
+    //use HasTeams;
     use HasUuids;
     use Notifiable;
-    use TwoFactorAuthenticatable;
+    //use TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.

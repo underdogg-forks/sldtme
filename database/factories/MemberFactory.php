@@ -23,8 +23,8 @@ class MemberFactory extends Factory
         return [
             'billable_rate'   => null,
             'role'            => Role::Employee,
-            'organization_id' => Organization::factory(),
-            'user_id'         => User::factory(),
+            'organization_id' => Organization::factory()->create()->id, // Will resolve to integer
+            'user_id'         => User::factory()->create()->id, // Will resolve to integer
         ];
     }
 

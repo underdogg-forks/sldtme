@@ -8,15 +8,12 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('organization_invitations', static function (Blueprint $table): void {
-            $table->uuid('id')->primary();
-            $table->uuid('organization_id');
+            $table->id();
+            $table->unsignedBigInteger('organization_id');
             $table->string('email');
             $table->string('role')->nullable();
             $table->timestamps();
-
             $table->unique(['organization_id', 'email']);
-
-            // Foreign key with restrict on delete
             $table->foreign('organization_id')
                 ->references('id')
                 ->on('organizations')

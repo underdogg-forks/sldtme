@@ -90,6 +90,6 @@ class AppServiceProvider extends ServiceProvider
         // Routing
         Route::model('member', Member::class);
         Route::model('invitation', OrganizationInvitation::class);
-        Route::model('apiToken', Token::class);
+        //Route::model('apiToken', Token::class);
     }
 }

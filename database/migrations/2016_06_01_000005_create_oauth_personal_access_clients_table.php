@@ -8,7 +8,7 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('oauth_personal_access_clients', static function (Blueprint $table): void {
-            $table->bigIncrements('id');
+            $table->id();
             $table->uuid('client_id');
             $table->timestamps();
         });

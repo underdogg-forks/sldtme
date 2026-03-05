@@ -8,8 +8,8 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('oauth_clients', static function (Blueprint $table): void {
-            $table->uuid('id')->primary();
-            $table->uuid('user_id')->nullable()->index();
+            $table->id();
+            $table->unsignedBigInteger('user_id')->nullable()->index();
             $table->string('name');
             $table->string('secret', 100)->nullable();
             $table->string('provider')->nullable();

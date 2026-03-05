@@ -10,9 +10,9 @@ return new class () extends Migration {
         // Create organization_user table (renamed to 'members' in later migrations)
         // For fresh installs, create it directly as 'members'
         Schema::create('members', static function (Blueprint $table): void {
-            $table->uuid('id')->primary();
-            $table->uuid('organization_id');
-            $table->uuid('user_id');
+            $table->id();
+            $table->unsignedBigInteger('organization_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('role')->nullable();
             $table->integer('billable_rate')->unsigned()->nullable();
             $table->timestamps();

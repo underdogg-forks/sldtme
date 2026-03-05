@@ -8,7 +8,7 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('users', static function (Blueprint $table): void {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->string('name');
             $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
@@ -22,7 +22,7 @@ return new class () extends Migration {
             $table->timestamp('two_factor_confirmed_at')->nullable();
 
             // Foreign key to organizations - added after organizations table is created
-            $table->uuid('current_team_id')->nullable();
+            $table->unsignedBigInteger('current_team_id')->nullable();
 
             $table->string('profile_photo_path', 2048)->nullable();
             $table->string('timezone');

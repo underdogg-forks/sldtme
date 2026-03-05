@@ -8,8 +8,8 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('organizations', static function (Blueprint $table): void {
-            $table->uuid('id')->primary();
-            $table->uuid('user_id')->index();
+            $table->id();
+            $table->unsignedBigInteger('user_id')->index();
             $table->string('name');
             $table->boolean('personal_team');
             $table->integer('billable_rate')->unsigned()->nullable();

@@ -12,6 +12,7 @@ use App\Models\Concerns\HasUuids;
 use Database\Factories\OrganizationFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -19,10 +20,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
-use Laravel\Jetstream\Events\TeamCreated;
-use Laravel\Jetstream\Events\TeamDeleted;
-use Laravel\Jetstream\Events\TeamUpdated;
-use Laravel\Jetstream\Team as JetstreamTeam;
+//use Laravel\Jetstream\Events\TeamCreated;
+//use Laravel\Jetstream\Events\TeamDeleted;
+//use Laravel\Jetstream\Events\TeamUpdated;
+//use Laravel\Jetstream\Team as JetstreamTeam;
 use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
 /**
@@ -50,7 +51,7 @@ use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
  * @method        HasMany<OrganizationInvitation, $this> teamInvitations()
  * @method static OrganizationFactory                    factory()
  */
-class Organization extends JetstreamTeam implements AuditableContract
+class Organization extends Model implements AuditableContract
 {
     use CustomAuditable;
 
@@ -93,11 +94,11 @@ class Organization extends JetstreamTeam implements AuditableContract
      *
      * @var array<string, class-string>
      */
-    protected $dispatchesEvents = [
+    /*protected $dispatchesEvents = [
         'created' => TeamCreated::class,
         'updated' => TeamUpdated::class,
         'deleted' => TeamDeleted::class,
-    ];
+    ];*/
 
     /**
      * The model's default values for attributes.

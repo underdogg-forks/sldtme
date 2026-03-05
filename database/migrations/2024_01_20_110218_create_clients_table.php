@@ -8,10 +8,10 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('clients', static function (Blueprint $table): void {
-            $table->uuid('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name', 255);
             $table->dateTime('archived_at')->nullable();
-            $table->uuid('organization_id');
+            $table->unsignedBigInteger('organization_id');
             $table->foreign('organization_id')
                 ->references('id')
                 ->on('organizations')

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Concerns\CustomAuditable;
-use App\Models\Concerns\HasUuids;
 use Database\Factories\MemberFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -36,8 +35,6 @@ class Member extends Model implements AuditableContract
 
     /** @use HasFactory<MemberFactory> */
     use HasFactory;
-
-    use HasUuids;
 
     /**
      * The table associated with the pivot model.

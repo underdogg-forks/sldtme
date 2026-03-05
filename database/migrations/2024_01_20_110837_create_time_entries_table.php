@@ -8,7 +8,7 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('time_entries', static function (Blueprint $table): void {
-            $table->uuid('id')->primary();
+            $table->id();
             // Extended description to 5000 characters
             $table->string('description', 5000);
             $table->dateTime('start');
@@ -22,12 +22,12 @@ return new class () extends Migration {
             // Reminder notifications
             $table->dateTime('still_active_email_sent_at')->nullable();
 
-            $table->uuid('user_id');
-            $table->uuid('member_id');
-            $table->uuid('organization_id');
-            $table->uuid('project_id')->nullable();
-            $table->uuid('task_id')->nullable();
-            $table->uuid('client_id')->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('member_id');
+            $table->unsignedBigInteger('organization_id');
+            $table->unsignedBigInteger('project_id')->nullable();
+            $table->unsignedBigInteger('task_id')->nullable();
+            $table->unsignedBigInteger('client_id')->nullable();
 
             // MariaDB uses json() instead of jsonb()
             $table->json('tags')->nullable();
@@ -62,8 +62,8 @@ return new class () extends Migration {
             $table->foreign('client_id')
                 ->references('id')
                 ->on('clients')
-                ->restrictOnDelete()
-                ->cascadeOnUpdate();
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
 
             $table->index('start');
             $table->index('end');
