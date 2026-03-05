@@ -25,7 +25,7 @@ return new class () extends Migration {
             $table->dateTime('expires_at')->nullable();
 
             // Foreign key to users - can be added here (users already exist)
-            $table->foreign('user_id')
+            $table->foreign('user_id', 'oauth_access_tokens_user_id_foreign')
                 ->references('id')
                 ->on('users')
                 ->restrictOnDelete()

@@ -36,38 +36,37 @@ class DatabaseSeeder extends Seeder
     {
         $this->deleteAll();
 
-        app(ClientRepository::class)->createAuthorizationCodeGrantClient(
-            name: 'Desktop App',
-            redirectUris: ['solidtime://oauth/callback'],
-            confidential: false, // TODO: ?
-            enableDeviceFlow: false, // TODO: ?
-        );
+        // TODO: Fix OAuth crypto key configuration before enabling this
+        // app(ClientRepository::class)->createAuthorizationCodeGrantClient(
+        //     name: 'Desktop App',
+        //     redirectUris: ['solidtime://oauth/callback'],
+        //     confidential: false,
+        //     enableDeviceFlow: false,
+        // );
 
         // TODO: grant_types ? migration?
 
         // app(ClientRepository::class)->createPersonalAccessGrantClient('API');
 
-        /*
-        app(ClientRepository::class)->create(
-            null,
-            'desktop',
-            'solidtime://oauth/callback',
-            null,
-            false,
-            false,
-            false
-        );
-        */
+        // app(ClientRepository::class)->create(
+        //     null,
+        //     'desktop',
+        //     'solidtime://oauth/callback',
+        //     null,
+        //     false,
+        //     false,
+        //     false
+        // );
 
-        $personalAccessClient                = new PassportClient();
-        $personalAccessClient->id            = config('passport.personal_access_client.id');
-        $personalAccessClient->secret        = config('passport.personal_access_client.secret');
-        $personalAccessClient->name          = 'API';
-        $personalAccessClient->redirect_uris = ['http://localhost'];
-        $personalAccessClient->revoked       = false;
-        $personalAccessClient->provider      = 'users';
-        $personalAccessClient->grant_types   = ['personal_access'];
-        $personalAccessClient->save();
+        // $personalAccessClient                = new PassportClient();
+        // $personalAccessClient->id            = config('passport.personal_access_client.id');
+        // $personalAccessClient->secret        = config('passport.personal_access_client.secret');
+        // $personalAccessClient->name          = 'API';
+        // $personalAccessClient->redirect_uris = ['http://localhost'];
+        // $personalAccessClient->revoked       = false;
+        // $personalAccessClient->provider      = 'users';
+        // $personalAccessClient->grant_types   = ['personal_access'];
+        // $personalAccessClient->save();
 
         $userWithMultipleOrganizations = User::factory()->withPersonalOrganization()->create([
             'name'  => 'Mister Overemployed',

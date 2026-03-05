@@ -22,7 +22,7 @@ return new class () extends Migration {
             $table->timestamps();
 
             // Foreign key with restrict on delete
-            $table->foreign('user_id')
+            $table->foreign('user_id', 'oauth_clients_user_id_foreign')
                 ->references('id')
                 ->on('users')
                 ->restrictOnDelete()
