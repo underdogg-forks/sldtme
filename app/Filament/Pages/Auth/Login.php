@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages\Auth;
 
+use App\Filament\Http\Responses\LoginResponse;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\TextInput;
-use Filament\Http\Responses\Auth\Contracts\LoginResponse;
+use Filament\Http\Responses\Auth\Contracts\LoginResponse as LoginResponseContract;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Pages\Auth\Login as BaseLogin;
 use Illuminate\Support\Facades\Hash;
@@ -18,7 +19,7 @@ use Log;
 
 class Login extends BaseLogin
 {
-    public function authenticate(): ?LoginResponse
+    public function authenticate(): LoginResponseContract
     {
         /*try {
             $this->rateLimit(5);
@@ -47,10 +48,10 @@ class Login extends BaseLogin
         // Attempt authentication
         $authenticated = Filament::auth()->attempt($credentials, $data['remember'] ?? false);
 
-        Log::info('Authentication result', [
+        /*Log::info('Authentication result', [
             'authenticated' => $authenticated,
             'guard'         => Filament::auth()->guard(),
-        ]);
+        ]);*/
 
         if ( ! $authenticated) {
             Log::warning('Authentication failed for email', [
