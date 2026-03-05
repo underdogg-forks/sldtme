@@ -18,7 +18,7 @@ class CurrencyServiceTest extends TestCaseWithDatabase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->currencyService = new CurrencyService;
+        $this->currencyService = new CurrencyService();
     }
 
     public function test_get_currency_symbol_for_currency_eur(): void

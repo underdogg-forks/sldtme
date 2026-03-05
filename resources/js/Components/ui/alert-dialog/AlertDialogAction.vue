@@ -13,7 +13,7 @@ const delegatedProps = computed(() => {
 </script>
 
 <template>
-    <AlertDialogAction v-bind="delegatedProps" :class="twMerge(buttonVariants(), props.class)">
+    <AlertDialogAction v-bind="delegatedProps" :class="twMerge(buttonVariants(), props.class as string)">
         <slot />
     </AlertDialogAction>
 </template>

@@ -4,5 +4,5 @@
     "singleQuote": true,
     "bracketSameLine": true,
     "quoteProps": "preserve",
-    "printWidth": 100
+    "printWidth": 200
 }

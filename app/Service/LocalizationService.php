@@ -30,15 +30,15 @@ class LocalizationService
     public function __construct(CurrencyFormat $currencyFormat, DateFormat $dateFormat, TimeFormat $timeFormat, NumberFormat $numberFormat, IntervalFormat $intervalFormat)
     {
         $this->currencyFormat = $currencyFormat;
-        $this->dateFormat = $dateFormat;
-        $this->timeFormat = $timeFormat;
-        $this->numberFormat = $numberFormat;
+        $this->dateFormat     = $dateFormat;
+        $this->timeFormat     = $timeFormat;
+        $this->numberFormat   = $numberFormat;
         $this->intervalFormat = $intervalFormat;
     }
 
     public static function forOrganization(Organization $organization): self
     {
-        return new LocalizationService(
+        return new self(
             $organization->currency_format,
             $organization->date_format,
             $organization->time_format,
@@ -53,13 +53,17 @@ class LocalizationService
 
         if ($this->numberFormat === NumberFormat::ThousandsPointDecimalComma) {
             return number_format($numberFloat, 2, ',', '.');
-        } elseif ($this->numberFormat === NumberFormat::ThousandsSpaceDecimalPoint) {
+        }
+        if ($this->numberFormat === NumberFormat::ThousandsSpaceDecimalPoint) {
             return number_format($numberFloat, 2, '.', ' ');
-        } elseif ($this->numberFormat === NumberFormat::ThousandsCommaDecimalPoint) {
+        }
+        if ($this->numberFormat === NumberFormat::ThousandsCommaDecimalPoint) {
             return number_format($numberFloat, 2, '.', ',');
-        } elseif ($this->numberFormat === NumberFormat::ThousandsSpaceDecimalComma) {
+        }
+        if ($this->numberFormat === NumberFormat::ThousandsSpaceDecimalComma) {
             return number_format($numberFloat, 2, ',', ' ');
-        } elseif ($this->numberFormat === NumberFormat::ThousandsApostropheDecimalPoint) {
+        }
+        if ($this->numberFormat === NumberFormat::ThousandsApostropheDecimalPoint) {
             return number_format($numberFloat, 2, '.', '\'');
         }
     }
@@ -68,9 +72,9 @@ class LocalizationService
     {
         $number = $this->formatNumber($number);
 
-        $number = rtrim($number, '0');
-        $number = rtrim($number, '.');
-        $number = rtrim($number, ',');
+        $number = mb_rtrim($number, '0');
+        $number = mb_rtrim($number, '.');
+        $number = mb_rtrim($number, ',');
 
         return $number;
     }
@@ -80,19 +84,22 @@ class LocalizationService
         if ($this->intervalFormat === IntervalFormat::Decimal) {
             $interval->cascade();
 
-            return $this->formatNumber($interval->totalHours).' h';
-        } elseif ($this->intervalFormat === IntervalFormat::HoursMinutes) {
+            return $this->formatNumber($interval->totalHours) . ' h';
+        }
+        if ($this->intervalFormat === IntervalFormat::HoursMinutes) {
             $interval->cascade();
 
-            return ((int) floor($interval->totalHours)).'h '.$interval->format('%I').'m';
-        } elseif ($this->intervalFormat === IntervalFormat::HoursMinutesColonSeparated) {
+            return ((int) floor($interval->totalHours)) . 'h ' . $interval->format('%I') . 'm';
+        }
+        if ($this->intervalFormat === IntervalFormat::HoursMinutesColonSeparated) {
             $interval->cascade();
 
-            return ((int) floor($interval->totalHours)).':'.$interval->format('%I');
-        } elseif ($this->intervalFormat === IntervalFormat::HoursMinutesSecondsColonSeparated) {
+            return ((int) floor($interval->totalHours)) . ':' . $interval->format('%I');
+        }
+        if ($this->intervalFormat === IntervalFormat::HoursMinutesSecondsColonSeparated) {
             $interval->cascade();
 
-            return ((int) floor($interval->totalHours)).':'.$interval->format('%I:%S');
+            return ((int) floor($interval->totalHours)) . ':' . $interval->format('%I:%S');
         }
     }
 
@@ -100,17 +107,22 @@ class LocalizationService
     {
         $currencyService = app(CurrencyService::class);
         if ($this->currencyFormat === CurrencyFormat::ISOCodeAfterWithSpace) {
-            return $this->formatNumber($money->getAmount()).' '.$money->getCurrency()->getCurrencyCode();
-        } elseif ($this->currencyFormat === CurrencyFormat::ISOCodeBeforeWithSpace) {
-            return $money->getCurrency()->getCurrencyCode().' '.$this->formatNumber($money->getAmount());
-        } elseif ($this->currencyFormat === CurrencyFormat::SymbolAfter) {
-            return $this->formatNumber($money->getAmount()).$currencyService->getCurrencySymbolForMoney($money);
-        } elseif ($this->currencyFormat === CurrencyFormat::SymbolBefore) {
-            return $currencyService->getCurrencySymbolForMoney($money).$this->formatNumber($money->getAmount());
-        } elseif ($this->currencyFormat === CurrencyFormat::SymbolBeforeWithSpace) {
-            return $currencyService->getCurrencySymbolForMoney($money).' '.$this->formatNumber($money->getAmount());
-        } elseif ($this->currencyFormat === CurrencyFormat::SymbolAfterWithSpace) {
-            return $this->formatNumber($money->getAmount()).' '.$currencyService->getCurrencySymbolForMoney($money);
+            return $this->formatNumber($money->getAmount()) . ' ' . $money->getCurrency()->getCurrencyCode();
+        }
+        if ($this->currencyFormat === CurrencyFormat::ISOCodeBeforeWithSpace) {
+            return $money->getCurrency()->getCurrencyCode() . ' ' . $this->formatNumber($money->getAmount());
+        }
+        if ($this->currencyFormat === CurrencyFormat::SymbolAfter) {
+            return $this->formatNumber($money->getAmount()) . $currencyService->getCurrencySymbolForMoney($money);
+        }
+        if ($this->currencyFormat === CurrencyFormat::SymbolBefore) {
+            return $currencyService->getCurrencySymbolForMoney($money) . $this->formatNumber($money->getAmount());
+        }
+        if ($this->currencyFormat === CurrencyFormat::SymbolBeforeWithSpace) {
+            return $currencyService->getCurrencySymbolForMoney($money) . ' ' . $this->formatNumber($money->getAmount());
+        }
+        if ($this->currencyFormat === CurrencyFormat::SymbolAfterWithSpace) {
+            return $this->formatNumber($money->getAmount()) . ' ' . $currencyService->getCurrencySymbolForMoney($money);
         }
     }
 
@@ -118,7 +130,8 @@ class LocalizationService
     {
         if ($this->timeFormat === TimeFormat::TwelveHours) {
             return $time->format('h:i a'); // Examples: "11:01 am", "1:02 am"
-        } elseif ($this->timeFormat === TimeFormat::TwentyFourHours) {
+        }
+        if ($this->timeFormat === TimeFormat::TwentyFourHours) {
             return $time->format('H:i'); // Examples: "23:01", "01:02"
         }
     }

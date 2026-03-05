@@ -34,7 +34,7 @@ class DeleteUser extends DeleteAction
                 return false;
             });
 
-            if (! $result) {
+            if ( ! $result) {
                 $this->failure();
 
                 return;

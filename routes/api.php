@@ -183,11 +183,11 @@ Route::prefix('v1')->name('v1.')->group(static function (): void {
     });
 });
 
-/**
+/*
  * Fallback routes, to prevent a rendered HTML page in /api/* routes
  * The / route is also included since the fallback is not triggered on the root route
  */
-Route::get('/', function (): void {
+Route::get('/', static function (): void {
     throw new NotFoundHttpException('API resource not found');
 });
 Route::fallback(function (): void {

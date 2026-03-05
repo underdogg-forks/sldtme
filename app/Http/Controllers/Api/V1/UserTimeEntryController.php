@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Log;
 class UserTimeEntryController extends Controller
 {
     /**
-     * Get the active time entry of the current user
+     * Get the active time entry of the current user.
      *
      * This endpoint is independent of organization.
      *
@@ -41,8 +41,7 @@ class UserTimeEntryController extends Controller
 
         if ($activeTimeEntry !== null) {
             return new TimeEntryResource($activeTimeEntry);
-        } else {
-            throw new ModelNotFoundException('No active time entry');
         }
+        throw new ModelNotFoundException('No active time entry');
     }
 }

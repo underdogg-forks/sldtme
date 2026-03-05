@@ -21,6 +21,7 @@ use App\Service\Import\Importers\ReportDto;
 use App\Service\Import\ImportService;
 use App\Service\TimezoneService;
 use Brick\Money\ISOCurrencyProvider;
+use Exception;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
@@ -80,9 +81,9 @@ class OrganizationResource extends Resource
                     ->label('Currency')
                     ->options(function (): array {
                         $currencies = ISOCurrencyProvider::getInstance()->getAvailableCurrencies();
-                        $select = [];
+                        $select     = [];
                         foreach ($currencies as $currency) {
-                            $select[$currency->getCurrencyCode()] = $currency->getName().' ('.$currency->getCurrencyCode().')';
+                            $select[$currency->getCurrencyCode()] = $currency->getName() . ' (' . $currency->getCurrencyCode() . ')';
                         }
 
                         return $select;
@@ -136,7 +137,6 @@ class OrganizationResource extends Resource
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
-                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -158,12 +158,12 @@ class OrganizationResource extends Resource
                             return response()->streamDownload(function () use ($file): void {
                                 echo Storage::disk(config('filesystems.private'))->get($file);
                             }, 'export.zip');
-                        } catch (\Exception $exception) {
+                        } catch (Exception $exception) {
                             report($exception);
                             Notification::make()
                                 ->title('Export failed')
                                 ->danger()
-                                ->body('Message: '.$exception->getMessage())
+                                ->body('Message: ' . $exception->getMessage())
                                 ->persistent()
                                 ->send();
                         }
@@ -174,7 +174,7 @@ class OrganizationResource extends Resource
                         try {
                             $file = Storage::disk(config('filament.default_filesystem_disk'))->get($data['file']);
                             if ($file === null) {
-                                throw new \Exception('File not found');
+                                throw new Exception('File not found');
                             }
                             /** @var string $timezone */
                             $timezone = $data['timezone'];
@@ -189,12 +189,12 @@ class OrganizationResource extends Resource
                                 ->title('Import successful')
                                 ->success()
                                 ->body(
-                                    'Imported time entries: '.$report->timeEntriesCreated.'<br>'.
-                                    'Imported clients: '.$report->clientsCreated.'<br>'.
-                                    'Imported projects: '.$report->projectsCreated.'<br>'.
-                                    'Imported tasks: '.$report->tasksCreated.'<br>'.
-                                    'Imported tags: '.$report->tagsCreated.'<br>'.
-                                    'Imported users: '.$report->usersCreated
+                                    'Imported time entries: ' . $report->timeEntriesCreated . '<br>'
+                                    . 'Imported clients: ' . $report->clientsCreated . '<br>'
+                                    . 'Imported projects: ' . $report->projectsCreated . '<br>'
+                                    . 'Imported tasks: ' . $report->tasksCreated . '<br>'
+                                    . 'Imported tags: ' . $report->tagsCreated . '<br>'
+                                    . 'Imported users: ' . $report->usersCreated
                                 )
                                 ->persistent()
                                 ->send();
@@ -203,12 +203,12 @@ class OrganizationResource extends Resource
                             Notification::make()
                                 ->title('Import failed, changes rolled back')
                                 ->danger()
-                                ->body('Message: '.$exception->getMessage())
+                                ->body('Message: ' . $exception->getMessage())
                                 ->persistent()
                                 ->send();
                         }
                     })
-                    ->tooltip(fn (Organization $record): string => 'Import into '.$record->name)
+                    ->tooltip(fn (Organization $record): string => 'Import into ' . $record->name)
                     ->form([
                         Forms\Components\FileUpload::make('file')
                             ->label('File')
@@ -245,10 +245,10 @@ class OrganizationResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListOrganizations::route('/'),
+            'index'  => Pages\ListOrganizations::route('/'),
             'create' => Pages\CreateOrganization::route('/create'),
-            'edit' => Pages\EditOrganization::route('/{record}/edit'),
-            'view' => Pages\ViewOrganization::route('/{record}'),
+            'edit'   => Pages\EditOrganization::route('/{record}/edit'),
+            'view'   => Pages\ViewOrganization::route('/{record}'),
         ];
     }
 }

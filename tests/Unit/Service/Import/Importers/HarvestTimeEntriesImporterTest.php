@@ -28,8 +28,8 @@ class HarvestTimeEntriesImporterTest extends ImporterTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $timezone = 'Europe/Vienna';
-        $importer = new HarvestTimeEntriesImporter;
+        $timezone     = 'Europe/Vienna';
+        $importer     = new HarvestTimeEntriesImporter();
         $importer->init($organization);
         $data = Storage::disk('testfiles')->get('harvest_time_entries_import_test_1.csv');
 

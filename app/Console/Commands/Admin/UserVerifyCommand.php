@@ -32,7 +32,7 @@ class UserVerifyCommand extends Command
     {
         $email = $this->argument('email');
 
-        $this->info('Start verifying user with email "'.$email.'"');
+        $this->info('Start verifying user with email "' . $email . '"');
 
         /** @var User|null $user */
         $user = User::query()->where('email', $email)
@@ -40,13 +40,13 @@ class UserVerifyCommand extends Command
             ->first();
 
         if ($user === null) {
-            $this->error('User with email "'.$email.'" not found.');
+            $this->error('User with email "' . $email . '" not found.');
 
             return self::FAILURE;
         }
 
         if ($user->hasVerifiedEmail()) {
-            $this->info('User with email "'.$email.'" already verified.');
+            $this->info('User with email "' . $email . '" already verified.');
 
             return self::FAILURE;
         }
@@ -54,7 +54,7 @@ class UserVerifyCommand extends Command
         $user->markEmailAsVerified();
         event(new Verified($user));
 
-        $this->info('User with email "'.$email.'" has been verified.');
+        $this->info('User with email "' . $email . '" has been verified.');
 
         return self::SUCCESS;
     }

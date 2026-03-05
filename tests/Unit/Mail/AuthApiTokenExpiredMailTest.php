@@ -17,9 +17,9 @@ class AuthApiTokenExpiredMailTest extends TestCaseWithDatabase
     public function test_mail_renders_content_correctly(): void
     {
         // Arrange
-        $user = User::factory()->create();
+        $user   = User::factory()->create();
         $client = Client::factory()->apiClient()->create();
-        $token = Token::factory()->forClient($client)->forUser($user)->create([
+        $token  = Token::factory()->forClient($client)->forUser($user)->create([
             'name' => 'TEST',
         ]);
         $mail = new AuthApiTokenExpiredMail($token, $user);

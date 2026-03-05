@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Support\Str;
 use League\Csv\Exception as CsvException;
 use League\Csv\Reader;
+use Override;
 
 class HarvestProjectsImporter extends DefaultImporter
 {
@@ -24,7 +25,7 @@ class HarvestProjectsImporter extends DefaultImporter
     /**
      * @throws ImportException
      */
-    #[\Override]
+    #[Override]
     public function importData(string $data, string $timezone): void
     {
         try {
@@ -40,32 +41,32 @@ class HarvestProjectsImporter extends DefaultImporter
                 $clientId = null;
                 if ($record['Client'] !== '') {
                     $clientId = $this->clientImportHelper->getKey([
-                        'name' => $record['Client'],
+                        'name'            => $record['Client'],
                         'organization_id' => $this->organization->id,
                     ]);
                 }
                 if ($record['Project'] !== '') {
-                    if (! isset($record['Budget']) || ! is_string($record['Budget'])) {
+                    if ( ! isset($record['Budget']) || ! is_string($record['Budget'])) {
                         throw new ImportException('The value for "Budget" is invalid');
                     }
                     $estimatedTimeField = Str::replace(',', '.', $record['Budget']);
-                    $estimatedTime = $estimatedTimeField !== '' && is_numeric($estimatedTimeField) ? (int) (((float) $estimatedTimeField) * 60 * 60) : null;
+                    $estimatedTime      = $estimatedTimeField !== '' && is_numeric($estimatedTimeField) ? (int) (((float) $estimatedTimeField) * 60 * 60) : null;
                     if ($estimatedTime === 0) {
                         $estimatedTime = null;
                     }
-                    if (! isset($record['Billable Hours']) || ! is_string($record['Billable Hours'])) {
+                    if ( ! isset($record['Billable Hours']) || ! is_string($record['Billable Hours'])) {
                         throw new ImportException('The value for "Billable Hours" is invalid');
                     }
                     $billableHoursField = Str::replace(',', '.', $record['Billable Hours']);
-                    $billableHours = $billableHoursField !== '' && is_numeric($billableHoursField) ? (int) ((float) $billableHoursField) : null;
+                    $billableHours      = $billableHoursField !== '' && is_numeric($billableHoursField) ? (int) ((float) $billableHoursField) : null;
                     $this->projectImportHelper->getKey([
-                        'name' => $record['Project'],
-                        'client_id' => $clientId,
+                        'name'            => $record['Project'],
+                        'client_id'       => $clientId,
                         'organization_id' => $this->organization->id,
                     ], [
-                        'color' => $this->colorService->getRandomColor(),
+                        'color'          => $this->colorService->getRandomColor(),
                         'estimated_time' => $estimatedTime,
-                        'is_billable' => $billableHours > 0,
+                        'is_billable'    => $billableHours > 0,
                     ]);
                 }
             }
@@ -79,29 +80,29 @@ class HarvestProjectsImporter extends DefaultImporter
         }
     }
 
+    #[Override]
+    public function getName(): string
+    {
+        return __('importer.harvest_projects.name');
+    }
+
+    #[Override]
+    public function getDescription(): string
+    {
+        return __('importer.harvest_projects.description');
+    }
+
     /**
-     * @param  array<string>  $header
+     * @param array<string> $header
      *
      * @throws ImportException
      */
     private function validateHeader(array $header): void
     {
         foreach (self::REQUIRED_FIELDS as $requiredField) {
-            if (! in_array($requiredField, $header, true)) {
-                throw new ImportException('Invalid CSV header, missing field: '.$requiredField);
+            if ( ! in_array($requiredField, $header, true)) {
+                throw new ImportException('Invalid CSV header, missing field: ' . $requiredField);
             }
         }
-    }
-
-    #[\Override]
-    public function getName(): string
-    {
-        return __('importer.harvest_projects.name');
-    }
-
-    #[\Override]
-    public function getDescription(): string
-    {
-        return __('importer.harvest_projects.description');
     }
 }

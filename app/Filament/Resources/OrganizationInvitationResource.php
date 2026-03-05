@@ -78,7 +78,6 @@ class OrganizationInvitationResource extends Resource
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
-                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -107,8 +106,8 @@ class OrganizationInvitationResource extends Resource
     {
         return [
             'index' => Pages\ListOrganizationInvitations::route('/'),
-            'edit' => Pages\EditOrganizationInvitation::route('/{record}/edit'),
-            'view' => Pages\ViewOrganizationInvitation::route('/{record}'),
+            'edit'  => Pages\EditOrganizationInvitation::route('/{record}/edit'),
+            'view'  => Pages\ViewOrganizationInvitation::route('/{record}'),
         ];
     }
 }

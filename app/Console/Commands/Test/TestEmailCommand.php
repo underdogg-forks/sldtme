@@ -30,7 +30,7 @@ class TestEmailCommand extends Command
     public function handle(): int
     {
         $email = $this->argument('email');
-        Mail::raw('Hello World!', function (Message $message) use ($email): void {
+        Mail::raw('Hello World!', static function (Message $message) use ($email): void {
             $message->to($email)
                 ->subject('Test Email')
                 ->html('<h1>Hello World!</h1>');

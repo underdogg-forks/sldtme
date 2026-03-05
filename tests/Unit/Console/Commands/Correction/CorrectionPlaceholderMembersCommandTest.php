@@ -21,10 +21,10 @@ class CorrectionPlaceholderMembersCommandTest extends TestCaseWithDatabase
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $user1 = User::factory()->placeholder()->create();
-        $member1 = Member::factory()->forOrganization($organization)->forUser($user1)->role(Role::Admin)->create();
-        $user2 = User::factory()->create();
-        $member2 = Member::factory()->forOrganization($organization)->forUser($user2)->role(Role::Admin)->create();
+        $user1        = User::factory()->placeholder()->create();
+        $member1      = Member::factory()->forOrganization($organization)->forUser($user1)->role(Role::Admin)->create();
+        $user2        = User::factory()->create();
+        $member2      = Member::factory()->forOrganization($organization)->forUser($user2)->role(Role::Admin)->create();
 
         // Act
         $exitCode = $this->withoutMockingConsoleOutput()->artisan('correction:placeholder-members');
@@ -36,18 +36,18 @@ class CorrectionPlaceholderMembersCommandTest extends TestCaseWithDatabase
         $this->assertSame(Role::Placeholder->value, $member1->role);
         $member2->refresh();
         $this->assertSame(Role::Admin->value, $member2->role);
-        $this->assertSame("Sets all members who belong to a placeholder user to role placeholder...\n".
-            'Set role of member (id='.$member1->getKey().") to placeholder\n", $output);
+        $this->assertSame("Sets all members who belong to a placeholder user to role placeholder...\n"
+            . 'Set role of member (id=' . $member1->getKey() . ") to placeholder\n", $output);
     }
 
     public function test_sets_member_role_to_placeholder_if_user_is_placeholder_dry_run(): void
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $user1 = User::factory()->placeholder()->create();
-        $member1 = Member::factory()->forOrganization($organization)->forUser($user1)->role(Role::Admin)->create();
-        $user2 = User::factory()->create();
-        $member2 = Member::factory()->forOrganization($organization)->forUser($user2)->role(Role::Admin)->create();
+        $user1        = User::factory()->placeholder()->create();
+        $member1      = Member::factory()->forOrganization($organization)->forUser($user1)->role(Role::Admin)->create();
+        $user2        = User::factory()->create();
+        $member2      = Member::factory()->forOrganization($organization)->forUser($user2)->role(Role::Admin)->create();
 
         // Act
         $exitCode = $this->withoutMockingConsoleOutput()->artisan('correction:placeholder-members --dry-run');
@@ -59,8 +59,8 @@ class CorrectionPlaceholderMembersCommandTest extends TestCaseWithDatabase
         $this->assertSame(Role::Admin->value, $member1->role);
         $member2->refresh();
         $this->assertSame(Role::Admin->value, $member2->role);
-        $this->assertSame("Sets all members who belong to a placeholder user to role placeholder...\n".
-            "Running in dry-run mode. Nothing will be saved to the database.\n".
-            'Set role of member (id='.$member1->getKey().") to placeholder\n", $output);
+        $this->assertSame("Sets all members who belong to a placeholder user to role placeholder...\n"
+            . "Running in dry-run mode. Nothing will be saved to the database.\n"
+            . 'Set role of member (id=' . $member1->getKey() . ") to placeholder\n", $output);
     }
 }

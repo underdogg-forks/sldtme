@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Delete obsolete migrations that have been consolidated into create migrations
+cd /home/wysiwyg/projects/sldtme/database/migrations
+
+# Remove all the add_* and modification migrations that were consolidated
+rm -f 2014_10_12_200000_add_two_factor_columns_to_users_table.php
+rm -f 2024_05_07_134711_move_from_user_id_to_member_id_in_project_members_table.php
+rm -f 2024_05_07_141842_move_from_user_id_to_member_id_in_time_entries_table.php
+rm -f 2024_05_13_171020_rename_table_organization_user_to_members.php
+rm -f 2024_05_22_151226_add_client_id_to_time_entries_table.php
+rm -f 2024_05_30_175801_add_is_billable_column_to_projects_table.php
+rm -f 2024_05_30_175825_add_is_imported_column_to_time_entries_table.php
+rm -f 2024_06_07_113443_change_member_id_foreign_keys_to_restrict_on_delete.php
+rm -f 2024_06_10_161831_reset_billable_rates_with_zero_as_value.php
+rm -f 2024_06_21_122754_add_is_archived_columns_to_projects_and_clients_table.php
+rm -f 2024_06_24_114433_add_done_at_to_tasks_table.php
+rm -f 2024_07_02_134307_add_estimated_time_to_projects_and_tasks_table.php
+rm -f 2024_07_18_080906_add_still_active_email_sent_at_to_time_entries_table.php
+rm -f 2024_09_18_120203_add_spent_time_to_projects_and_tasks_table.php
+rm -f 2024_10_01_143608_add_employees_can_see_billable_rates_to_organizations_table.php
+rm -f 2024_11_04_164807_add_foreign_key_to_organizations_and_members_table.php
+rm -f 2025_04_03_101827_add_localization_columns_to_organizations_table.php
+rm -f 2025_05_06_152804_fix_typos_in_organizations_table_format_columns.php
+rm -f 2025_05_16_075757_add_foreign_key_for_current_team_id_in_users_table.php
+rm -f 2025_07_17_104903_add_reminder_sent_at_to_oauth_access_tokens_table.php
+rm -f 2025_10_02_000001_add_prevent_overlapping_time_entries_to_organizations_table.php
+rm -f 2025_10_16_000001_extend_time_entry_description.php
+rm -f 2025_10_24_120845_add_employees_can_manage_tasks_to_organizations_table.php
+
+echo "Obsolete migrations deleted"
+

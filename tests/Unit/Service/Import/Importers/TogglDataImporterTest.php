@@ -21,8 +21,8 @@ class TogglDataImporterTest extends ImporterTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $timezone = 'Europe/Vienna';
-        $importer = new TogglDataImporter;
+        $timezone     = 'Europe/Vienna';
+        $importer     = new TogglDataImporter();
         $importer->init($organization);
 
         // Act
@@ -40,10 +40,10 @@ class TogglDataImporterTest extends ImporterTestAbstract
     public function test_import_of_test_file_succeeds(): void
     {
         // Arrange
-        $zipPath = $this->createTestZip('toggl_data_import_test_1');
-        $timezone = 'Europe/Vienna';
+        $zipPath      = $this->createTestZip('toggl_data_import_test_1');
+        $timezone     = 'Europe/Vienna';
         $organization = Organization::factory()->create();
-        $importer = new TogglDataImporter;
+        $importer     = new TogglDataImporter();
         $importer->init($organization);
         $data = file_get_contents($zipPath);
 
@@ -64,14 +64,14 @@ class TogglDataImporterTest extends ImporterTestAbstract
     public function test_import_of_test_file_twice_succeeds(): void
     {
         // Arrange
-        $zipPath = $this->createTestZip('toggl_data_import_test_1');
-        $timezone = 'Europe/Vienna';
+        $zipPath      = $this->createTestZip('toggl_data_import_test_1');
+        $timezone     = 'Europe/Vienna';
         $organization = Organization::factory()->create();
-        $importer = new TogglDataImporter;
+        $importer     = new TogglDataImporter();
         $importer->init($organization);
         $data = file_get_contents($zipPath);
         $importer->importData($data, $timezone);
-        $importer = new TogglDataImporter;
+        $importer = new TogglDataImporter();
         $importer->init($organization);
 
         // Act
@@ -91,10 +91,10 @@ class TogglDataImporterTest extends ImporterTestAbstract
     public function test_import_of_user_with_unknown_timezone_will_be_mapped_to_utc(): void
     {
         // Arrange
-        $zipPath = $this->createTestZip('toggl_data_import_test_2');
-        $timezone = 'Europe/Vienna';
+        $zipPath      = $this->createTestZip('toggl_data_import_test_2');
+        $timezone     = 'Europe/Vienna';
         $organization = Organization::factory()->create();
-        $importer = new TogglDataImporter;
+        $importer     = new TogglDataImporter();
         $importer->init($organization);
         $data = file_get_contents($zipPath);
 

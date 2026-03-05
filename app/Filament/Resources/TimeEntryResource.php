@@ -59,7 +59,7 @@ class TimeEntryResource extends Resource
                         titleAttribute: 'id',
                         modifyQueryUsing: fn (Builder $query) => $query->with(['user', 'organization'])
                     )
-                    ->getOptionLabelFromRecordUsing(fn (Member $record): string => $record->user->email.' ('.$record->organization->name.')')
+                    ->getOptionLabelFromRecordUsing(fn (Member $record): string => $record->user->email . ' (' . $record->organization->name . ')')
                     ->searchable()
                     ->required(),
                 Select::make('project_id')
@@ -88,9 +88,9 @@ class TimeEntryResource extends Resource
                     ->label('Task'),
                 TextColumn::make('time')
                     ->getStateUsing(function (TimeEntry $record): string {
-                        return ($record->getDuration()?->cascade()?->forHumans() ?? '-').' '.
-                            ' ('.$record->start->toDateTimeString('minute').' - '.
-                            ($record->end?->toDateTimeString('minute') ?? '...').')';
+                        return ($record->getDuration()?->cascade()?->forHumans() ?? '-') . ' '
+                            . ' (' . $record->start->toDateTimeString('minute') . ' - '
+                            . ($record->end?->toDateTimeString('minute') ?? '...') . ')';
                     })
                     ->label('Time'),
                 Tables\Columns\TextColumn::make('organization.name')
@@ -124,16 +124,15 @@ class TimeEntryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTimeEntries::route('/'),
+            'index'  => Pages\ListTimeEntries::route('/'),
             'create' => Pages\CreateTimeEntry::route('/create'),
-            'edit' => Pages\EditTimeEntry::route('/{record}/edit'),
+            'edit'   => Pages\EditTimeEntry::route('/{record}/edit'),
         ];
     }
 }

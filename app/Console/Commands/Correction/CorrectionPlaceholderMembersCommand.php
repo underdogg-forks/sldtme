@@ -17,8 +17,8 @@ class CorrectionPlaceholderMembersCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'correction:placeholder-members '.
-        ' { --dry-run : Do not actually save anything to the database, just output what would happen }';
+    protected $signature = 'correction:placeholder-members '
+        . ' { --dry-run : Do not actually save anything to the database, just output what would happen }';
 
     /**
      * The console command description.
@@ -40,18 +40,18 @@ class CorrectionPlaceholderMembersCommand extends Command
 
         $members = Member::query()
             ->where('role', '!=', Role::Placeholder->value)
-            ->whereHas('user', function (Builder $builder): void {
-                /** @var Builder<User> $builder */
+            ->whereHas('user', static function (Builder $builder): void {
+                /* @var Builder<User> $builder */
                 $builder->where('is_placeholder', '=', true);
             })
             ->get();
         foreach ($members as $member) {
-            /** @var Member $member */
+            /* @var Member $member */
             $member->role = Role::Placeholder->value;
-            if (! $dryRun) {
+            if ( ! $dryRun) {
                 $member->save();
             }
-            $this->line('Set role of member (id='.$member->getKey().') to placeholder');
+            $this->line('Set role of member (id=' . $member->getKey() . ') to placeholder');
         }
 
         return self::SUCCESS;

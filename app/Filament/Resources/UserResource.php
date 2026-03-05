@@ -106,9 +106,9 @@ class UserResource extends Resource
                     ->label('Currency (Personal Organization)')
                     ->options(function (): array {
                         $currencies = ISOCurrencyProvider::getInstance()->getAvailableCurrencies();
-                        $select = [];
+                        $select     = [];
                         foreach ($currencies as $currency) {
-                            $select[$currency->getCurrencyCode()] = $currency->getName().' ('.$currency->getCurrencyCode().')';
+                            $select[$currency->getCurrencyCode()] = $currency->getName() . ' (' . $currency->getCurrencyCode() . ')';
                         }
 
                         return $select;
@@ -159,15 +159,15 @@ class UserResource extends Resource
                 TernaryFilter::make('real_user')
                     ->queries(
                         true: function (Builder $query): Builder {
-                            /** @var Builder<User> $query */
+                            /* @var Builder<User> $query */
                             return $query->where('is_placeholder', '=', false);
                         },
                         false: function (Builder $query): Builder {
-                            /** @var Builder<User> $query */
+                            /* @var Builder<User> $query */
                             return $query->where('is_placeholder', '=', true);
                         },
                         blank: function (Builder $query): Builder {
-                            /** @var Builder<User> $query */
+                            /* @var Builder<User> $query */
                             return $query;
                         },
                     )
@@ -212,7 +212,7 @@ class UserResource extends Resource
                     ->icon('heroicon-o-paper-airplane')
                     ->action(function (Collection $records): void {
                         foreach ($records as $user) {
-                            /** @var User $user */
+                            /* @var User $user */
                             $user->sendEmailVerificationNotification();
                         }
                     }),
@@ -230,10 +230,10 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
+            'index'  => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
-            'view' => Pages\ViewUser::route('/{record}'),
+            'edit'   => Pages\EditUser::route('/{record}/edit'),
+            'view'   => Pages\ViewUser::route('/{record}'),
         ];
     }
 }

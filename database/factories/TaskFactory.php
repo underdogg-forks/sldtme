@@ -22,11 +22,11 @@ class TaskFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word(),
-            'project_id' => Project::factory(),
+            'name'            => $this->faker->word(),
+            'project_id'      => Project::factory(),
             'organization_id' => Organization::factory(),
-            'done_at' => null,
-            'estimated_time' => null,
+            'done_at'         => null,
+            'estimated_time'  => null,
         ];
     }
 

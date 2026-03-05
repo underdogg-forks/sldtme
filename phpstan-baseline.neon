@@ -1,0 +1,157 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to static method debug\(\) on an unknown class Log\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Actions/Fortify/CreateNewUser.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 2
+			path: app/Console/Commands/Auth/AuthSendReminderForExpiringApiTokensCommand.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Console/Commands/Report/ReportSetExpiredToPrivateCommand.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Console/Commands/TimeEntry/TimeEntrySendStillRunningMailsCommand.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Requests/V1/Client/ClientStoreRequest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Requests/V1/Client/ClientUpdateRequest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Requests/V1/Member/MemberMergeIntoRequest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 3
+			path: app/Http/Requests/V1/Project/ProjectStoreRequest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 3
+			path: app/Http/Requests/V1/Project/ProjectUpdateRequest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Requests/V1/ProjectMember/ProjectMemberStoreRequest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Requests/V1/Tag/TagStoreRequest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Requests/V1/Tag/TagUpdateRequest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 2
+			path: app/Http/Requests/V1/Task/TaskIndexRequest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 2
+			path: app/Http/Requests/V1/Task/TaskStoreRequest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Requests/V1/Task/TaskUpdateRequest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 7
+			path: app/Http/Requests/V1/TimeEntry/TimeEntryAggregateExportRequest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 7
+			path: app/Http/Requests/V1/TimeEntry/TimeEntryAggregateRequest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 6
+			path: app/Http/Requests/V1/TimeEntry/TimeEntryIndexExportRequest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 6
+			path: app/Http/Requests/V1/TimeEntry/TimeEntryIndexRequest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 8
+			path: app/Http/Requests/V1/TimeEntry/TimeEntryStoreRequest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 8
+			path: app/Http/Requests/V1/TimeEntry/TimeEntryUpdateMultipleRequest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 8
+			path: app/Http/Requests/V1/TimeEntry/TimeEntryUpdateRequest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Providers/RouteServiceProvider.php
+
+		-
+			message: '#^Call to static method warning\(\) on an unknown class Log\.$#'
+			identifier: class.notFound
+			count: 4
+			path: app/Service/ApiService.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 8
+			path: app/Service/Import/Importers/DefaultImporter.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 3
+			path: app/Service/ReportExport/CsvExport.php

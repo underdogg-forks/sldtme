@@ -34,10 +34,10 @@ class ProjectStoreRequest extends BaseFormRequest
                 'string',
                 'min:1',
                 'max:255',
-                UniqueEloquent::make(Project::class, 'name', function (Builder $builder): Builder {
+                UniqueEloquent::make(Project::class, 'name', static function (Builder $builder): Builder {
                     /** @var Builder<Project> $builder */
                     $clientId = $this->input('client_id');
-                    if (! is_string($clientId) || ! Str::isUuid($clientId)) {
+                    if ( ! is_string($clientId) || ! Str::isUuid($clientId)) {
                         $clientId = null;
                     }
 
@@ -49,7 +49,7 @@ class ProjectStoreRequest extends BaseFormRequest
                 'required',
                 'string',
                 'max:255',
-                new ColorRule,
+                new ColorRule(),
             ],
             'is_billable' => [
                 'required',
@@ -65,8 +65,8 @@ class ProjectStoreRequest extends BaseFormRequest
             'client_id' => [
                 'present',
                 'nullable',
-                ExistsEloquent::make(Client::class, null, function (Builder $builder): Builder {
-                    /** @var Builder<Client> $builder */
+                ExistsEloquent::make(Client::class, null, static function (Builder $builder): Builder {
+                    /* @var Builder<Client> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization');
                 })->uuid(),
             ],

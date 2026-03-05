@@ -6,8 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
@@ -21,7 +20,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::create('oauth_personal_access_clients', function (Blueprint $table): void {
+        Schema::create('oauth_personal_access_clients', static function (Blueprint $table): void {
             $table->bigIncrements('id');
             $table->uuid('client_id');
             $table->foreign('client_id')

@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Mailer
@@ -37,14 +36,14 @@ return [
 
     'mailers' => [
         'smtp' => [
-            'transport' => 'smtp',
-            'url' => env('MAIL_URL'),
-            'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
-            'port' => env('MAIL_PORT', 587),
-            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-            'username' => env('MAIL_USERNAME'),
-            'password' => env('MAIL_PASSWORD'),
-            'timeout' => null,
+            'transport'    => 'smtp',
+            'url'          => env('MAIL_URL'),
+            'host'         => env('MAIL_HOST', 'smtp.mailgun.org'),
+            'port'         => env('MAIL_PORT', 587),
+            'encryption'   => env('MAIL_ENCRYPTION', 'tls'),
+            'username'     => env('MAIL_USERNAME'),
+            'password'     => env('MAIL_PASSWORD'),
+            'timeout'      => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
 
@@ -69,12 +68,12 @@ return [
 
         'sendmail' => [
             'transport' => 'sendmail',
-            'path' => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -bs -i'),
+            'path'      => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -bs -i'),
         ],
 
         'log' => [
             'transport' => 'log',
-            'channel' => env('MAIL_LOG_CHANNEL'),
+            'channel'   => env('MAIL_LOG_CHANNEL'),
         ],
 
         'array' => [
@@ -83,7 +82,7 @@ return [
 
         'failover' => [
             'transport' => 'failover',
-            'mailers' => [
+            'mailers'   => [
                 'smtp',
                 'log',
             ],
@@ -91,7 +90,7 @@ return [
 
         'roundrobin' => [
             'transport' => 'roundrobin',
-            'mailers' => [
+            'mailers'   => [
                 'ses',
                 'postmark',
             ],
@@ -111,12 +110,12 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'name'    => env('MAIL_FROM_NAME', 'Example'),
     ],
 
     'reply_to' => [
         'address' => env('MAIL_REPLY_TO_ADDRESS'),
-        'name' => env('MAIL_REPLY_TO_NAME'),
+        'name'    => env('MAIL_REPLY_TO_NAME'),
     ],
 
     /*
@@ -137,5 +136,4 @@ return [
             resource_path('views/vendor/mail'),
         ],
     ],
-
 ];

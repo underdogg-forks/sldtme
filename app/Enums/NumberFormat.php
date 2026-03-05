@@ -29,7 +29,7 @@ enum NumberFormat: string
     {
         $selectArray = [];
         foreach (self::values() as $value) {
-            $selectArray[(string) $value] = (string) __('enum.number_format.'.$value);
+            $selectArray[(string) $value] = (string) __('enum.number_format.' . $value);
         }
 
         return $selectArray;

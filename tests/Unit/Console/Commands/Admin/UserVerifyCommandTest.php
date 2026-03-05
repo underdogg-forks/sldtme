@@ -18,7 +18,7 @@ class UserVerifyCommandTest extends TestCaseWithDatabase
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $user = User::factory()->create([
+        $user         = User::factory()->create([
             'email_verified_at' => null,
         ]);
         $member = Member::factory()->forUser($user)->forOrganization($organization)->create();
@@ -27,18 +27,18 @@ class UserVerifyCommandTest extends TestCaseWithDatabase
         $command = $this->artisan('admin:user:verify', ['email' => $user->email]);
 
         // Assert
-        $command->expectsOutput('Start verifying user with email "'.$user->email.'"')
-            ->expectsOutput('User with email "'.$user->email.'" has been verified.')
+        $command->expectsOutput('Start verifying user with email "' . $user->email . '"')
+            ->expectsOutput('User with email "' . $user->email . '" has been verified.')
             ->assertExitCode(0);
     }
 
     public function test_it_fails_if_user_does_not_exist(): void
     {
         // Arrange
-        $email = 'test@test.test';
+        $email        = 'test@test.test';
         $organization = Organization::factory()->create();
-        $user = User::factory()->create([
-            'email' => 'other@test.test',
+        $user         = User::factory()->create([
+            'email'             => 'other@test.test',
             'email_verified_at' => null,
         ]);
         $member = Member::factory()->forUser($user)->forOrganization($organization)->create();
@@ -47,7 +47,7 @@ class UserVerifyCommandTest extends TestCaseWithDatabase
         $command = $this->artisan('admin:user:verify', ['email' => $email]);
 
         // Assert
-        $command->expectsOutput('User with email "'.$email.'" not found.')
+        $command->expectsOutput('User with email "' . $email . '" not found.')
             ->assertExitCode(1);
     }
 
@@ -55,7 +55,7 @@ class UserVerifyCommandTest extends TestCaseWithDatabase
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $user = User::factory()->create([
+        $user         = User::factory()->create([
             'email_verified_at' => now(),
         ]);
         $member = Member::factory()->forUser($user)->forOrganization($organization)->create();
@@ -64,7 +64,7 @@ class UserVerifyCommandTest extends TestCaseWithDatabase
         $command = $this->artisan('admin:user:verify', ['email' => $user->email]);
 
         // Assert
-        $command->expectsOutput('User with email "'.$user->email.'" already verified.')
+        $command->expectsOutput('User with email "' . $user->email . '" already verified.')
             ->assertExitCode(1);
     }
 }

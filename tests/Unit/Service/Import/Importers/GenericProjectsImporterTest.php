@@ -24,8 +24,8 @@ class GenericProjectsImporterTest extends ImporterTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $timezone = 'Europe/Vienna';
-        $importer = new GenericProjectsImporter;
+        $timezone     = 'Europe/Vienna';
+        $importer     = new GenericProjectsImporter();
         $importer->init($organization);
         $data = Storage::disk('testfiles')->get('generic_projects_import_test_1.csv');
 

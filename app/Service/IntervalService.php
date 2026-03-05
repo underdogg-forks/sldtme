@@ -12,6 +12,6 @@ class IntervalService
     {
         $interval->cascade();
 
-        return ((int) floor($interval->totalHours)).':'.$interval->format('%I:%S');
+        return ((int) floor($interval->totalHours)) . ':' . $interval->format('%I:%S');
     }
 }

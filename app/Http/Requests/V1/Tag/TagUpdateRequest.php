@@ -13,7 +13,7 @@ use Korridor\LaravelModelValidationRules\Rules\UniqueEloquent;
 
 /**
  * @property Organization $organization Organization from model binding
- * @property Tag|null $tag Tag from model binding
+ * @property Tag|null     $tag          Tag from model binding
  */
 class TagUpdateRequest extends BaseFormRequest
 {
@@ -30,8 +30,8 @@ class TagUpdateRequest extends BaseFormRequest
                 'string',
                 'min:1',
                 'max:255',
-                UniqueEloquent::make(Tag::class, 'name', function (Builder $builder): Builder {
-                    /** @var Builder<Tag> $builder */
+                UniqueEloquent::make(Tag::class, 'name', static function (Builder $builder): Builder {
+                    /* @var Builder<Tag> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization');
                 })->ignore($this->tag?->getKey())->withCustomTranslation('validation.tag_name_already_exists'),
             ],

@@ -19,16 +19,8 @@ use Illuminate\Http\JsonResponse;
 
 class InvitationController extends Controller
 {
-    protected function checkPermission(Organization $organization, string $permission, ?OrganizationInvitation $organizationInvitation = null): void
-    {
-        parent::checkPermission($organization, $permission);
-        if ($organizationInvitation !== null && $organizationInvitation->organization_id !== $organization->id) {
-            throw new AuthorizationException('Invitation does not belong to organization');
-        }
-    }
-
     /**
-     * List all invitations of an organization
+     * List all invitations of an organization.
      *
      * @return InvitationCollection<InvitationResource>
      *
@@ -48,7 +40,7 @@ class InvitationController extends Controller
     }
 
     /**
-     * Invite a user to the organization
+     * Invite a user to the organization.
      *
      * @throws AuthorizationException
      * @throws UserIsAlreadyMemberOfOrganizationApiException
@@ -61,7 +53,7 @@ class InvitationController extends Controller
         $this->checkPermission($organization, 'invitations:create');
 
         $email = $request->getEmail();
-        $role = $request->getRole();
+        $role  = $request->getRole();
 
         $invitationService->inviteUser($organization, $email, $role);
 
@@ -69,7 +61,7 @@ class InvitationController extends Controller
     }
 
     /**
-     * Resend email for a pending invitation
+     * Resend email for a pending invitation.
      *
      * @throws AuthorizationException
      *
@@ -85,7 +77,7 @@ class InvitationController extends Controller
     }
 
     /**
-     * Remove a pending invitation
+     * Remove a pending invitation.
      *
      * @throws AuthorizationException
      *
@@ -98,5 +90,13 @@ class InvitationController extends Controller
         $invitation->delete();
 
         return response()->json(null, 204);
+    }
+
+    protected function checkPermission(Organization $organization, string $permission, ?OrganizationInvitation $organizationInvitation = null): void
+    {
+        parent::checkPermission($organization, $permission);
+        if ($organizationInvitation !== null && $organizationInvitation->organization_id !== $organization->id) {
+            throw new AuthorizationException('Invitation does not belong to organization');
+        }
     }
 }

@@ -31,12 +31,12 @@ class UserEndpointTest extends ApiEndpointTestAbstract
         $response->assertSuccessful();
         $response->assertJson([
             'data' => [
-                'id' => $data->user->getKey(),
-                'name' => $data->user->name,
-                'email' => $data->user->email,
+                'id'                => $data->user->getKey(),
+                'name'              => $data->user->name,
+                'email'             => $data->user->email,
                 'profile_photo_url' => $data->user->profile_photo_url,
-                'timezone' => $data->user->timezone,
-                'week_start' => $data->user->week_start->value,
+                'timezone'          => $data->user->timezone,
+                'week_start'        => $data->user->week_start->value,
             ],
         ]);
     }

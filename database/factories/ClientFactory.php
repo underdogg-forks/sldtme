@@ -21,8 +21,8 @@ class ClientFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->company(),
-            'archived_at' => null,
+            'name'            => $this->faker->company(),
+            'archived_at'     => null,
             'organization_id' => Organization::factory(),
         ];
     }

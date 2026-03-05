@@ -11,17 +11,17 @@ use Illuminate\Support\Carbon;
 use Laravel\Passport\Client as PassportClient;
 
 /**
- * @property string $id
- * @property string|null $owner_id
- * @property string|null $owner_type
- * @property string $name
- * @property string|null $secret
- * @property string|null $provider
+ * @property string        $id
+ * @property string|null   $owner_id
+ * @property string|null   $owner_type
+ * @property string        $name
+ * @property string|null   $secret
+ * @property string|null   $provider
  * @property array<string> $grant_types
  * @property array<string> $redirect_uris
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property bool $revoked
+ * @property Carbon|null   $created_at
+ * @property Carbon|null   $updated_at
+ * @property bool          $revoked
  */
 class Client extends PassportClient
 {

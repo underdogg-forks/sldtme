@@ -49,11 +49,11 @@ class DeleteAccountTest extends TestCase
     public function test_user_account_can_not_be_deleted_if_attached_to_a_organization_with_multiple_users(): void
     {
         // Arrange
-        $user = User::factory()->create();
+        $user         = User::factory()->create();
         $organization = Organization::factory()->withOwner($user)->create();
-        $userMember = Member::factory()->forOrganization($organization)->forUser($user)->role(Role::Owner)->create();
-        $otherUser = User::factory()->create();
-        $otherMember = Member::factory()->forOrganization($organization)->forUser($otherUser)->role(Role::Admin)->create();
+        $userMember   = Member::factory()->forOrganization($organization)->forUser($user)->role(Role::Owner)->create();
+        $otherUser    = User::factory()->create();
+        $otherMember  = Member::factory()->forOrganization($organization)->forUser($otherUser)->role(Role::Admin)->create();
         $this->actingAs($user);
 
         // Act

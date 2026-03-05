@@ -21,7 +21,7 @@ class ExportEndpointTest extends ApiEndpointTestAbstract
     {
         // Arrange
         $data = $this->createUserWithPermission();
-        $this->mock(ExportService::class, function (MockInterface $mock): void {
+        $this->mock(ExportService::class, static function (MockInterface $mock): void {
             $mock->shouldNotReceive('export');
         });
         Passport::actingAs($data->user);
@@ -38,12 +38,12 @@ class ExportEndpointTest extends ApiEndpointTestAbstract
         $user = $this->createUserWithPermission([
             'export',
         ]);
-        $this->mock(ExportService::class, function (MockInterface $mock) use (&$user): void {
+        $this->mock(ExportService::class, static function (MockInterface $mock) use (&$user): void {
             $mock->shouldReceive('export')
                 ->withArgs(function (Organization $organization) use (&$user): bool {
                     return $organization->is($user->organization);
                 })
-                ->andThrow(new ExportException)
+                ->andThrow(new ExportException())
                 ->once();
         });
         Passport::actingAs($user->user);
@@ -54,8 +54,8 @@ class ExportEndpointTest extends ApiEndpointTestAbstract
         // Assert
         $response->assertStatus(400);
         $response->assertExactJson([
-            'error' => true,
-            'key' => 'export',
+            'error'   => true,
+            'key'     => 'export',
             'message' => 'Export failed, please try again later or contact support',
         ]);
     }
@@ -70,7 +70,7 @@ class ExportEndpointTest extends ApiEndpointTestAbstract
         Storage::fake('local');
         $now = Carbon::now();
         $this->travelTo($now);
-        $this->mock(ExportService::class, function (MockInterface $mock) use (&$user, $filepath): void {
+        $this->mock(ExportService::class, static function (MockInterface $mock) use (&$user, $filepath): void {
             $mock->shouldReceive('export')
                 ->withArgs(function (Organization $organization) use (&$user): bool {
                     return $organization->is($user->organization);

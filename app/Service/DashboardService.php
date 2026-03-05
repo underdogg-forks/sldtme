@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 class DashboardService
 {
@@ -26,124 +27,21 @@ class DashboardService
     }
 
     /**
-     * @return Collection<int, string>
-     */
-    private function lastDays(int $days, CarbonTimeZone $timeZone): Collection
-    {
-        $result = new Collection;
-        $date = Carbon::now($timeZone)->subDays($days);
-        for ($i = 0; $i < $days; $i++) {
-            $date->addDay();
-            $result->push($date->format('Y-m-d'));
-        }
-
-        return $result;
-    }
-
-    /**
-     * @return array{start: string, end: string, dates: array<string, array<string>>}
-     */
-    private function lastDaysSplitInWindows(int $days, CarbonTimeZone $timeZone, int $windows): array
-    {
-        $result = [];
-        $windowSize = 24 / $windows;
-        $end = Carbon::now($timeZone)->startOfDay()->addDay()->subHours(3)->utc()->toDateTimeString();
-        $start = Carbon::now($timeZone)->subDays($days)->startOfDay()->utc()->toDateTimeString();
-
-        $date = Carbon::now($timeZone)->startOfDay();
-        $dateUtc = Carbon::now($timeZone)->startOfDay()->utc();
-        for ($i = 0; $i < $days; $i++) {
-            $dateString = $date->format('Y-m-d');
-            $tempDate = $dateUtc->copy();
-            $start = $tempDate->copy()->utc()->toDateTimeString();
-            $tempWindows = [];
-            for ($j = 0; $j < $windows; $j++) {
-                $tempWindow = $tempDate->toDateTimeString();
-                $tempWindows[] = $tempWindow;
-                $tempDate->addHours($windowSize);
-            }
-            $result[$dateString] = $tempWindows;
-            $date->subDay();
-            $dateUtc->subDay();
-        }
-
-        return [
-            'start' => $start,
-            'end' => $end,
-            'dates' => $result,
-        ];
-    }
-
-    /**
-     * @return Collection<int, string>
-     */
-    private function daysOfThisWeek(CarbonTimeZone $timeZone, Weekday $startOfWeek): Collection
-    {
-        $result = new Collection;
-        $date = Carbon::now($timeZone);
-        $start = $date->startOfWeek($startOfWeek->carbonWeekDay());
-        for ($i = 0; $i < 7; $i++) {
-            $result->push($start->format('Y-m-d'));
-            $start->addDay();
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param  Collection<int, string>  $possibleDates
-     * @param  Builder<TimeEntry>  $builder
-     * @return Builder<TimeEntry>
-     */
-    private function constrainDateByPossibleDates(Builder $builder, Collection $possibleDates, CarbonTimeZone $timeZone): Builder
-    {
-        $value1 = Carbon::createFromFormat('Y-m-d', $possibleDates->first(), $timeZone);
-        $value2 = Carbon::createFromFormat('Y-m-d', $possibleDates->last(), $timeZone);
-        if ($value2 === null || $value1 === null) {
-            throw new \RuntimeException('Provided date is not valid');
-        }
-        if ($value1->gt($value2)) {
-            $last = $value1;
-            $first = $value2;
-        } else {
-            $last = $value2;
-            $first = $value1;
-        }
-
-        return $builder->whereBetween('start', [
-            $first->startOfDay()->utc(),
-            $last->endOfDay()->utc(),
-        ]);
-    }
-
-    /**
-     * @param  Builder<TimeEntry>  $builder
-     * @return Builder<TimeEntry>
-     */
-    private function constrainDateByCurrentWeek(Builder $builder, CarbonTimeZone $timeZone, Weekday $startOfWeek): Builder
-    {
-        return $builder->whereBetween('start', [
-            Carbon::now($timeZone)->startOfWeek($startOfWeek->carbonWeekDay())->utc(),
-            Carbon::now($timeZone)->endOfWeek($startOfWeek->toEndOfWeek()->carbonWeekDay())->utc(),
-        ]);
-    }
-
-    /**
      * Get the daily tracked hours for the user
      * First value: date
-     * Second value: seconds
+     * Second value: seconds.
      *
      * @return array<int, array{date: string, duration: int}>
      */
     public function getDailyTrackedHours(User $user, Organization $organization, int $days): array
     {
-        $timezone = $this->timezoneService->getTimezoneFromUser($user);
+        $timezone      = $this->timezoneService->getTimezoneFromUser($user);
         $timezoneShift = $this->timezoneService->getShiftFromUtc($timezone);
 
         if ($timezoneShift > 0) {
-            $dateWithTimeZone = 'start + INTERVAL \''.$timezoneShift.' second\'';
+            $dateWithTimeZone = 'start + INTERVAL \'' . $timezoneShift . ' second\'';
         } elseif ($timezoneShift < 0) {
-            $dateWithTimeZone = 'start - INTERVAL \''.abs($timezoneShift).' second\'';
+            $dateWithTimeZone = 'start - INTERVAL \'' . abs($timezoneShift) . ' second\'';
         } else {
             $dateWithTimeZone = 'start';
         }
@@ -151,13 +49,13 @@ class DashboardService
         $possibleDays = $this->lastDays($days, $timezone);
 
         $query = TimeEntry::query()
-            ->select(DB::raw('DATE('.$dateWithTimeZone.') as date, round(sum(extract(epoch from (coalesce("end", now()) - start)))) as aggregate'))
+            ->select(DB::raw('DATE(' . $dateWithTimeZone . ') as date, round(sum(extract(epoch from (coalesce("end", now()) - start)))) as aggregate'))
             ->where('user_id', '=', $user->getKey())
             ->where('organization_id', '=', $organization->getKey())
-            ->groupBy(DB::raw('DATE('.$dateWithTimeZone.')'))
+            ->groupBy(DB::raw('DATE(' . $dateWithTimeZone . ')'))
             ->orderBy('date');
 
-        $query = $this->constrainDateByPossibleDates($query, $possibleDays, $timezone);
+        $query    = $this->constrainDateByPossibleDates($query, $possibleDays, $timezone);
         $resultDb = $query->get()
             ->pluck('aggregate', 'date');
 
@@ -165,7 +63,7 @@ class DashboardService
 
         foreach ($possibleDays as $possibleDay) {
             $result[] = [
-                'date' => $possibleDay,
+                'date'     => $possibleDay,
                 'duration' => (int) ($resultDb->get($possibleDay) ?? 0),
             ];
         }
@@ -174,31 +72,31 @@ class DashboardService
     }
 
     /**
-     * Statistics for the current week starting at weekday of users preference
+     * Statistics for the current week starting at weekday of users preference.
      *
      * @return array<int, array{date: string, duration: int}>
      */
     public function getWeeklyHistory(User $user, Organization $organization): array
     {
-        $timezone = $this->timezoneService->getTimezoneFromUser($user);
+        $timezone      = $this->timezoneService->getTimezoneFromUser($user);
         $timezoneShift = $this->timezoneService->getShiftFromUtc($timezone);
         if ($timezoneShift > 0) {
-            $dateWithTimeZone = 'start + INTERVAL \''.$timezoneShift.' second\'';
+            $dateWithTimeZone = 'start + INTERVAL \'' . $timezoneShift . ' second\'';
         } elseif ($timezoneShift < 0) {
-            $dateWithTimeZone = 'start - INTERVAL \''.abs($timezoneShift).' second\'';
+            $dateWithTimeZone = 'start - INTERVAL \'' . abs($timezoneShift) . ' second\'';
         } else {
             $dateWithTimeZone = 'start';
         }
         $possibleDays = $this->daysOfThisWeek($timezone, $user->week_start);
 
         $query = TimeEntry::query()
-            ->select(DB::raw('DATE('.$dateWithTimeZone.') as date, round(sum(extract(epoch from (coalesce("end", now()) - start)))) as aggregate'))
+            ->select(DB::raw('DATE(' . $dateWithTimeZone . ') as date, round(sum(extract(epoch from (coalesce("end", now()) - start)))) as aggregate'))
             ->where('user_id', '=', $user->getKey())
             ->where('organization_id', '=', $organization->getKey())
-            ->groupBy(DB::raw('DATE('.$dateWithTimeZone.')'))
+            ->groupBy(DB::raw('DATE(' . $dateWithTimeZone . ')'))
             ->orderBy('date');
 
-        $query = $this->constrainDateByPossibleDates($query, $possibleDays, $timezone);
+        $query    = $this->constrainDateByPossibleDates($query, $possibleDays, $timezone);
         $resultDb = $query->get()
             ->pluck('aggregate', 'date');
 
@@ -206,7 +104,7 @@ class DashboardService
 
         foreach ($possibleDays as $possibleDay) {
             $result[] = [
-                'date' => $possibleDay,
+                'date'     => $possibleDay,
                 'duration' => (int) ($resultDb->get($possibleDay) ?? 0),
             ];
         }
@@ -216,7 +114,7 @@ class DashboardService
 
     public function totalWeeklyTime(User $user, Organization $organization): int
     {
-        $timezone = $this->timezoneService->getTimezoneFromUser($user);
+        $timezone     = $this->timezoneService->getTimezoneFromUser($user);
         $possibleDays = $this->daysOfThisWeek($timezone, $user->week_start);
 
         $query = TimeEntry::query()
@@ -233,7 +131,7 @@ class DashboardService
 
     public function totalWeeklyBillableTime(User $user, Organization $organization): int
     {
-        $timezone = $this->timezoneService->getTimezoneFromUser($user);
+        $timezone     = $this->timezoneService->getTimezoneFromUser($user);
         $possibleDays = $this->daysOfThisWeek($timezone, $user->week_start);
 
         $query = TimeEntry::query()
@@ -254,7 +152,7 @@ class DashboardService
      */
     public function totalWeeklyBillableAmount(User $user, Organization $organization): array
     {
-        $timezone = $this->timezoneService->getTimezoneFromUser($user);
+        $timezone     = $this->timezoneService->getTimezoneFromUser($user);
         $possibleDays = $this->daysOfThisWeek($timezone, $user->week_start);
 
         $query = TimeEntry::query()
@@ -274,7 +172,7 @@ class DashboardService
         $resultDb = $query->get();
 
         return [
-            'value' => (int) $resultDb->get(0)->aggregate,
+            'value'    => (int) $resultDb->get(0)->aggregate,
             'currency' => $organization->currency,
         ];
     }
@@ -296,7 +194,7 @@ class DashboardService
         /** @var Collection<int, object{project_id: string, aggregate: int}> $entries */
         $entries = $query->get();
 
-        $projectIds = $entries->pluck('project_id')->whereNotNull()->all();
+        $projectIds  = $entries->pluck('project_id')->whereNotNull()->all();
         $projectsMap = Project::query()
             ->select(['id', 'name', 'color'])
             ->whereBelongsTo($organization, 'organization')
@@ -318,8 +216,8 @@ class DashboardService
 
             $response[] = [
                 'value' => (int) $entry->aggregate,
-                'id' => $entry->project_id,
-                'name' => $project->name,
+                'id'    => $entry->project_id,
+                'name'  => $project->name,
                 'color' => $project->color,
             ];
         }
@@ -327,18 +225,17 @@ class DashboardService
         if ($aggregateOther > 0 || count($response) === 0) {
             $response[] = [
                 'value' => $aggregateOther,
-                'id' => null,
-                'name' => 'No project',
+                'id'    => null,
+                'name'  => 'No project',
                 'color' => '#cccccc',
             ];
-
         }
 
         return $response;
     }
 
     /**
-     * Rhe 4 most recently active members of your team with member_id, name, description of the latest time entry, time_entry_id, task_id and a boolean status if the team member is currently working
+     * Rhe 4 most recently active members of your team with member_id, name, description of the latest time entry, time_entry_id, task_id and a boolean status if the team member is currently working.
      *
      * @return array<int, array{member_id: string, name: string, description: string|null, time_entry_id: string, task_id: string|null, status: bool }>
      */
@@ -363,12 +260,12 @@ class DashboardService
 
         foreach ($timeEntries as $timeEntry) {
             $response[] = [
-                'member_id' => $timeEntry->member_id,
-                'name' => $timeEntry->member->user->name,
-                'description' => $timeEntry->description,
+                'member_id'     => $timeEntry->member_id,
+                'name'          => $timeEntry->member->user->name,
+                'description'   => $timeEntry->description,
                 'time_entry_id' => $timeEntry->id,
-                'task_id' => $timeEntry->task_id,
-                'status' => $timeEntry->end === null,
+                'task_id'       => $timeEntry->task_id,
+                'status'        => $timeEntry->end === null,
             ];
         }
 
@@ -376,7 +273,7 @@ class DashboardService
     }
 
     /**
-     * The 4 tasks with the most recent time entries
+     * The 4 tasks with the most recent time entries.
      *
      * @return array<int, array{id: string, name: string, project_name: string|null, project_id: string }>
      */
@@ -387,8 +284,8 @@ class DashboardService
             ->with([
                 'project',
             ])
-            ->whereHas('timeEntries', function (Builder $builder) use ($user, $organization): void {
-                /** @var Builder<TimeEntry> $builder */
+            ->whereHas('timeEntries', static function (Builder $builder) use ($user, $organization): void {
+                /* @var Builder<TimeEntry> $builder */
                 $builder->where('user_id', '=', $user->getKey())
                     ->where('organization_id', '=', $organization->getKey());
             })
@@ -405,10 +302,10 @@ class DashboardService
 
         foreach ($tasks as $task) {
             $response[] = [
-                'id' => $task->id,
-                'name' => $task->name,
+                'id'           => $task->id,
+                'name'         => $task->name,
                 'project_name' => $task->project->name,
-                'project_id' => $task->project->id,
+                'project_id'   => $task->project->id,
             ];
         }
 
@@ -416,15 +313,15 @@ class DashboardService
     }
 
     /**
-     * The last 7 days with statistics for the time entries
+     * The last 7 days with statistics for the time entries.
      *
      * @return array<int, array{ date: string, duration: int, history: array<int> }>
      */
     public function lastSevenDays(User $user, Organization $organization): array
     {
-        $timezone = $this->timezoneService->getTimezoneFromUser($user);
+        $timezone               = $this->timezoneService->getTimezoneFromUser($user);
         $lastDaysSplitInWindows = $this->lastDaysSplitInWindows(7, $timezone, 8);
-        $data = collect(DB::select('
+        $data                   = collect(DB::select('
             SELECT time_ranges.start, EXTRACT(epoch FROM sum(LEAST(time_ranges."end", coalesce(time_entries."end", :now::timestamp)) - GREATEST(time_ranges.start, time_entries.start))) AS aggregate
             FROM  (
                SELECT time_range_starts.start AS start, time_range_starts.start + interval \'3 hours\' AS "end"
@@ -438,29 +335,134 @@ class DashboardService
             ORDER BY time_ranges.start
         ', [
             'start_time_ranges' => $lastDaysSplitInWindows['start'],
-            'end_time_ranges' => $lastDaysSplitInWindows['end'],
-            'user_id' => $user->getKey(),
-            'organization_id' => $organization->getKey(),
-            'now' => Carbon::now()->toDateTimeString(),
+            'end_time_ranges'   => $lastDaysSplitInWindows['end'],
+            'user_id'           => $user->getKey(),
+            'organization_id'   => $organization->getKey(),
+            'now'               => Carbon::now()->toDateTimeString(),
         ]))->pluck('aggregate', 'start');
 
         $response = [];
 
         foreach ($lastDaysSplitInWindows['dates'] as $date => $windows) {
-            $history = [];
+            $history  = [];
             $duration = 0;
             foreach ($windows as $window) {
-                $value = (int) ($data->get($window, null) ?? 0);
+                $value     = (int) ($data->get($window, null) ?? 0);
                 $history[] = $value;
                 $duration += $value;
             }
             $response[] = [
-                'date' => $date,
+                'date'     => $date,
                 'duration' => $duration,
-                'history' => $history,
+                'history'  => $history,
             ];
         }
 
         return $response;
+    }
+
+    /**
+     * @return Collection<int, string>
+     */
+    private function lastDays(int $days, CarbonTimeZone $timeZone): Collection
+    {
+        $result = new Collection();
+        $date   = Carbon::now($timeZone)->subDays($days);
+        for ($i = 0; $i < $days; $i++) {
+            $date->addDay();
+            $result->push($date->format('Y-m-d'));
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return array{start: string, end: string, dates: array<string, array<string>>}
+     */
+    private function lastDaysSplitInWindows(int $days, CarbonTimeZone $timeZone, int $windows): array
+    {
+        $result     = [];
+        $windowSize = 24 / $windows;
+        $end        = Carbon::now($timeZone)->startOfDay()->addDay()->subHours(3)->utc()->toDateTimeString();
+        $start      = Carbon::now($timeZone)->subDays($days)->startOfDay()->utc()->toDateTimeString();
+
+        $date    = Carbon::now($timeZone)->startOfDay();
+        $dateUtc = Carbon::now($timeZone)->startOfDay()->utc();
+        for ($i = 0; $i < $days; $i++) {
+            $dateString  = $date->format('Y-m-d');
+            $tempDate    = $dateUtc->copy();
+            $start       = $tempDate->copy()->utc()->toDateTimeString();
+            $tempWindows = [];
+            for ($j = 0; $j < $windows; $j++) {
+                $tempWindow    = $tempDate->toDateTimeString();
+                $tempWindows[] = $tempWindow;
+                $tempDate->addHours($windowSize);
+            }
+            $result[$dateString] = $tempWindows;
+            $date->subDay();
+            $dateUtc->subDay();
+        }
+
+        return [
+            'start' => $start,
+            'end'   => $end,
+            'dates' => $result,
+        ];
+    }
+
+    /**
+     * @return Collection<int, string>
+     */
+    private function daysOfThisWeek(CarbonTimeZone $timeZone, Weekday $startOfWeek): Collection
+    {
+        $result = new Collection();
+        $date   = Carbon::now($timeZone);
+        $start  = $date->startOfWeek($startOfWeek->carbonWeekDay());
+        for ($i = 0; $i < 7; $i++) {
+            $result->push($start->format('Y-m-d'));
+            $start->addDay();
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Collection<int, string> $possibleDates
+     * @param Builder<TimeEntry>      $builder
+     *
+     * @return Builder<TimeEntry>
+     */
+    private function constrainDateByPossibleDates(Builder $builder, Collection $possibleDates, CarbonTimeZone $timeZone): Builder
+    {
+        $value1 = Carbon::createFromFormat('Y-m-d', $possibleDates->first(), $timeZone);
+        $value2 = Carbon::createFromFormat('Y-m-d', $possibleDates->last(), $timeZone);
+        if ($value2 === null || $value1 === null) {
+            throw new RuntimeException('Provided date is not valid');
+        }
+        if ($value1->gt($value2)) {
+            $last  = $value1;
+            $first = $value2;
+        } else {
+            $last  = $value2;
+            $first = $value1;
+        }
+
+        return $builder->whereBetween('start', [
+            $first->startOfDay()->utc(),
+            $last->endOfDay()->utc(),
+        ]);
+    }
+
+    /**
+     * @param Builder<TimeEntry> $builder
+     *
+     * @return Builder<TimeEntry>
+     */
+    private function constrainDateByCurrentWeek(Builder $builder, CarbonTimeZone $timeZone, Weekday $startOfWeek): Builder
+    {
+        return $builder->whereBetween('start', [
+            Carbon::now($timeZone)->startOfWeek($startOfWeek->carbonWeekDay())->utc(),
+            Carbon::now($timeZone)->endOfWeek($startOfWeek->toEndOfWeek()->carbonWeekDay())->utc(),
+        ]);
     }
 }

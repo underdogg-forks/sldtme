@@ -36,12 +36,12 @@ class ExportService
      */
     public function export(Organization $organization): string
     {
-        $exportId = Str::uuid();
-        $timeStamp = Carbon::now();
+        $exportId           = Str::uuid();
+        $timeStamp          = Carbon::now();
         $temporaryDirectory = TemporaryDirectory::make();
         Log::debug('Start exporting organization', [
             'organization_id' => $organization->getKey(),
-            'export_id' => $exportId,
+            'export_id'       => $exportId,
         ]);
 
         // Organizations
@@ -82,7 +82,7 @@ class ExportService
             ]);
             OrganizationInvitation::query()
                 ->whereBelongsTo($organization, 'organization')
-                ->chunk(1000, function (Collection $organizationInvitations) use (&$writer): void {
+                ->chunk(1000, static function (Collection $organizationInvitations) use (&$writer): void {
                     $organizationInvitations->each(function (OrganizationInvitation $organizationInvitation) use (&$writer): void {
                         $writer->insertOne([
                             $organizationInvitation->id,
@@ -121,7 +121,7 @@ class ExportService
             ]);
             TimeEntry::query()
                 ->whereBelongsTo($organization, 'organization')
-                ->chunk(1000, function (Collection $timeEntries) use (&$writer): void {
+                ->chunk(1000, static function (Collection $timeEntries) use (&$writer): void {
                     $timeEntries->each(function (TimeEntry $timeEntry) use (&$writer): void {
                         $tags = json_encode($timeEntry->tags);
                         $writer->insertOne([
@@ -161,7 +161,7 @@ class ExportService
             ]);
             Client::query()
                 ->whereBelongsTo($organization, 'organization')
-                ->chunk(1000, function (Collection $clients) use (&$writer): void {
+                ->chunk(1000, static function (Collection $clients) use (&$writer): void {
                     $clients->each(function (Client $client) use (&$writer): void {
                         $writer->insertOne([
                             $client->id,
@@ -194,7 +194,7 @@ class ExportService
             ]);
             Project::query()
                 ->whereBelongsTo($organization, 'organization')
-                ->chunk(1000, function (Collection $projects) use (&$writer): void {
+                ->chunk(1000, static function (Collection $projects) use (&$writer): void {
                     $projects->each(function (Project $project) use (&$writer): void {
                         $writer->insertOne([
                             $project->id,
@@ -228,7 +228,7 @@ class ExportService
             ]);
             ProjectMember::query()
                 ->whereBelongsToOrganization($organization)
-                ->chunk(1000, function (Collection $projectMembers) use (&$writer): void {
+                ->chunk(1000, static function (Collection $projectMembers) use (&$writer): void {
                     $projectMembers->each(function (ProjectMember $projectMember) use (&$writer): void {
                         $writer->insertOne([
                             $projectMember->id,
@@ -263,7 +263,7 @@ class ExportService
                 ->with([
                     'user',
                 ])
-                ->chunk(1000, function (Collection $members) use (&$writer): void {
+                ->chunk(1000, static function (Collection $members) use (&$writer): void {
                     $members->each(function (Member $member) use (&$writer): void {
                         $writer->insertOne([
                             $member->id,
@@ -295,7 +295,7 @@ class ExportService
             ]);
             Task::query()
                 ->whereBelongsTo($organization, 'organization')
-                ->chunk(1000, function (Collection $tasks) use (&$writer): void {
+                ->chunk(1000, static function (Collection $tasks) use (&$writer): void {
                     $tasks->each(function (Task $task) use (&$writer): void {
                         $writer->insertOne([
                             $task->id,
@@ -323,7 +323,7 @@ class ExportService
             ]);
             Tag::query()
                 ->whereBelongsTo($organization, 'organization')
-                ->chunk(1000, function (Collection $tags) use (&$writer): void {
+                ->chunk(1000, static function (Collection $tags) use (&$writer): void {
                     $tags->each(function (Tag $tag) use (&$writer): void {
                         $writer->insertOne([
                             $tag->id,
@@ -337,16 +337,16 @@ class ExportService
 
             // Meta data file
             $metaData = (object) [
-                'id' => $exportId,
-                'version' => self::VERSION,
+                'id'            => $exportId,
+                'version'       => self::VERSION,
                 'organizations' => [$organization->getKey()],
-                'exported_at' => $timeStamp->toIso8601ZuluString(),
+                'exported_at'   => $timeStamp->toIso8601ZuluString(),
             ];
             file_put_contents($temporaryDirectory->path('meta.json'), json_encode($metaData));
 
             // Create ZIP file
             $temporaryDirectoryZip = TemporaryDirectory::make();
-            $zip = new ZipArchive;
+            $zip                   = new ZipArchive();
             if ($zip->open($temporaryDirectoryZip->path('export.zip'), ZipArchive::CREATE) !== true) {
                 throw new Exception('Cannot create ZIP file');
             }
@@ -363,7 +363,7 @@ class ExportService
             $zip->close();
 
             // Upload ZIP file to private storage
-            $filename = 'export_'.$organization->getKey().'_'.$timeStamp->format('Y-m-d_H-i-s').'_'.$exportId.'.zip';
+            $filename = 'export_' . $organization->getKey() . '_' . $timeStamp->format('Y-m-d_H-i-s') . '_' . $exportId . '.zip';
             Storage::disk(config('filesystems.private'))->putFileAs(
                 'exports',
                 new File($temporaryDirectoryZip->path('export.zip')),
@@ -376,14 +376,14 @@ class ExportService
 
             Log::debug('Finished exporting organization', [
                 'organization_id' => $organization->getKey(),
-                'export_id' => $exportId,
+                'export_id'       => $exportId,
             ]);
 
-            return 'exports/'.$filename;
+            return 'exports/' . $filename;
         } catch (UnavailableStream|CannotInsertRecord|Exception|LeagueCsvException $exception) {
             report($exception);
 
-            throw new ExportException;
+            throw new ExportException();
         }
     }
 }

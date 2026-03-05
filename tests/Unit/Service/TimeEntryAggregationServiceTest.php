@@ -49,8 +49,8 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
 
         // Assert
         $this->assertSame([
-            'seconds' => 0,
-            'cost' => 0,
+            'seconds'      => 0,
+            'cost'         => 0,
             'grouped_type' => 'day',
             'grouped_data' => [],
         ], $result);
@@ -98,42 +98,42 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
 
         // Assert
         $this->assertSame([
-            'seconds' => 40,
-            'cost' => 0,
+            'seconds'      => 40,
+            'cost'         => 0,
             'grouped_type' => 'project',
             'grouped_data' => [
                 [
-                    'key' => $project2->getKey(),
-                    'seconds' => 20,
-                    'cost' => 0,
+                    'key'          => $project2->getKey(),
+                    'seconds'      => 20,
+                    'cost'         => 0,
                     'grouped_type' => 'description',
                     'grouped_data' => [
                         [
-                            'key' => null,
-                            'seconds' => 10,
-                            'cost' => 0,
+                            'key'          => null,
+                            'seconds'      => 10,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
                         [
-                            'key' => 'Test',
-                            'seconds' => 10,
-                            'cost' => 0,
+                            'key'          => 'Test',
+                            'seconds'      => 10,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
                     ],
                 ],
                 [
-                    'key' => $project1->getKey(),
-                    'seconds' => 20,
-                    'cost' => 0,
+                    'key'          => $project1->getKey(),
+                    'seconds'      => 20,
+                    'cost'         => 0,
                     'grouped_type' => 'description',
                     'grouped_data' => [
                         [
-                            'key' => 'Test',
-                            'seconds' => 20,
-                            'cost' => 0,
+                            'key'          => 'Test',
+                            'seconds'      => 20,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
@@ -185,42 +185,42 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
 
         // Assert
         $this->assertSame([
-            'seconds' => 40,
-            'cost' => null,
+            'seconds'      => 40,
+            'cost'         => null,
             'grouped_type' => 'project',
             'grouped_data' => [
                 [
-                    'key' => $project2->getKey(),
-                    'seconds' => 20,
-                    'cost' => null,
+                    'key'          => $project2->getKey(),
+                    'seconds'      => 20,
+                    'cost'         => null,
                     'grouped_type' => 'description',
                     'grouped_data' => [
                         [
-                            'key' => null,
-                            'seconds' => 10,
-                            'cost' => null,
+                            'key'          => null,
+                            'seconds'      => 10,
+                            'cost'         => null,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
                         [
-                            'key' => 'Test',
-                            'seconds' => 10,
-                            'cost' => null,
+                            'key'          => 'Test',
+                            'seconds'      => 10,
+                            'cost'         => null,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
                     ],
                 ],
                 [
-                    'key' => $project1->getKey(),
-                    'seconds' => 20,
-                    'cost' => null,
+                    'key'          => $project1->getKey(),
+                    'seconds'      => 20,
+                    'cost'         => null,
                     'grouped_type' => 'description',
                     'grouped_data' => [
                         [
-                            'key' => 'Test',
-                            'seconds' => 20,
-                            'cost' => null,
+                            'key'          => 'Test',
+                            'seconds'      => 20,
+                            'cost'         => null,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
@@ -234,7 +234,7 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
     {
         // Arrange
         $timezone = 'Europe/Vienna';
-        $query = TimeEntry::query();
+        $query    = TimeEntry::query();
 
         // Act
         $result = $this->service->getAggregatedTimeEntries(
@@ -253,21 +253,21 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
 
         // Assert
         $this->assertSame([
-            'seconds' => 0,
-            'cost' => 0,
+            'seconds'      => 0,
+            'cost'         => 0,
             'grouped_type' => 'day',
             'grouped_data' => [
                 [
-                    'key' => Carbon::now()->subDays(2)->timezone($timezone)->format('Y-m-d'),
-                    'seconds' => 0,
-                    'cost' => 0,
+                    'key'          => Carbon::now()->subDays(2)->timezone($timezone)->format('Y-m-d'),
+                    'seconds'      => 0,
+                    'cost'         => 0,
                     'grouped_type' => 'project',
                     'grouped_data' => [],
                 ],
                 [
-                    'key' => Carbon::now()->subDay()->timezone($timezone)->format('Y-m-d'),
-                    'seconds' => 0,
-                    'cost' => 0,
+                    'key'          => Carbon::now()->subDay()->timezone($timezone)->format('Y-m-d'),
+                    'seconds'      => 0,
+                    'cost'         => 0,
                     'grouped_type' => 'project',
                     'grouped_data' => [],
                 ],
@@ -297,8 +297,8 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
 
         // Assert
         $this->assertSame([
-            'seconds' => 0,
-            'cost' => 0,
+            'seconds'      => 0,
+            'cost'         => 0,
             'grouped_type' => 'user',
             'grouped_data' => [],
         ], $result);
@@ -326,8 +326,8 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
 
         // Assert
         $this->assertSame([
-            'seconds' => 0,
-            'cost' => 0,
+            'seconds'      => 0,
+            'cost'         => 0,
             'grouped_type' => 'user',
             'grouped_data' => [],
         ], $result);
@@ -336,8 +336,8 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
     public function test_aggregate_time_entries_by_client_and_project(): void
     {
         // Arrange
-        $client1 = Client::factory()->create();
-        $client2 = Client::factory()->create();
+        $client1  = Client::factory()->create();
+        $client2  = Client::factory()->create();
         $project1 = Project::factory()->forClient($client1)->create();
         $project2 = Project::factory()->forClient($client2)->create();
         $project3 = Project::factory()->create();
@@ -364,57 +364,57 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
 
         // Assert
         $this->assertEqualsCanonicalizing([
-            'seconds' => 40,
-            'cost' => 0,
+            'seconds'      => 40,
+            'cost'         => 0,
             'grouped_type' => 'client',
             'grouped_data' => [
                 [
-                    'key' => null,
-                    'seconds' => 20,
-                    'cost' => 0,
+                    'key'          => null,
+                    'seconds'      => 20,
+                    'cost'         => 0,
                     'grouped_type' => 'project',
                     'grouped_data' => [
                         [
-                            'key' => null,
-                            'seconds' => 10,
-                            'cost' => 0,
+                            'key'          => null,
+                            'seconds'      => 10,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
                         [
-                            'key' => $project3->getKey(),
-                            'seconds' => 10,
-                            'cost' => 0,
-                            'grouped_type' => null,
-                            'grouped_data' => null,
-                        ],
-                    ],
-                ],
-                [
-                    'key' => $client1->getKey(),
-                    'seconds' => 10,
-                    'cost' => 0,
-                    'grouped_type' => 'project',
-                    'grouped_data' => [
-                        [
-                            'key' => $project1->getKey(),
-                            'seconds' => 10,
-                            'cost' => 0,
+                            'key'          => $project3->getKey(),
+                            'seconds'      => 10,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
                     ],
                 ],
                 [
-                    'key' => $client2->getKey(),
-                    'seconds' => 10,
-                    'cost' => 0,
+                    'key'          => $client1->getKey(),
+                    'seconds'      => 10,
+                    'cost'         => 0,
                     'grouped_type' => 'project',
                     'grouped_data' => [
                         [
-                            'key' => $project2->getKey(),
-                            'seconds' => 10,
-                            'cost' => 0,
+                            'key'          => $project1->getKey(),
+                            'seconds'      => 10,
+                            'cost'         => 0,
+                            'grouped_type' => null,
+                            'grouped_data' => null,
+                        ],
+                    ],
+                ],
+                [
+                    'key'          => $client2->getKey(),
+                    'seconds'      => 10,
+                    'cost'         => 0,
+                    'grouped_type' => 'project',
+                    'grouped_data' => [
+                        [
+                            'key'          => $project2->getKey(),
+                            'seconds'      => 10,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
@@ -427,8 +427,8 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
     public function test_aggregate_time_can_round_up_per_time_entry(): void
     {
         // Arrange
-        $client1 = Client::factory()->create();
-        $client2 = Client::factory()->create();
+        $client1  = Client::factory()->create();
+        $client2  = Client::factory()->create();
         $project1 = Project::factory()->forClient($client1)->create();
         $project2 = Project::factory()->forClient($client2)->create();
         $project3 = Project::factory()->create();
@@ -462,57 +462,57 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
 
         // Assert
         $this->assertEqualsCanonicalizing([
-            'seconds' => 4500,
-            'cost' => 0,
+            'seconds'      => 4500,
+            'cost'         => 0,
             'grouped_type' => 'client',
             'grouped_data' => [
                 [
-                    'key' => null,
-                    'seconds' => 1800,
-                    'cost' => 0,
+                    'key'          => null,
+                    'seconds'      => 1800,
+                    'cost'         => 0,
                     'grouped_type' => 'project',
                     'grouped_data' => [
                         [
-                            'key' => null,
-                            'seconds' => 900,
-                            'cost' => 0,
+                            'key'          => null,
+                            'seconds'      => 900,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
                         [
-                            'key' => $project3->getKey(),
-                            'seconds' => 900,
-                            'cost' => 0,
-                            'grouped_type' => null,
-                            'grouped_data' => null,
-                        ],
-                    ],
-                ],
-                [
-                    'key' => $client1->getKey(),
-                    'seconds' => 1800,
-                    'cost' => 0,
-                    'grouped_type' => 'project',
-                    'grouped_data' => [
-                        [
-                            'key' => $project1->getKey(),
-                            'seconds' => 1800,
-                            'cost' => 0,
+                            'key'          => $project3->getKey(),
+                            'seconds'      => 900,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
                     ],
                 ],
                 [
-                    'key' => $client2->getKey(),
-                    'seconds' => 900,
-                    'cost' => 0,
+                    'key'          => $client1->getKey(),
+                    'seconds'      => 1800,
+                    'cost'         => 0,
                     'grouped_type' => 'project',
                     'grouped_data' => [
                         [
-                            'key' => $project2->getKey(),
-                            'seconds' => 900,
-                            'cost' => 0,
+                            'key'          => $project1->getKey(),
+                            'seconds'      => 1800,
+                            'cost'         => 0,
+                            'grouped_type' => null,
+                            'grouped_data' => null,
+                        ],
+                    ],
+                ],
+                [
+                    'key'          => $client2->getKey(),
+                    'seconds'      => 900,
+                    'cost'         => 0,
+                    'grouped_type' => 'project',
+                    'grouped_data' => [
+                        [
+                            'key'          => $project2->getKey(),
+                            'seconds'      => 900,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
@@ -525,8 +525,8 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
     public function test_aggregate_time_can_round_down_per_time_entry(): void
     {
         // Arrange
-        $client1 = Client::factory()->create();
-        $client2 = Client::factory()->create();
+        $client1  = Client::factory()->create();
+        $client2  = Client::factory()->create();
         $project1 = Project::factory()->forClient($client1)->create();
         $project2 = Project::factory()->forClient($client2)->create();
         $project3 = Project::factory()->create();
@@ -560,57 +560,57 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
 
         // Assert
         $this->assertEqualsCanonicalizing([
-            'seconds' => 1800,
-            'cost' => 0,
+            'seconds'      => 1800,
+            'cost'         => 0,
             'grouped_type' => 'client',
             'grouped_data' => [
                 [
-                    'key' => null,
-                    'seconds' => 1800,
-                    'cost' => 0,
+                    'key'          => null,
+                    'seconds'      => 1800,
+                    'cost'         => 0,
                     'grouped_type' => 'project',
                     'grouped_data' => [
                         [
-                            'key' => null,
-                            'seconds' => 900,
-                            'cost' => 0,
+                            'key'          => null,
+                            'seconds'      => 900,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
                         [
-                            'key' => $project3->getKey(),
-                            'seconds' => 900,
-                            'cost' => 0,
-                            'grouped_type' => null,
-                            'grouped_data' => null,
-                        ],
-                    ],
-                ],
-                [
-                    'key' => $client1->getKey(),
-                    'seconds' => 0,
-                    'cost' => 0,
-                    'grouped_type' => 'project',
-                    'grouped_data' => [
-                        [
-                            'key' => $project1->getKey(),
-                            'seconds' => 0,
-                            'cost' => 0,
+                            'key'          => $project3->getKey(),
+                            'seconds'      => 900,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
                     ],
                 ],
                 [
-                    'key' => $client2->getKey(),
-                    'seconds' => 0,
-                    'cost' => 0,
+                    'key'          => $client1->getKey(),
+                    'seconds'      => 0,
+                    'cost'         => 0,
                     'grouped_type' => 'project',
                     'grouped_data' => [
                         [
-                            'key' => $project2->getKey(),
-                            'seconds' => 0,
-                            'cost' => 0,
+                            'key'          => $project1->getKey(),
+                            'seconds'      => 0,
+                            'cost'         => 0,
+                            'grouped_type' => null,
+                            'grouped_data' => null,
+                        ],
+                    ],
+                ],
+                [
+                    'key'          => $client2->getKey(),
+                    'seconds'      => 0,
+                    'cost'         => 0,
+                    'grouped_type' => 'project',
+                    'grouped_data' => [
+                        [
+                            'key'          => $project2->getKey(),
+                            'seconds'      => 0,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
@@ -623,8 +623,8 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
     public function test_aggregate_time_can_round_to_nearest_per_time_entry(): void
     {
         // Arrange
-        $client1 = Client::factory()->create();
-        $client2 = Client::factory()->create();
+        $client1  = Client::factory()->create();
+        $client2  = Client::factory()->create();
         $project1 = Project::factory()->forClient($client1)->create();
         $project2 = Project::factory()->forClient($client2)->create();
         $project3 = Project::factory()->create();
@@ -658,57 +658,57 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
 
         // Assert
         $this->assertEqualsCanonicalizing([
-            'seconds' => 3600,
-            'cost' => 0,
+            'seconds'      => 3600,
+            'cost'         => 0,
             'grouped_type' => 'client',
             'grouped_data' => [
                 [
-                    'key' => null,
-                    'seconds' => 1800,
-                    'cost' => 0,
+                    'key'          => null,
+                    'seconds'      => 1800,
+                    'cost'         => 0,
                     'grouped_type' => 'project',
                     'grouped_data' => [
                         [
-                            'key' => null,
-                            'seconds' => 900,
-                            'cost' => 0,
+                            'key'          => null,
+                            'seconds'      => 900,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
                         [
-                            'key' => $project3->getKey(),
-                            'seconds' => 900,
-                            'cost' => 0,
-                            'grouped_type' => null,
-                            'grouped_data' => null,
-                        ],
-                    ],
-                ],
-                [
-                    'key' => $client1->getKey(),
-                    'seconds' => 900,
-                    'cost' => 0,
-                    'grouped_type' => 'project',
-                    'grouped_data' => [
-                        [
-                            'key' => $project1->getKey(),
-                            'seconds' => 900,
-                            'cost' => 0,
+                            'key'          => $project3->getKey(),
+                            'seconds'      => 900,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
                     ],
                 ],
                 [
-                    'key' => $client2->getKey(),
-                    'seconds' => 900,
-                    'cost' => 0,
+                    'key'          => $client1->getKey(),
+                    'seconds'      => 900,
+                    'cost'         => 0,
                     'grouped_type' => 'project',
                     'grouped_data' => [
                         [
-                            'key' => $project2->getKey(),
-                            'seconds' => 900,
-                            'cost' => 0,
+                            'key'          => $project1->getKey(),
+                            'seconds'      => 900,
+                            'cost'         => 0,
+                            'grouped_type' => null,
+                            'grouped_data' => null,
+                        ],
+                    ],
+                ],
+                [
+                    'key'          => $client2->getKey(),
+                    'seconds'      => 900,
+                    'cost'         => 0,
+                    'grouped_type' => 'project',
+                    'grouped_data' => [
+                        [
+                            'key'          => $project2->getKey(),
+                            'seconds'      => 900,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
@@ -723,8 +723,8 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
     public function test_aggregate_time_entries_by_client_and_project_with_filled_gaps(): void
     {
         // Arrange
-        $client1 = Client::factory()->create();
-        $client2 = Client::factory()->create();
+        $client1  = Client::factory()->create();
+        $client2  = Client::factory()->create();
         $project1 = Project::factory()->forClient($client1)->create();
         $project2 = Project::factory()->forClient($client2)->create();
         $project3 = Project::factory()->create();
@@ -751,57 +751,57 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
 
         // Assert
         $this->assertEqualsCanonicalizing([
-            'seconds' => 40,
-            'cost' => 0,
+            'seconds'      => 40,
+            'cost'         => 0,
             'grouped_type' => 'client',
             'grouped_data' => [
                 [
-                    'key' => null,
-                    'seconds' => 20,
-                    'cost' => 0,
+                    'key'          => null,
+                    'seconds'      => 20,
+                    'cost'         => 0,
                     'grouped_type' => 'project',
                     'grouped_data' => [
                         [
-                            'key' => null,
-                            'seconds' => 10,
-                            'cost' => 0,
+                            'key'          => null,
+                            'seconds'      => 10,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
                         [
-                            'key' => $project3->getKey(),
-                            'seconds' => 10,
-                            'cost' => 0,
-                            'grouped_type' => null,
-                            'grouped_data' => null,
-                        ],
-                    ],
-                ],
-                [
-                    'key' => $client1->getKey(),
-                    'seconds' => 10,
-                    'cost' => 0,
-                    'grouped_type' => 'project',
-                    'grouped_data' => [
-                        [
-                            'key' => $project1->getKey(),
-                            'seconds' => 10,
-                            'cost' => 0,
+                            'key'          => $project3->getKey(),
+                            'seconds'      => 10,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
                     ],
                 ],
                 [
-                    'key' => $client2->getKey(),
-                    'seconds' => 10,
-                    'cost' => 0,
+                    'key'          => $client1->getKey(),
+                    'seconds'      => 10,
+                    'cost'         => 0,
                     'grouped_type' => 'project',
                     'grouped_data' => [
                         [
-                            'key' => $project2->getKey(),
-                            'seconds' => 10,
-                            'cost' => 0,
+                            'key'          => $project1->getKey(),
+                            'seconds'      => 10,
+                            'cost'         => 0,
+                            'grouped_type' => null,
+                            'grouped_data' => null,
+                        ],
+                    ],
+                ],
+                [
+                    'key'          => $client2->getKey(),
+                    'seconds'      => 10,
+                    'cost'         => 0,
+                    'grouped_type' => 'project',
+                    'grouped_data' => [
+                        [
+                            'key'          => $project2->getKey(),
+                            'seconds'      => 10,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
@@ -816,19 +816,19 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
         // Arrange
         TimeEntry::factory()->startWithDuration(now(), 10)->create([
             'description' => 'TEST 1',
-            'billable' => true,
+            'billable'    => true,
         ]);
         TimeEntry::factory()->startWithDuration(now(), 10)->create([
             'description' => '',
-            'billable' => false,
+            'billable'    => false,
         ]);
         TimeEntry::factory()->startWithDuration(now(), 10)->create([
             'description' => 'TEST 1',
-            'billable' => false,
+            'billable'    => false,
         ]);
         TimeEntry::factory()->startWithDuration(now(), 10)->create([
             'description' => '',
-            'billable' => false,
+            'billable'    => false,
         ]);
         $query = TimeEntry::query();
 
@@ -849,56 +849,56 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
 
         // Assert
         $this->assertSame([
-            'seconds' => 40,
-            'cost' => 0,
+            'seconds'      => 40,
+            'cost'         => 0,
             'grouped_type' => 'description',
             'grouped_data' => [
                 [
-                    'key' => null,
-                    'seconds' => 20,
-                    'cost' => 0,
+                    'key'          => null,
+                    'seconds'      => 20,
+                    'cost'         => 0,
                     'grouped_type' => 'billable',
                     'grouped_data' => [
                         [
-                            'key' => '0',
-                            'seconds' => 20,
-                            'cost' => 0,
+                            'key'          => '0',
+                            'seconds'      => 20,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
-                            'description' => 'Non-billable',
-                            'color' => null,
+                            'description'  => 'Non-billable',
+                            'color'        => null,
                         ],
                     ],
                     'description' => null,
-                    'color' => null,
+                    'color'       => null,
                 ],
                 [
-                    'key' => 'TEST 1',
-                    'seconds' => 20,
-                    'cost' => 0,
+                    'key'          => 'TEST 1',
+                    'seconds'      => 20,
+                    'cost'         => 0,
                     'grouped_type' => 'billable',
                     'grouped_data' => [
                         [
-                            'key' => '0',
-                            'seconds' => 10,
-                            'cost' => 0,
+                            'key'          => '0',
+                            'seconds'      => 10,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
-                            'description' => 'Non-billable',
-                            'color' => null,
+                            'description'  => 'Non-billable',
+                            'color'        => null,
                         ],
                         [
-                            'key' => '1',
-                            'seconds' => 10,
-                            'cost' => 0,
+                            'key'          => '1',
+                            'seconds'      => 10,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
-                            'description' => 'Billable',
-                            'color' => null,
+                            'description'  => 'Billable',
+                            'color'        => null,
                         ],
                     ],
                     'description' => 'TEST 1',
-                    'color' => null,
+                    'color'       => null,
                 ],
             ],
         ], $result);
@@ -907,8 +907,8 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
     public function test_aggregated_time_entries_with_descriptions_by_client_and_project(): void
     {
         // Arrange
-        $client1 = Client::factory()->create();
-        $client2 = Client::factory()->create();
+        $client1  = Client::factory()->create();
+        $client2  = Client::factory()->create();
         $project1 = Project::factory()->forClient($client1)->create();
         $project2 = Project::factory()->forClient($client2)->create();
         $project3 = Project::factory()->create();
@@ -935,75 +935,75 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
 
         // Assert
         $this->assertEqualsCanonicalizing([
-            'seconds' => 40,
-            'cost' => 0,
+            'seconds'      => 40,
+            'cost'         => 0,
             'grouped_type' => 'client',
             'grouped_data' => [
                 [
-                    'key' => null,
-                    'seconds' => 20,
-                    'cost' => 0,
+                    'key'          => null,
+                    'seconds'      => 20,
+                    'cost'         => 0,
                     'grouped_type' => 'project',
                     'grouped_data' => [
                         [
-                            'key' => null,
-                            'seconds' => 10,
-                            'cost' => 0,
+                            'key'          => null,
+                            'seconds'      => 10,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
-                            'description' => null,
-                            'color' => null,
+                            'description'  => null,
+                            'color'        => null,
                         ],
                         [
-                            'key' => $project3->getKey(),
-                            'seconds' => 10,
-                            'cost' => 0,
+                            'key'          => $project3->getKey(),
+                            'seconds'      => 10,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
-                            'description' => $project3->name,
-                            'color' => $project3->color,
+                            'description'  => $project3->name,
+                            'color'        => $project3->color,
                         ],
                     ],
                     'description' => null,
-                    'color' => null,
+                    'color'       => null,
                 ],
                 [
-                    'key' => $client1->getKey(),
-                    'seconds' => 10,
-                    'cost' => 0,
+                    'key'          => $client1->getKey(),
+                    'seconds'      => 10,
+                    'cost'         => 0,
                     'grouped_type' => 'project',
                     'grouped_data' => [
                         [
-                            'key' => $project1->getKey(),
-                            'seconds' => 10,
-                            'cost' => 0,
+                            'key'          => $project1->getKey(),
+                            'seconds'      => 10,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
-                            'description' => $project1->name,
-                            'color' => $project1->color,
+                            'description'  => $project1->name,
+                            'color'        => $project1->color,
                         ],
                     ],
                     'description' => $client1->name,
-                    'color' => null,
+                    'color'       => null,
                 ],
                 [
-                    'key' => $client2->getKey(),
-                    'seconds' => 10,
-                    'cost' => 0,
+                    'key'          => $client2->getKey(),
+                    'seconds'      => 10,
+                    'cost'         => 0,
                     'grouped_type' => 'project',
                     'grouped_data' => [
                         [
-                            'key' => $project2->getKey(),
-                            'seconds' => 10,
-                            'cost' => 0,
+                            'key'          => $project2->getKey(),
+                            'seconds'      => 10,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
-                            'description' => $project2->name,
-                            'color' => $project2->color,
+                            'description'  => $project2->name,
+                            'color'        => $project2->color,
                         ],
                     ],
                     'description' => $client2->name,
-                    'color' => null,
+                    'color'       => null,
                 ],
             ],
         ], $result);
@@ -1012,8 +1012,8 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
     public function test_aggregate_time_entries_group_by_tag_includes_no_tag_and_avoids_double_counting_overall(): void
     {
         // Arrange
-        $tag1 = Tag::factory()->create();
-        $tag2 = Tag::factory()->create();
+        $tag1  = Tag::factory()->create();
+        $tag2  = Tag::factory()->create();
         $start = Carbon::now();
 
         // One entry with two tags (100s)
@@ -1048,28 +1048,28 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
 
         // Assert - overall total should be 175 and groups: null=25, tag1=150, tag2=100
         $expected = [
-            'seconds' => 175,
-            'cost' => 0,
+            'seconds'      => 175,
+            'cost'         => 0,
             'grouped_type' => 'tag',
             'grouped_data' => [
                 [
-                    'key' => null,
-                    'seconds' => 25,
-                    'cost' => 0,
+                    'key'          => null,
+                    'seconds'      => 25,
+                    'cost'         => 0,
                     'grouped_type' => null,
                     'grouped_data' => null,
                 ],
                 [
-                    'key' => $tag1->getKey(),
-                    'seconds' => 150,
-                    'cost' => 0,
+                    'key'          => $tag1->getKey(),
+                    'seconds'      => 150,
+                    'cost'         => 0,
                     'grouped_type' => null,
                     'grouped_data' => null,
                 ],
                 [
-                    'key' => $tag2->getKey(),
-                    'seconds' => 100,
-                    'cost' => 0,
+                    'key'          => $tag2->getKey(),
+                    'seconds'      => 100,
+                    'cost'         => 0,
                     'grouped_type' => null,
                     'grouped_data' => null,
                 ],
@@ -1082,9 +1082,9 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
     {
         // Arrange
         $project = Project::factory()->create();
-        $tag1 = Tag::factory()->create();
-        $tag2 = Tag::factory()->create();
-        $start = Carbon::now();
+        $tag1    = Tag::factory()->create();
+        $tag2    = Tag::factory()->create();
+        $start   = Carbon::now();
 
         TimeEntry::factory()->startWithDuration($start, 120)->forProject($project)->create([
             'tags' => [$tag1->getKey()],
@@ -1112,27 +1112,27 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
 
         // Assert
         $expected = [
-            'seconds' => 180,
-            'cost' => 0,
+            'seconds'      => 180,
+            'cost'         => 0,
             'grouped_type' => 'project',
             'grouped_data' => [
                 [
-                    'key' => $project->getKey(),
-                    'seconds' => 180,
-                    'cost' => 0,
+                    'key'          => $project->getKey(),
+                    'seconds'      => 180,
+                    'cost'         => 0,
                     'grouped_type' => 'tag',
                     'grouped_data' => [
                         [
-                            'key' => $tag1->getKey(),
-                            'seconds' => 120,
-                            'cost' => 0,
+                            'key'          => $tag1->getKey(),
+                            'seconds'      => 120,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
                         [
-                            'key' => $tag2->getKey(),
-                            'seconds' => 60,
-                            'cost' => 0,
+                            'key'          => $tag2->getKey(),
+                            'seconds'      => 60,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
@@ -1147,9 +1147,9 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
     {
         // Arrange
         $project = Project::factory()->create();
-        $tag1 = Tag::factory()->create();
-        $tag2 = Tag::factory()->create();
-        $start = Carbon::now();
+        $tag1    = Tag::factory()->create();
+        $tag2    = Tag::factory()->create();
+        $start   = Carbon::now();
 
         // One entry with two tags => subgroup rows show both tags, but project total should equal entry duration
         TimeEntry::factory()->startWithDuration($start, 100)->forProject($project)->create([
@@ -1175,27 +1175,27 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
 
         // Assert
         $expected = [
-            'seconds' => 100,
-            'cost' => 0,
+            'seconds'      => 100,
+            'cost'         => 0,
             'grouped_type' => 'project',
             'grouped_data' => [
                 [
-                    'key' => $project->getKey(),
-                    'seconds' => 100,
-                    'cost' => 0,
+                    'key'          => $project->getKey(),
+                    'seconds'      => 100,
+                    'cost'         => 0,
                     'grouped_type' => 'tag',
                     'grouped_data' => [
                         [
-                            'key' => $tag1->getKey(),
-                            'seconds' => 100,
-                            'cost' => 0,
+                            'key'          => $tag1->getKey(),
+                            'seconds'      => 100,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
                         [
-                            'key' => $tag2->getKey(),
-                            'seconds' => 100,
-                            'cost' => 0,
+                            'key'          => $tag2->getKey(),
+                            'seconds'      => 100,
+                            'cost'         => 0,
                             'grouped_type' => null,
                             'grouped_data' => null,
                         ],
@@ -1240,14 +1240,14 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
         // Assert
         // The entry is already on a 15-minute boundary (90 minutes), so it should stay at 90 minutes (5400 seconds)
         $this->assertEqualsCanonicalizing([
-            'seconds' => 5400, // 90 minutes - should NOT be rounded to 105 minutes (6300 seconds)
-            'cost' => 0,
+            'seconds'      => 5400, // 90 minutes - should NOT be rounded to 105 minutes (6300 seconds)
+            'cost'         => 0,
             'grouped_type' => 'project',
             'grouped_data' => [
                 [
-                    'key' => $project->getKey(),
-                    'seconds' => 5400, // 90 minutes
-                    'cost' => 0,
+                    'key'          => $project->getKey(),
+                    'seconds'      => 5400, // 90 minutes
+                    'cost'         => 0,
                     'grouped_type' => null,
                     'grouped_data' => null,
                 ],
@@ -1288,14 +1288,14 @@ class TimeEntryAggregationServiceTest extends TestCaseWithDatabase
         // Assert
         // 48 minutes rounded up to 15-minute interval = 60 minutes (3600 seconds)
         $this->assertEqualsCanonicalizing([
-            'seconds' => 3600, // 60 minutes
-            'cost' => 0,
+            'seconds'      => 3600, // 60 minutes
+            'cost'         => 0,
             'grouped_type' => 'project',
             'grouped_data' => [
                 [
-                    'key' => $project->getKey(),
-                    'seconds' => 3600, // 60 minutes
-                    'cost' => 0,
+                    'key'          => $project->getKey(),
+                    'seconds'      => 3600, // 60 minutes
+                    'cost'         => 0,
                     'grouped_type' => null,
                     'grouped_data' => null,
                 ],

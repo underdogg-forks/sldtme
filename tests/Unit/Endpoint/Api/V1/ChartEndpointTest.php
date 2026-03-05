@@ -238,8 +238,8 @@ class ChartEndpointTest extends EndpointTestAbstract
     public function test_total_weekly_billable_amount_endpoint_fails_if_the_user_is_an_employee_but_the_organization_does_not_allow_employees_to_view_billable_rates(): void
     {
         // Arrange
-        $user = $this->createUserWithRole(Role::Employee);
-        $organization = $user->organization;
+        $user                                           = $this->createUserWithRole(Role::Employee);
+        $organization                                   = $user->organization;
         $organization->employees_can_see_billable_rates = false;
         $organization->save();
         Passport::actingAs($user->user);
@@ -256,8 +256,8 @@ class ChartEndpointTest extends EndpointTestAbstract
     public function test_total_weekly_billable_amount_endpoint_returns_chart_data(): void
     {
         // Arrange
-        $user = $this->createUserWithRole(Role::Employee);
-        $organization = $user->organization;
+        $user                                           = $this->createUserWithRole(Role::Employee);
+        $organization                                   = $user->organization;
         $organization->employees_can_see_billable_rates = true;
         $organization->save();
         Passport::actingAs($user->user);

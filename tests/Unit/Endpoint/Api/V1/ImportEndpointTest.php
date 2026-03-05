@@ -67,8 +67,8 @@ class ImportEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->postJson(route('api.v1.import.import', ['organization' => $data->organization->getKey()]), [
-            'type' => 'toggl_time_entries',
-            'data' => base64_encode('some data'),
+            'type'    => 'toggl_time_entries',
+            'data'    => base64_encode('some data'),
             'options' => [],
         ]);
 
@@ -103,7 +103,7 @@ class ImportEndpointTest extends ApiEndpointTestAbstract
         $user = $this->createUserWithPermission([
             'import',
         ]);
-        $this->mock(ImportService::class, function (MockInterface $mock) use (&$user): void {
+        $this->mock(ImportService::class, static function (MockInterface $mock) use (&$user): void {
             $mock->shouldReceive('import')
                 ->withArgs(function (Organization $organization, string $importerType, string $data) use (&$user): bool {
                     return $organization->is($user->organization) && $importerType === 'toggl_time_entries' && $data === 'some data';
@@ -132,7 +132,7 @@ class ImportEndpointTest extends ApiEndpointTestAbstract
         $user = $this->createUserWithPermission([
             'import',
         ]);
-        $this->mock(ImportService::class, function (MockInterface $mock) use (&$user): void {
+        $this->mock(ImportService::class, static function (MockInterface $mock) use (&$user): void {
             $mock->shouldReceive('import')
                 ->withArgs(function (Organization $organization, string $importerType, string $data) use (&$user): bool {
                     return $organization->is($user->organization) && $importerType === 'toggl_time_entries' && $data === 'some data';

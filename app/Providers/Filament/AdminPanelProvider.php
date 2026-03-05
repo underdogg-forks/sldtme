@@ -56,8 +56,8 @@ class AdminPanelProvider extends PanelProvider
                 EnvironmentIndicatorPlugin::make()
                     ->color(fn () => match (App::environment()) {
                         'production' => null,
-                        'staging' => Color::Orange,
-                        default => Color::Blue,
+                        'staging'    => Color::Orange,
+                        default      => Color::Blue,
                     }),
             ])
             ->navigationGroups([
@@ -93,17 +93,17 @@ class AdminPanelProvider extends PanelProvider
         foreach ($modules as $module) {
             $panel->discoverResources(
                 in: module_path($module->getName(), 'app/Filament/Resources'),
-                for: 'Extensions\\'.$module->getName().'\\App\\Filament\\Resources'
+                for: 'Extensions\\' . $module->getName() . '\\App\\Filament\\Resources'
             );
 
             $panel->discoverPages(
                 in: module_path($module->getName(), 'app/Filament/Pages'),
-                for: 'Extensions\\'.$module->getName().'\\App\\Filament\\Pages'
+                for: 'Extensions\\' . $module->getName() . '\\App\\Filament\\Pages'
             );
 
             $panel->discoverWidgets(
                 in: module_path($module->getName(), 'app/Filament/Widgets'),
-                for: 'Extensions\\'.$module->getName().'\\App\\Filament\\Widgets'
+                for: 'Extensions\\' . $module->getName() . '\\App\\Filament\\Widgets'
             );
         }
 

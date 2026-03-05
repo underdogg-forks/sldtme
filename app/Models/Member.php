@@ -16,17 +16,17 @@ use Laravel\Jetstream\Membership as JetstreamMembership;
 use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
 /**
- * @property string $id
- * @property string $role
- * @property int|null $billable_rate
- * @property string $organization_id
- * @property string $user_id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property-read Organization $organization
- * @property-read User $user
- * @property-read Collection<int, ProjectMember> $projectMembers
- * @property-read Collection<int, TimeEntry> $timeEntries
+ * @property string                         $id
+ * @property string                         $role
+ * @property int|null                       $billable_rate
+ * @property string                         $organization_id
+ * @property string                         $user_id
+ * @property Carbon|null                    $created_at
+ * @property Carbon|null                    $updated_at
+ * @property Organization                   $organization
+ * @property User                           $user
+ * @property Collection<int, ProjectMember> $projectMembers
+ * @property Collection<int, TimeEntry>     $timeEntries
  *
  * @method static MemberFactory factory()
  */

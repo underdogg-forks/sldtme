@@ -378,7 +378,7 @@ class CurrencyService
 
     public function getRandomCurrencyCode(): string
     {
-        $currencies = ISOCurrencyProvider::getInstance()->getAvailableCurrencies();
+        $currencies    = ISOCurrencyProvider::getInstance()->getAvailableCurrencies();
         $currencyCodes = array_keys($currencies);
 
         return $currencyCodes[array_rand($currencyCodes)];

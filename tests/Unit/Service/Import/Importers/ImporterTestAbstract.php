@@ -124,12 +124,12 @@ class ImporterTestAbstract extends TestCase
         $this->assertNotNull($tag1);
 
         return (object) [
-            'user1' => $user1,
+            'user1'    => $user1,
             'project1' => $project1,
             'project2' => $project2,
             'project3' => $project3,
-            'tag1' => $tag1,
-            'tag2' => $tag2,
+            'tag1'     => $tag1,
+            'tag2'     => $tag2,
         ];
     }
 
@@ -166,15 +166,15 @@ class ImporterTestAbstract extends TestCase
         $this->assertSame($project2->getKey(), $task3->project_id);
 
         return (object) [
-            'client1' => $client1,
+            'client1'  => $client1,
             'project1' => $project1,
             'project2' => $project2,
-            'task1' => $task1,
+            'task1'    => $task1,
         ];
     }
 
     /**
-     * @param  object{user1: User, project1: Project, project2: Project, tag1: Tag, tag2: Tag}  $testScenario
+     * @param object{user1: User, project1: Project, project2: Project, tag1: Tag, tag2: Tag} $testScenario
      */
     protected function checkTimeEntries(object $testScenario, bool $secondRun = false): void
     {
@@ -206,10 +206,10 @@ class ImporterTestAbstract extends TestCase
     {
         $tempDir = TemporaryDirectory::make();
         $zipPath = $tempDir->path('test.zip');
-        $zip = new ZipArchive;
+        $zip     = new ZipArchive();
         $zip->open($zipPath, ZipArchive::CREATE);
         foreach (Storage::disk('testfiles')->allFiles($folder) as $file) {
-            $zip->addFile(Storage::disk('testfiles')->path($file), Str::of($file)->after($folder.'/')->value());
+            $zip->addFile(Storage::disk('testfiles')->path($file), Str::of($file)->after($folder . '/')->value());
         }
         $zip->close();
 

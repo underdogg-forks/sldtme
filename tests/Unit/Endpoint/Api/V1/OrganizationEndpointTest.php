@@ -62,9 +62,9 @@ class OrganizationEndpointTest extends ApiEndpointTestAbstract
     public function test_show_endpoint_shows_billable_rate_for_members_with_role_employee_if_organization_allows_it(): void
     {
         // Arrange
-        $data = $this->createUserWithRole(Role::Employee);
+        $data                                                 = $this->createUserWithRole(Role::Employee);
         $data->organization->employees_can_see_billable_rates = true;
-        $data->organization->billable_rate = 100;
+        $data->organization->billable_rate                    = 100;
         $data->organization->save();
         Passport::actingAs($data->user);
 
@@ -79,9 +79,9 @@ class OrganizationEndpointTest extends ApiEndpointTestAbstract
     public function test_show_endpoint_does_not_show_billable_rate_for_members_with_role_employee_if_organization_does_not_allow_it(): void
     {
         // Arrange
-        $data = $this->createUserWithRole(Role::Employee);
+        $data                                                 = $this->createUserWithRole(Role::Employee);
         $data->organization->employees_can_see_billable_rates = false;
-        $data->organization->billable_rate = 100;
+        $data->organization->billable_rate                    = 100;
         $data->organization->save();
         Passport::actingAs($data->user);
 
@@ -122,7 +122,7 @@ class OrganizationEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->putJson(route('api.v1.organizations.update', [$data->organization->getKey()]), [
-            'name' => $organizationFake->name,
+            'name'          => $organizationFake->name,
             'billable_rate' => null,
         ]);
 
@@ -145,33 +145,33 @@ class OrganizationEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->putJson(route('api.v1.organizations.update', [$data->organization->getKey()]), [
-            'name' => $organizationFake->name,
-            'number_format' => $organizationFake->number_format->value,
+            'name'            => $organizationFake->name,
+            'number_format'   => $organizationFake->number_format->value,
             'currency_format' => $organizationFake->currency_format->value,
-            'date_format' => $organizationFake->date_format->value,
+            'date_format'     => $organizationFake->date_format->value,
             'interval_format' => $organizationFake->interval_format->value,
-            'time_format' => $organizationFake->time_format->value,
+            'time_format'     => $organizationFake->time_format->value,
         ]);
 
         // Assert
         $response->assertStatus(200);
         $response->assertJson([
             'data' => [
-                'id' => $data->organization->getKey(),
-                'number_format' => $organizationFake->number_format->value,
+                'id'              => $data->organization->getKey(),
+                'number_format'   => $organizationFake->number_format->value,
                 'currency_format' => $organizationFake->currency_format->value,
-                'date_format' => $organizationFake->date_format->value,
+                'date_format'     => $organizationFake->date_format->value,
                 'interval_format' => $organizationFake->interval_format->value,
-                'time_format' => $organizationFake->time_format->value,
+                'time_format'     => $organizationFake->time_format->value,
             ],
         ]);
         $this->assertDatabaseHas(Organization::class, [
-            'name' => $organizationFake->name,
-            'number_format' => $organizationFake->number_format,
+            'name'            => $organizationFake->name,
+            'number_format'   => $organizationFake->number_format,
             'currency_format' => $organizationFake->currency_format,
-            'date_format' => $organizationFake->date_format,
+            'date_format'     => $organizationFake->date_format,
             'interval_format' => $organizationFake->interval_format,
-            'time_format' => $organizationFake->time_format,
+            'time_format'     => $organizationFake->time_format,
         ]);
     }
 
@@ -194,14 +194,14 @@ class OrganizationEndpointTest extends ApiEndpointTestAbstract
         $response->assertStatus(200);
         $response->assertJson([
             'data' => [
-                'id' => $data->organization->getKey(),
-                'name' => $data->organization->name,
+                'id'            => $data->organization->getKey(),
+                'name'          => $data->organization->name,
                 'billable_rate' => $organizationFake->billable_rate,
             ],
         ]);
         $this->assertDatabaseHas(Organization::class, [
-            'id' => $data->organization->getKey(),
-            'name' => $data->organization->name,
+            'id'            => $data->organization->getKey(),
+            'name'          => $data->organization->name,
             'billable_rate' => $organizationFake->billable_rate,
         ]);
     }
@@ -220,14 +220,14 @@ class OrganizationEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->putJson(route('api.v1.organizations.update', [$data->organization->getKey()]), [
-            'name' => $organizationFake->name,
+            'name'                             => $organizationFake->name,
             'employees_can_see_billable_rates' => true,
         ]);
 
         // Assert
         $response->assertStatus(200);
         $this->assertDatabaseHas(Organization::class, [
-            'name' => $organizationFake->name,
+            'name'                             => $organizationFake->name,
             'employees_can_see_billable_rates' => true,
         ]);
     }
@@ -238,9 +238,9 @@ class OrganizationEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'organizations:update',
         ]);
-        $billableRate = 111;
+        $billableRate     = 111;
         $organizationFake = Organization::factory()->billableRate($billableRate)->make();
-        $this->mock(BillableRateService::class, function (MockInterface $mock) use ($data, $billableRate): void {
+        $this->mock(BillableRateService::class, static function (MockInterface $mock) use ($data, $billableRate): void {
             $mock->shouldReceive('updateTimeEntriesBillableRateForOrganization')
                 ->once()
                 ->withArgs(fn (Organization $organization) => $organization->is($data->organization) && $organization->billable_rate === $billableRate);
@@ -249,14 +249,14 @@ class OrganizationEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->putJson(route('api.v1.organizations.update', [$data->organization->getKey()]), [
-            'name' => $organizationFake->name,
+            'name'          => $organizationFake->name,
             'billable_rate' => $organizationFake->billable_rate,
         ]);
 
         // Assert
         $response->assertStatus(200);
         $this->assertDatabaseHas(Organization::class, [
-            'name' => $organizationFake->name,
+            'name'          => $organizationFake->name,
             'billable_rate' => $organizationFake->billable_rate,
         ]);
     }

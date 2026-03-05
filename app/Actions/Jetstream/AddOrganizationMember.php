@@ -44,7 +44,7 @@ class AddOrganizationMember implements AddsTeamMembers
     {
         Validator::make([
             'email' => $email,
-            'role' => $role,
+            'role'  => $role,
         ], $this->rules())->after(
             $this->ensureUserIsNotAlreadyOnTeam($organization, $email)
         )->validateWithBag('addTeamMember');
@@ -61,8 +61,8 @@ class AddOrganizationMember implements AddsTeamMembers
             'email' => [
                 'required',
                 'email',
-                ExistsEloquent::make(User::class, 'email', function (Builder $builder) {
-                    /** @var Builder<User> $builder */
+                ExistsEloquent::make(User::class, 'email', static function (Builder $builder) {
+                    /* @var Builder<User> $builder */
                     return $builder->where('is_placeholder', '=', false);
                 })->withMessage(__('We were unable to find a registered user with this email address.')),
             ],

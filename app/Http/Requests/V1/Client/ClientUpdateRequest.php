@@ -13,7 +13,7 @@ use Korridor\LaravelModelValidationRules\Rules\UniqueEloquent;
 
 /**
  * @property Organization $organization Organization from model binding
- * @property Client|null $client Client from model binding
+ * @property Client|null  $client       Client from model binding
  */
 class ClientUpdateRequest extends BaseFormRequest
 {
@@ -31,8 +31,8 @@ class ClientUpdateRequest extends BaseFormRequest
                 'string',
                 'min:1',
                 'max:255',
-                UniqueEloquent::make(Client::class, 'name', function (Builder $builder): Builder {
-                    /** @var Builder<Client> $builder */
+                UniqueEloquent::make(Client::class, 'name', static function (Builder $builder): Builder {
+                    /* @var Builder<Client> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization');
                 })->ignore($this->client?->getKey())->withCustomTranslation('validation.client_name_already_exists'),
             ],

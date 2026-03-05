@@ -23,9 +23,9 @@ class UserMembershipEndpointTest extends ApiEndpointTestAbstract
     public function test_my_members_returns_information_about_the_organization_membership_of_the_current_user(): void
     {
         // Arrange
-        $data = $this->createUserWithPermission();
+        $data              = $this->createUserWithPermission();
         $otherOrganization = Organization::factory()->create();
-        $otherMember = Member::factory()->forOrganization($otherOrganization)->forUser($data->user)->create();
+        $otherMember       = Member::factory()->forOrganization($otherOrganization)->forUser($data->user)->create();
         Passport::actingAs($data->user);
 
         // Act

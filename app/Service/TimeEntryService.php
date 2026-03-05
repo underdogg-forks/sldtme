@@ -25,23 +25,25 @@ class TimeEntryService
     public function getEndSelectRawForRounding(?TimeEntryRoundingType $roundingType, ?int $roundingMinutes): string
     {
         if ($roundingType === null || $roundingMinutes === null) {
-            return 'coalesce("end", \''.Carbon::now()->toDateTimeString().'\')';
+            return 'coalesce("end", \'' . Carbon::now()->toDateTimeString() . '\')';
         }
         if ($roundingMinutes < 1) {
             throw new LogicException('Rounding minutes must be greater than 0');
         }
-        $end = 'coalesce("end", \''.Carbon::now()->toDateTimeString().'\')';
+        $end   = 'coalesce("end", \'' . Carbon::now()->toDateTimeString() . '\')';
         $start = $this->getStartSelectRawForRounding($roundingType, $roundingMinutes);
         if ($roundingType === TimeEntryRoundingType::Down) {
-            return 'date_bin(\''.$roundingMinutes.' minutes\', '.$end.', '.$start.')';
-        } elseif ($roundingType === TimeEntryRoundingType::Up) {
+            return 'date_bin(\'' . $roundingMinutes . ' minutes\', ' . $end . ', ' . $start . ')';
+        }
+        if ($roundingType === TimeEntryRoundingType::Up) {
             // If end is already on a boundary, keep it; otherwise round up to next boundary
-            return 'CASE WHEN '.$end.' = date_bin(\''.$roundingMinutes.' minutes\', '.$end.', '.$start.') '.
-                   'THEN '.$end.' '.
-                   'ELSE date_bin(\''.$roundingMinutes.' minutes\', '.$end.' + interval \''.$roundingMinutes.' minutes\', '.$start.') '.
-                   'END';
-        } elseif ($roundingType === TimeEntryRoundingType::Nearest) {
-            return 'date_bin(\''.$roundingMinutes.' minutes\', '.$end.' + interval \''.($roundingMinutes / 2).' minutes\', '.$start.')';
+            return 'CASE WHEN ' . $end . ' = date_bin(\'' . $roundingMinutes . ' minutes\', ' . $end . ', ' . $start . ') '
+                   . 'THEN ' . $end . ' '
+                   . 'ELSE date_bin(\'' . $roundingMinutes . ' minutes\', ' . $end . ' + interval \'' . $roundingMinutes . ' minutes\', ' . $start . ') '
+                   . 'END';
+        }
+        if ($roundingType === TimeEntryRoundingType::Nearest) {
+            return 'date_bin(\'' . $roundingMinutes . ' minutes\', ' . $end . ' + interval \'' . ($roundingMinutes / 2) . ' minutes\', ' . $start . ')';
         }
     }
 }

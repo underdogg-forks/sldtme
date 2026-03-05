@@ -30,15 +30,15 @@ class ProfileInformationTest extends TestCase
     public function test_profile_information_can_be_updated(): void
     {
         // Arrange
-        $user = User::factory()->create();
+        $user     = User::factory()->create();
         $timezone = app(TimezoneService::class)->getTimezones()[0];
         $this->actingAs($user);
 
         // Act
         $response = $this->put('/user/profile-information', [
-            'name' => 'Test Name',
-            'email' => 'test@example.com',
-            'timezone' => $timezone,
+            'name'       => 'Test Name',
+            'email'      => 'test@example.com',
+            'timezone'   => $timezone,
             'week_start' => Weekday::Sunday->value,
         ]);
 

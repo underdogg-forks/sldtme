@@ -22,8 +22,8 @@ class HarvestProjectsImporterTest extends ImporterTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $timezone = 'Europe/Vienna';
-        $importer = new HarvestProjectsImporter;
+        $timezone     = 'Europe/Vienna';
+        $importer     = new HarvestProjectsImporter();
         $importer->init($organization);
         $data = Storage::disk('testfiles')->get('harvest_projects_import_test_1.csv');
 

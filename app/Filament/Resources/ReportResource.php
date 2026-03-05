@@ -134,8 +134,8 @@ class ReportResource extends Resource
     {
         return [
             'index' => Pages\ListReports::route('/'),
-            'edit' => Pages\EditReport::route('/{record}/edit'),
-            'view' => Pages\ViewReport::route('/{record}'),
+            'edit'  => Pages\EditReport::route('/{record}/edit'),
+            'view'  => Pages\ViewReport::route('/{record}'),
         ];
     }
 }

@@ -24,19 +24,19 @@ class TogglDataImporter extends DefaultImporter
     public function importData(string $data, string $timezone): void
     {
         $temporaryDirectoryZip = null;
-        $temporaryDirectory = null;
+        $temporaryDirectory    = null;
         try {
-            $zip = new ZipArchive;
+            $zip                   = new ZipArchive();
             $temporaryDirectoryZip = TemporaryDirectory::make();
             file_put_contents($temporaryDirectoryZip->path('import.zip'), $data);
             $res = $zip->open($temporaryDirectoryZip->path('import.zip'), ZipArchive::RDONLY);
             if ($res !== true) {
-                throw new ImportException('Invalid ZIP, error code: '.$res);
+                throw new ImportException('Invalid ZIP, error code: ' . $res);
             }
             $temporaryDirectory = TemporaryDirectory::make();
             $zip->extractTo($temporaryDirectory->path());
             $zip->close();
-            if (! file_exists($temporaryDirectory->path('clients.json'))) {
+            if ( ! file_exists($temporaryDirectory->path('clients.json'))) {
                 throw new ImportException('File "clients.json" missing in ZIP');
             }
             $clientsFileContent = file_get_contents($temporaryDirectory->path('clients.json'));
@@ -47,7 +47,7 @@ class TogglDataImporter extends DefaultImporter
             if ($clients === null) {
                 throw new ImportException('File "clients.json" is empty');
             }
-            if (! file_exists($temporaryDirectory->path('projects.json'))) {
+            if ( ! file_exists($temporaryDirectory->path('projects.json'))) {
                 throw new ImportException('File "projects.json" missing in ZIP');
             }
             $projectsFileContent = file_get_contents($temporaryDirectory->path('projects.json'));
@@ -58,7 +58,7 @@ class TogglDataImporter extends DefaultImporter
             if ($projects === null) {
                 throw new ImportException('File "projects.json" is empty');
             }
-            if (! file_exists($temporaryDirectory->path('tags.json'))) {
+            if ( ! file_exists($temporaryDirectory->path('tags.json'))) {
                 throw new ImportException('File "tags.json" missing in ZIP');
             }
             $tagsFileContent = file_get_contents($temporaryDirectory->path('tags.json'));
@@ -69,7 +69,7 @@ class TogglDataImporter extends DefaultImporter
             if ($tags === null) {
                 throw new ImportException('File "tags.json" is empty');
             }
-            if (! file_exists($temporaryDirectory->path('workspace_users.json'))) {
+            if ( ! file_exists($temporaryDirectory->path('workspace_users.json'))) {
                 throw new ImportException('File "workspace_users.json" missing in ZIP');
             }
             $workspaceUsersFileContent = file_get_contents($temporaryDirectory->path('workspace_users.json'));
@@ -82,7 +82,7 @@ class TogglDataImporter extends DefaultImporter
             }
             foreach ($clients as $client) {
                 $this->clientImportHelper->getKey([
-                    'name' => $client->name,
+                    'name'            => $client->name,
                     'organization_id' => $this->organization->id,
                 ], [
                     'archived_at' => $client->archived === true ? Carbon::now() : null,
@@ -90,7 +90,7 @@ class TogglDataImporter extends DefaultImporter
             }
             foreach ($tags as $tag) {
                 $this->tagImportHelper->getKey([
-                    'name' => $tag->name,
+                    'name'            => $tag->name,
                     'organization_id' => $this->organization->id,
                 ], [], (string) $tag->id);
             }
@@ -100,7 +100,7 @@ class TogglDataImporter extends DefaultImporter
                 if ($timezone === '') {
                     $timezone = 'UTC';
                 }
-                if (! app(TimezoneService::class)->isValid($timezone)) {
+                if ( ! app(TimezoneService::class)->isValid($timezone)) {
                     Log::warning('TogglDateImporter: Invalid timezone', [
                         'timezone' => $timezone,
                     ]);
@@ -110,12 +110,12 @@ class TogglDataImporter extends DefaultImporter
                 $userId = $this->userImportHelper->getKey([
                     'email' => $workspaceUser->email,
                 ], [
-                    'name' => $workspaceUser->name,
-                    'timezone' => $timezone,
+                    'name'           => $workspaceUser->name,
+                    'timezone'       => $timezone,
                     'is_placeholder' => true,
                 ], (string) $workspaceUser->uid);
                 $this->memberImportHelper->getKey([
-                    'user_id' => $userId,
+                    'user_id'         => $userId,
                     'organization_id' => $this->organization->getKey(),
                 ], [
                     'role' => Role::Placeholder->value,
@@ -131,55 +131,55 @@ class TogglDataImporter extends DefaultImporter
                     }
                 }
 
-                if (! $this->colorService->isValid($project->color)) {
+                if ( ! $this->colorService->isValid($project->color)) {
                     throw new ImportException('Invalid color');
                 }
 
                 $projectId = $this->projectImportHelper->getKey([
-                    'name' => $project->name,
-                    'client_id' => $clientId,
+                    'name'            => $project->name,
+                    'client_id'       => $clientId,
                     'organization_id' => $this->organization->getKey(),
                 ], [
-                    'color' => $project->color,
-                    'is_billable' => $project->billable,
-                    'is_public' => ! $project->is_private,
+                    'color'         => $project->color,
+                    'is_billable'   => $project->billable,
+                    'is_public'     => ! $project->is_private,
                     'billable_rate' => $project->rate !== null ? (int) ($project->rate * 100) : null,
                 ], (string) $project->id);
 
-                if (! file_exists($temporaryDirectory->path('projects_users/'.$project->id.'.json'))) {
-                    throw new ImportException('File "projects_users/'.$project->id.'.json" missing in ZIP');
+                if ( ! file_exists($temporaryDirectory->path('projects_users/' . $project->id . '.json'))) {
+                    throw new ImportException('File "projects_users/' . $project->id . '.json" missing in ZIP');
                 }
-                $projectMembersFileContent = file_get_contents($temporaryDirectory->path('projects_users/'.$project->id.'.json'));
+                $projectMembersFileContent = file_get_contents($temporaryDirectory->path('projects_users/' . $project->id . '.json'));
                 if ($projectMembersFileContent === false) {
-                    throw new ImportException('File "projects_users/'.$project->id.'.json" can not be opened');
+                    throw new ImportException('File "projects_users/' . $project->id . '.json" can not be opened');
                 }
                 $projectMembers = json_decode($projectMembersFileContent);
                 if ($projectMembers === null) {
-                    throw new ImportException('File "projects_users/'.$project->id.'.json" is empty');
+                    throw new ImportException('File "projects_users/' . $project->id . '.json" is empty');
                 }
                 foreach ($projectMembers as $projectMember) {
                     $userId = $this->userImportHelper->getKeyByExternalIdentifier((string) $projectMember->user_id);
                     $this->projectMemberImportHelper->getKey([
                         'project_id' => $projectId,
-                        'member_id' => $this->memberImportHelper->getKeyByExternalIdentifier($userId),
+                        'member_id'  => $this->memberImportHelper->getKeyByExternalIdentifier($userId),
                     ], [
-                        'user_id' => $userId,
+                        'user_id'       => $userId,
                         'billable_rate' => $projectMember->rate !== null ? (int) ($projectMember->rate * 100) : null,
                     ]);
                 }
             }
             $projectIds = $this->projectImportHelper->getExternalIds();
             foreach ($projectIds as $projectIdExternal) {
-                if (! file_exists($temporaryDirectory->path('tasks/'.$projectIdExternal.'.json'))) {
+                if ( ! file_exists($temporaryDirectory->path('tasks/' . $projectIdExternal . '.json'))) {
                     continue;
                 }
-                $tasksFileContent = file_get_contents($temporaryDirectory->path('tasks/'.$projectIdExternal.'.json'));
+                $tasksFileContent = file_get_contents($temporaryDirectory->path('tasks/' . $projectIdExternal . '.json'));
                 if ($tasksFileContent === false) {
-                    throw new ImportException('File "tasks/'.$projectIdExternal.'.json" can not be opened');
+                    throw new ImportException('File "tasks/' . $projectIdExternal . '.json" can not be opened');
                 }
                 $tasks = json_decode($tasksFileContent);
                 if ($tasks === null) {
-                    throw new ImportException('File "tasks/'.$projectIdExternal.'.json" is empty');
+                    throw new ImportException('File "tasks/' . $projectIdExternal . '.json" is empty');
                 }
                 foreach ($tasks as $task) {
                     $projectId = $this->projectImportHelper->getKeyByExternalIdentifier((string) $projectIdExternal);
@@ -188,8 +188,8 @@ class TogglDataImporter extends DefaultImporter
                         throw new Exception('Project does not exist');
                     }
                     $this->taskImportHelper->getKey([
-                        'name' => $task->name,
-                        'project_id' => $projectId,
+                        'name'            => $task->name,
+                        'project_id'      => $projectId,
                         'organization_id' => $this->organization->getKey(),
                     ], [
                         'done_at' => $task->active === false ? Carbon::now() : null,
@@ -197,7 +197,6 @@ class TogglDataImporter extends DefaultImporter
                 }
             }
         } catch (ValueError $exception) {
-
         } catch (ImportException $exception) {
             throw $exception;
         } catch (Exception $exception) {

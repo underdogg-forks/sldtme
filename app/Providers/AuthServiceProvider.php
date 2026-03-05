@@ -33,7 +33,7 @@ class AuthServiceProvider extends ServiceProvider
         // define scopes for passport tokens
         Passport::tokensCan([
             'create' => 'Create resources',
-            'read' => 'Read Resources',
+            'read'   => 'Read Resources',
             'update' => 'Update Resources',
             'delete' => 'Delete Resources',
         ]);

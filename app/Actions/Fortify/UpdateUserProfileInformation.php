@@ -18,7 +18,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     /**
      * Validate and update the given user's profile information.
      *
-     * @param  array<string, mixed>  $input
+     * @param array<string, mixed> $input
      *
      * @throws ValidationException
      */
@@ -35,7 +35,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'email',
                 'max:255',
                 UniqueEloquent::make(User::class, 'email')->ignore($user->id)->query(function (Builder $query) {
-                    /** @var Builder<User> $query */
+                    /* @var Builder<User> $query */
                     return $query->where('is_placeholder', '=', false);
                 }),
             ],
@@ -60,18 +60,18 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
 
         if ($input['email'] !== $user->email) {
             $user->forceFill([
-                'name' => $input['name'],
-                'email' => $input['email'],
+                'name'              => $input['name'],
+                'email'             => $input['email'],
                 'email_verified_at' => null,
-                'timezone' => $input['timezone'],
-                'week_start' => $input['week_start'],
+                'timezone'          => $input['timezone'],
+                'week_start'        => $input['week_start'],
             ])->save();
 
             $user->sendEmailVerificationNotification();
         } else {
             $user->forceFill([
-                'name' => $input['name'],
-                'timezone' => $input['timezone'],
+                'name'       => $input['name'],
+                'timezone'   => $input['timezone'],
                 'week_start' => $input['week_start'],
             ])->save();
         }

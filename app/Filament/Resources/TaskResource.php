@@ -83,16 +83,15 @@ class TaskResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTasks::route('/'),
+            'index'  => Pages\ListTasks::route('/'),
             'create' => Pages\CreateTask::route('/create'),
-            'edit' => Pages\EditTask::route('/{record}/edit'),
+            'edit'   => Pages\EditTask::route('/{record}/edit'),
         ];
     }
 }

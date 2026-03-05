@@ -25,15 +25,15 @@ class ImportServiceTest extends TestCase
         // Arrange
         Storage::fake(config('filesystems.default'));
         $organization = Organization::factory()->create();
-        $timezone = 'Europe/Vienna';
-        $data = Storage::disk('testfiles')->get('toggl_time_entries_import_test_1.csv');
+        $timezone     = 'Europe/Vienna';
+        $data         = Storage::disk('testfiles')->get('toggl_time_entries_import_test_1.csv');
 
         // Act
         $importService = app(ImportService::class);
-        $report = $importService->import($organization, 'toggl_time_entries', $data, $timezone);
+        $report        = $importService->import($organization, 'toggl_time_entries', $data, $timezone);
 
         // Assert
-        $lock = Cache::lock('import:'.$organization->getKey());
+        $lock = Cache::lock('import:' . $organization->getKey());
         $this->assertTrue($lock->get());
         $this->assertSame(2, $report->timeEntriesCreated);
         $this->assertSame(2, $report->tagsCreated);
@@ -48,8 +48,8 @@ class ImportServiceTest extends TestCase
         // Arrange
         Storage::fake(config('filesystems.default'));
         $organization = Organization::factory()->create();
-        $timezone = 'Europe/Vienna';
-        $data = 'Invalid CSV data';
+        $timezone     = 'Europe/Vienna';
+        $data         = 'Invalid CSV data';
 
         // Act
         $importService = app(ImportService::class);
@@ -57,7 +57,7 @@ class ImportServiceTest extends TestCase
             $importService->import($organization, 'toggl_time_entries', $data, $timezone);
         } catch (ImportException) {
             // Assert
-            $lock = Cache::lock('import:'.$organization->getKey());
+            $lock = Cache::lock('import:' . $organization->getKey());
             $this->assertTrue($lock->get());
         }
     }
@@ -67,9 +67,9 @@ class ImportServiceTest extends TestCase
         // Arrange
         Storage::fake(config('filesystems.default'));
         $organization = Organization::factory()->create();
-        $timezone = 'Europe/Vienna';
-        $data = Storage::disk('testfiles')->get('toggl_time_entries_import_test_1.csv');
-        Cache::lock('import:'.$organization->getKey(), 10)->get();
+        $timezone     = 'Europe/Vienna';
+        $data         = Storage::disk('testfiles')->get('toggl_time_entries_import_test_1.csv');
+        Cache::lock('import:' . $organization->getKey(), 10)->get();
 
         // Act
         $importService = app(ImportService::class);

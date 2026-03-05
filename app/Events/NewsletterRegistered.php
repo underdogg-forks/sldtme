@@ -21,8 +21,8 @@ class NewsletterRegistered
      */
     public function __construct(string $name, string $email, string $id)
     {
-        $this->name = $name;
+        $this->name  = $name;
         $this->email = $email;
-        $this->id = $id;
+        $this->id    = $id;
     }
 }

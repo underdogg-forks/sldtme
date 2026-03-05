@@ -50,93 +50,93 @@ class HarvestTimeEntriesImporter extends DefaultImporter
             $records = $reader->getRecords();
             foreach ($records as $record) {
                 $firstname = $record['First Name'];
-                $lastname = $record['Last Name'];
-                $userId = $this->userImportHelper->getKey([
-                    'email' => Str::slug($firstname).'.'.Str::slug($lastname).'@solidtime-import.test',
+                $lastname  = $record['Last Name'];
+                $userId    = $this->userImportHelper->getKey([
+                    'email' => Str::slug($firstname) . '.' . Str::slug($lastname) . '@solidtime-import.test',
                 ], [
-                    'name' => $firstname.' '.$lastname,
-                    'timezone' => 'UTC',
+                    'name'           => $firstname . ' ' . $lastname,
+                    'timezone'       => 'UTC',
                     'is_placeholder' => true,
                 ]);
                 $memberId = $this->memberImportHelper->getKey([
-                    'user_id' => $userId,
+                    'user_id'         => $userId,
                     'organization_id' => $this->organization->getKey(),
                 ], [
                     'role' => Role::Placeholder->value,
                 ]);
-                $member = $this->memberImportHelper->getModelById($memberId);
+                $member   = $this->memberImportHelper->getModelById($memberId);
                 $clientId = null;
                 if ($record['Client'] !== '') {
                     $clientId = $this->clientImportHelper->getKey([
-                        'name' => $record['Client'],
+                        'name'            => $record['Client'],
                         'organization_id' => $this->organization->id,
                     ]);
                 }
-                $projectId = null;
-                $project = null;
+                $projectId     = null;
+                $project       = null;
                 $projectMember = null;
                 if ($record['Project'] !== '') {
                     $projectId = $this->projectImportHelper->getKey([
-                        'name' => $record['Project'],
-                        'client_id' => $clientId,
+                        'name'            => $record['Project'],
+                        'client_id'       => $clientId,
                         'organization_id' => $this->organization->id,
                     ], [
-                        'color' => $this->colorService->getRandomColor(),
+                        'color'       => $this->colorService->getRandomColor(),
                         'is_billable' => true,
                     ]);
-                    $project = $this->projectImportHelper->getModelById($projectId);
+                    $project       = $this->projectImportHelper->getModelById($projectId);
                     $projectMember = $this->projectMemberImportHelper->getModel([
                         'project_id' => $projectId,
-                        'member_id' => $memberId,
+                        'member_id'  => $memberId,
                     ]);
                 }
                 $taskId = null;
                 if ($record['Task'] !== '') {
                     $taskId = $this->taskImportHelper->getKey([
-                        'name' => $record['Task'],
-                        'project_id' => $projectId,
+                        'name'            => $record['Task'],
+                        'project_id'      => $projectId,
                         'organization_id' => $this->organization->id,
                     ]);
                     $this->taskImportHelper->getModelById($taskId);
                 }
-                $timeEntry = new TimeEntry;
+                $timeEntry = new TimeEntry();
                 $timeEntry->disableAuditing();
-                $timeEntry->user_id = $userId;
-                $timeEntry->member_id = $memberId;
-                $timeEntry->task_id = $taskId;
-                $timeEntry->project_id = $projectId;
-                $timeEntry->client_id = $clientId;
+                $timeEntry->user_id         = $userId;
+                $timeEntry->member_id       = $memberId;
+                $timeEntry->task_id         = $taskId;
+                $timeEntry->project_id      = $projectId;
+                $timeEntry->client_id       = $clientId;
                 $timeEntry->organization_id = $this->organization->id;
-                if (strlen($record['Notes']) > 5000) {
+                if (mb_strlen($record['Notes']) > 5000) {
                     throw new ImportException('Time entry note is too long');
                 }
                 $timeEntry->description = $record['Notes'];
-                if (! in_array($record['Billable?'], ['Yes', 'No'], true)) {
+                if ( ! in_array($record['Billable?'], ['Yes', 'No'], true)) {
                     throw new ImportException('Invalid billable value');
                 }
-                $timeEntry->billable = $record['Billable?'] === 'Yes';
-                $timeEntry->tags = [];
+                $timeEntry->billable    = $record['Billable?'] === 'Yes';
+                $timeEntry->tags        = [];
                 $timeEntry->is_imported = true;
 
                 // Start & End
                 try {
                     $date = Carbon::createFromFormat('Y-m-d', $record['Date'], $timezone);
                 } catch (InvalidFormatException) {
-                    throw new ImportException('Date ("'.$record['Date'].'") is invalid');
+                    throw new ImportException('Date ("' . $record['Date'] . '") is invalid');
                 }
                 if ($date === null) {
-                    throw new ImportException('Date ("'.$record['Date'].'") is invalid');
+                    throw new ImportException('Date ("' . $record['Date'] . '") is invalid');
                 }
-                if (! isset($record['Hours']) || ! is_string($record['Hours'])) {
-                    throw new ImportException('Hours ("'.($record['Hours'] ?? '<null>').'") is invalid');
+                if ( ! isset($record['Hours']) || ! is_string($record['Hours'])) {
+                    throw new ImportException('Hours ("' . ($record['Hours'] ?? '<null>') . '") is invalid');
                 }
                 $hoursField = Str::replace(',', '.', $record['Hours']);
-                if (! is_numeric($hoursField)) {
-                    throw new ImportException('Hours ("'.$record['Hours'].'") is invalid');
+                if ( ! is_numeric($hoursField)) {
+                    throw new ImportException('Hours ("' . $record['Hours'] . '") is invalid');
                 }
-                $hours = (float) $hoursField;
-                $timeEntry->start = $date->copy()->startOfDay()->utc();
-                $timeEntry->end = $date->copy()->startOfDay()->addHours($hours)->utc();
+                $hours                    = (float) $hoursField;
+                $timeEntry->start         = $date->copy()->startOfDay()->utc();
+                $timeEntry->end           = $date->copy()->startOfDay()->addHours($hours)->utc();
                 $timeEntry->billable_rate = $this->billableRateService->getBillableRateForTimeEntryWithGivenRelations(
                     $timeEntry,
                     $projectMember,
@@ -163,20 +163,6 @@ class HarvestTimeEntriesImporter extends DefaultImporter
         }
     }
 
-    /**
-     * @param  array<string>  $header
-     *
-     * @throws ImportException
-     */
-    private function validateHeader(array $header): void
-    {
-        foreach (self::REQUIRED_FIELDS as $requiredField) {
-            if (! in_array($requiredField, $header, true)) {
-                throw new ImportException('Invalid CSV header, missing field: '.$requiredField);
-            }
-        }
-    }
-
     #[Override]
     public function getName(): string
     {
@@ -187,5 +173,19 @@ class HarvestTimeEntriesImporter extends DefaultImporter
     public function getDescription(): string
     {
         return __('importer.harvest_time_entries.description');
+    }
+
+    /**
+     * @param array<string> $header
+     *
+     * @throws ImportException
+     */
+    private function validateHeader(array $header): void
+    {
+        foreach (self::REQUIRED_FIELDS as $requiredField) {
+            if ( ! in_array($requiredField, $header, true)) {
+                throw new ImportException('Invalid CSV header, missing field: ' . $requiredField);
+            }
+        }
     }
 }

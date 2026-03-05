@@ -21,8 +21,8 @@ class AuthSendReminderForExpiringApiTokensCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'auth:send-mails-expiring-api-tokens '.
-        ' { --dry-run : Do not actually send emails or save anything to the database, just output what would happen }';
+    protected $signature = 'auth:send-mails-expiring-api-tokens '
+        . ' { --dry-run : Do not actually send emails or save anything to the database, just output what would happen }';
 
     /**
      * The console command description.
@@ -50,19 +50,19 @@ class AuthSendReminderForExpiringApiTokensCommand extends Command
                 'client',
                 'user',
             ])
-            ->whereHas('user', function (Builder $query): void {
-                /** @var Builder<User> $query */
+            ->whereHas('user', static function (Builder $query): void {
+                /* @var Builder<User> $query */
                 $query->where('is_placeholder', '=', false);
             })
             ->isApiToken(true)
             ->orderBy('created_at', 'asc')
-            ->chunk(500, function (Collection $tokens) use ($dryRun, &$sentMails): void {
+            ->chunk(500, static function (Collection $tokens) use ($dryRun, &$sentMails): void {
                 /** @var Collection<int, Token> $tokens */
                 foreach ($tokens as $token) {
                     $user = $token->user;
-                    $this->info('Start sending email to user "'.$user->email.'" ('.$user->getKey().') reminding about API token '.$token->getKey());
+                    $this->info('Start sending email to user "' . $user->email . '" (' . $user->getKey() . ') reminding about API token ' . $token->getKey());
                     $sentMails++;
-                    if (! $dryRun) {
+                    if ( ! $dryRun) {
                         Mail::to($user->email)
                             ->queue(new AuthApiTokenExpirationReminderMail($token, $user));
                         $token->reminder_sent_at = Carbon::now();
@@ -70,7 +70,7 @@ class AuthSendReminderForExpiringApiTokensCommand extends Command
                     }
                 }
             });
-        $this->comment('Finished sending '.$sentMails.' expiring API token emails...');
+        $this->comment('Finished sending ' . $sentMails . ' expiring API token emails...');
 
         $this->comment('Sent emails about expired API tokens');
         $sentMails = 0;
@@ -81,19 +81,19 @@ class AuthSendReminderForExpiringApiTokensCommand extends Command
                 'client',
                 'user',
             ])
-            ->whereHas('user', function (Builder $query): void {
-                /** @var Builder<User> $query */
+            ->whereHas('user', static function (Builder $query): void {
+                /* @var Builder<User> $query */
                 $query->where('is_placeholder', '=', false);
             })
             ->isApiToken(true)
             ->orderBy('created_at', 'asc')
-            ->chunk(500, function (Collection $tokens) use ($dryRun, &$sentMails): void {
+            ->chunk(500, static function (Collection $tokens) use ($dryRun, &$sentMails): void {
                 /** @var Collection<int, Token> $tokens */
                 foreach ($tokens as $token) {
                     $user = $token->user;
-                    $this->info('Start sending email to user "'.$user->email.'" ('.$user->getKey().') about expired API token '.$token->getKey());
+                    $this->info('Start sending email to user "' . $user->email . '" (' . $user->getKey() . ') about expired API token ' . $token->getKey());
                     $sentMails++;
-                    if (! $dryRun) {
+                    if ( ! $dryRun) {
                         Mail::to($user->email)
                             ->queue(new AuthApiTokenExpiredMail($token, $user));
                         $token->expired_info_sent_at = Carbon::now();
@@ -101,7 +101,7 @@ class AuthSendReminderForExpiringApiTokensCommand extends Command
                     }
                 }
             });
-        $this->comment('Finished sending '.$sentMails.' expired API token emails...');
+        $this->comment('Finished sending ' . $sentMails . ' expired API token emails...');
 
         return self::SUCCESS;
     }

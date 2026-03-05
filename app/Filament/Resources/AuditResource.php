@@ -68,7 +68,6 @@ class AuditResource extends Resource
                     ->dateTime(),
             ])
             ->filters([
-                //
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -87,9 +86,9 @@ class AuditResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAudits::route('/'),
+            'index'  => Pages\ListAudits::route('/'),
             'create' => Pages\CreateAudit::route('/create'),
-            'view' => Pages\ViewAudit::route('/{record}'),
+            'view'   => Pages\ViewAudit::route('/{record}'),
         ];
     }
 }

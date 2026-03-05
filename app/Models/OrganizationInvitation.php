@@ -14,13 +14,13 @@ use Laravel\Jetstream\TeamInvitation as JetstreamTeamInvitation;
 use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
 /**
- * @property string $id
- * @property string $email
- * @property string $role
- * @property string $organization_id
- * @property Carbon|null $updated_at
- * @property Carbon|null $created_at
- * @property-read Organization $organization
+ * @property string       $id
+ * @property string       $email
+ * @property string       $role
+ * @property string       $organization_id
+ * @property Carbon|null  $updated_at
+ * @property Carbon|null  $created_at
+ * @property Organization $organization
  *
  * @method static OrganizationInvitationFactory factory()
  */

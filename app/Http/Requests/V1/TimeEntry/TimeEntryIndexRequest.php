@@ -13,6 +13,7 @@ use App\Models\Project;
 use App\Models\Tag;
 use App\Models\Task;
 use App\Service\TimeEntryFilter;
+use Closure;
 use Illuminate\Contracts\Validation\Rule as RuleContract;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Database\Eloquent\Builder;
@@ -27,7 +28,7 @@ class TimeEntryIndexRequest extends BaseFormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, array<string|ValidationRule|RuleContract|\Closure>>
+     * @return array<string, array<string|ValidationRule|RuleContract|Closure>>
      */
     public function rules(): array
     {
@@ -35,8 +36,8 @@ class TimeEntryIndexRequest extends BaseFormRequest
             // Filter by member ID
             'member_id' => [
                 'string',
-                ExistsEloquent::make(Member::class, null, function (Builder $builder): Builder {
-                    /** @var Builder<Member> $builder */
+                ExistsEloquent::make(Member::class, null, static function (Builder $builder): Builder {
+                    /* @var Builder<Member> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization');
                 })->uuid(),
             ],
@@ -47,8 +48,8 @@ class TimeEntryIndexRequest extends BaseFormRequest
             ],
             'member_ids.*' => [
                 'string',
-                ExistsEloquent::make(Member::class, null, function (Builder $builder): Builder {
-                    /** @var Builder<Member> $builder */
+                ExistsEloquent::make(Member::class, null, static function (Builder $builder): Builder {
+                    /* @var Builder<Member> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization');
                 })->uuid(),
             ],
@@ -59,12 +60,12 @@ class TimeEntryIndexRequest extends BaseFormRequest
             ],
             'client_ids.*' => [
                 'string',
-                function (string $attribute, mixed $value, \Closure $fail): void {
+                function (string $attribute, mixed $value, Closure $fail): void {
                     if ($value === TimeEntryFilter::NONE_VALUE) {
                         return;
                     }
-                    ExistsEloquent::make(Client::class, null, function (Builder $builder): Builder {
-                        /** @var Builder<Client> $builder */
+                    ExistsEloquent::make(Client::class, null, static function (Builder $builder): Builder {
+                        /* @var Builder<Client> $builder */
                         return $builder->whereBelongsTo($this->organization, 'organization');
                     })->uuid()->validate($attribute, $value, $fail);
                 },
@@ -76,12 +77,12 @@ class TimeEntryIndexRequest extends BaseFormRequest
             ],
             'project_ids.*' => [
                 'string',
-                function (string $attribute, mixed $value, \Closure $fail): void {
+                function (string $attribute, mixed $value, Closure $fail): void {
                     if ($value === TimeEntryFilter::NONE_VALUE) {
                         return;
                     }
-                    ExistsEloquent::make(Project::class, null, function (Builder $builder): Builder {
-                        /** @var Builder<Project> $builder */
+                    ExistsEloquent::make(Project::class, null, static function (Builder $builder): Builder {
+                        /* @var Builder<Project> $builder */
                         return $builder->whereBelongsTo($this->organization, 'organization');
                     })->uuid()->validate($attribute, $value, $fail);
                 },
@@ -93,12 +94,12 @@ class TimeEntryIndexRequest extends BaseFormRequest
             ],
             'tag_ids.*' => [
                 'string',
-                function (string $attribute, mixed $value, \Closure $fail): void {
+                function (string $attribute, mixed $value, Closure $fail): void {
                     if ($value === TimeEntryFilter::NONE_VALUE) {
                         return;
                     }
-                    ExistsEloquent::make(Tag::class, null, function (Builder $builder): Builder {
-                        /** @var Builder<Tag> $builder */
+                    ExistsEloquent::make(Tag::class, null, static function (Builder $builder): Builder {
+                        /* @var Builder<Tag> $builder */
                         return $builder->whereBelongsTo($this->organization, 'organization');
                     })->uuid()->validate($attribute, $value, $fail);
                 },
@@ -110,12 +111,12 @@ class TimeEntryIndexRequest extends BaseFormRequest
             ],
             'task_ids.*' => [
                 'string',
-                function (string $attribute, mixed $value, \Closure $fail): void {
+                function (string $attribute, mixed $value, Closure $fail): void {
                     if ($value === TimeEntryFilter::NONE_VALUE) {
                         return;
                     }
-                    ExistsEloquent::make(Task::class, null, function (Builder $builder): Builder {
-                        /** @var Builder<Task> $builder */
+                    ExistsEloquent::make(Task::class, null, static function (Builder $builder): Builder {
+                        /* @var Builder<Task> $builder */
                         return $builder->whereBelongsTo($this->organization, 'organization');
                     })->uuid()->validate($attribute, $value, $fail);
                 },
@@ -192,7 +193,7 @@ class TimeEntryIndexRequest extends BaseFormRequest
 
     public function getRoundingType(): ?TimeEntryRoundingType
     {
-        if (! $this->has('rounding_type') || $this->validated('rounding_type') === null) {
+        if ( ! $this->has('rounding_type') || $this->validated('rounding_type') === null) {
             return null;
         }
 
@@ -201,7 +202,7 @@ class TimeEntryIndexRequest extends BaseFormRequest
 
     public function getRoundingMinutes(): ?int
     {
-        if (! $this->has('rounding_minutes') || $this->validated('rounding_minutes') === null) {
+        if ( ! $this->has('rounding_minutes') || $this->validated('rounding_minutes') === null) {
             return null;
         }
 

@@ -19,11 +19,6 @@ class ProjectCollection extends ResourceCollection implements PaginatedResourceC
         $this->showBillableRates = $showBillableRates;
     }
 
-    protected function collects(): ?string
-    {
-        return null;
-    }
-
     /**
      * Transform the resource collection into an array.
      *
@@ -35,5 +30,10 @@ class ProjectCollection extends ResourceCollection implements PaginatedResourceC
             return (new ProjectResource($project, $this->showBillableRates))
                 ->toArray($request);
         })->all();
+    }
+
+    protected function collects(): ?string
+    {
+        return null;
     }
 }

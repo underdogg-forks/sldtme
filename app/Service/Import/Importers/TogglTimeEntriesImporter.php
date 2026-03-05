@@ -14,36 +14,14 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use League\Csv\Exception as CsvException;
 use League\Csv\Reader;
+use Override;
 
 class TogglTimeEntriesImporter extends DefaultImporter
 {
     /**
-     * @return array<string>
-     *
      * @throws ImportException
      */
-    private function getTags(string $tags): array
-    {
-        if (Str::trim($tags) === '') {
-            return [];
-        }
-        $tagsParsed = explode(', ', $tags);
-        $tagIds = [];
-        foreach ($tagsParsed as $tagParsed) {
-            $tagId = $this->tagImportHelper->getKey([
-                'name' => $tagParsed,
-                'organization_id' => $this->organization->id,
-            ]);
-            $tagIds[] = $tagId;
-        }
-
-        return $tagIds;
-    }
-
-    /**
-     * @throws ImportException
-     */
-    #[\Override]
+    #[Override]
     public function importData(string $data, string $timezone): void
     {
         try {
@@ -59,85 +37,85 @@ class TogglTimeEntriesImporter extends DefaultImporter
                 $userId = $this->userImportHelper->getKey([
                     'email' => $record['Email'],
                 ], [
-                    'name' => $record['User'],
-                    'timezone' => 'UTC',
+                    'name'           => $record['User'],
+                    'timezone'       => 'UTC',
                     'is_placeholder' => true,
                 ]);
                 $memberId = $this->memberImportHelper->getKey([
-                    'user_id' => $userId,
+                    'user_id'         => $userId,
                     'organization_id' => $this->organization->getKey(),
                 ], [
                     'role' => Role::Placeholder->value,
                 ]);
-                $member = $this->memberImportHelper->getModelById($memberId);
+                $member   = $this->memberImportHelper->getModelById($memberId);
                 $clientId = null;
                 if ($record['Client'] !== '') {
                     $clientId = $this->clientImportHelper->getKey([
-                        'name' => $record['Client'],
+                        'name'            => $record['Client'],
                         'organization_id' => $this->organization->id,
                     ]);
                 }
-                $projectId = null;
-                $project = null;
+                $projectId     = null;
+                $project       = null;
                 $projectMember = null;
                 if ($record['Project'] !== '') {
                     $projectId = $this->projectImportHelper->getKey([
-                        'name' => $record['Project'],
-                        'client_id' => $clientId,
+                        'name'            => $record['Project'],
+                        'client_id'       => $clientId,
                         'organization_id' => $this->organization->id,
                     ], [
                         'is_billable' => false,
-                        'color' => $this->colorService->getRandomColor(),
+                        'color'       => $this->colorService->getRandomColor(),
                     ]);
-                    $project = $this->projectImportHelper->getModelById($projectId);
+                    $project       = $this->projectImportHelper->getModelById($projectId);
                     $projectMember = $this->projectMemberImportHelper->getModel([
                         'project_id' => $projectId,
-                        'member_id' => $memberId,
+                        'member_id'  => $memberId,
                     ]);
                 }
                 $taskId = null;
                 if ($record['Task'] !== '') {
                     $taskId = $this->taskImportHelper->getKey([
-                        'name' => $record['Task'],
-                        'project_id' => $projectId,
+                        'name'            => $record['Task'],
+                        'project_id'      => $projectId,
                         'organization_id' => $this->organization->id,
                     ]);
                     $this->taskImportHelper->getModelById($taskId);
                 }
-                $timeEntry = new TimeEntry;
+                $timeEntry = new TimeEntry();
                 $timeEntry->disableAuditing();
-                $timeEntry->user_id = $userId;
-                $timeEntry->member_id = $memberId;
-                $timeEntry->task_id = $taskId;
-                $timeEntry->project_id = $projectId;
-                $timeEntry->client_id = $clientId;
+                $timeEntry->user_id         = $userId;
+                $timeEntry->member_id       = $memberId;
+                $timeEntry->task_id         = $taskId;
+                $timeEntry->project_id      = $projectId;
+                $timeEntry->client_id       = $clientId;
                 $timeEntry->organization_id = $this->organization->id;
-                $timeEntry->description = $record['Description'];
-                if (! in_array($record['Billable'], ['Yes', 'No'], true)) {
+                $timeEntry->description     = $record['Description'];
+                if ( ! in_array($record['Billable'], ['Yes', 'No'], true)) {
                     throw new ImportException('Invalid billable value');
                 }
-                $timeEntry->billable = $record['Billable'] === 'Yes';
-                $timeEntry->tags = $this->getTags($record['Tags']);
+                $timeEntry->billable    = $record['Billable'] === 'Yes';
+                $timeEntry->tags        = $this->getTags($record['Tags']);
                 $timeEntry->is_imported = true;
                 try {
-                    $start = Carbon::createFromFormat('Y-m-d H:i:s', $record['Start date'].' '.$record['Start time'], $timezone);
+                    $start = Carbon::createFromFormat('Y-m-d H:i:s', $record['Start date'] . ' ' . $record['Start time'], $timezone);
                 } catch (InvalidFormatException) {
-                    throw new ImportException('Start date ("'.$record['Start date'].'") or time ("'.$record['Start time'].'") are invalid');
+                    throw new ImportException('Start date ("' . $record['Start date'] . '") or time ("' . $record['Start time'] . '") are invalid');
                 }
                 if ($start === null) {
-                    throw new ImportException('Start date ("'.$record['Start date'].'") or time ("'.$record['Start time'].'") are invalid');
+                    throw new ImportException('Start date ("' . $record['Start date'] . '") or time ("' . $record['Start time'] . '") are invalid');
                 }
                 $timeEntry->start = $start->utc();
 
                 try {
-                    $end = Carbon::createFromFormat('Y-m-d H:i:s', $record['End date'].' '.$record['End time'], $timezone);
+                    $end = Carbon::createFromFormat('Y-m-d H:i:s', $record['End date'] . ' ' . $record['End time'], $timezone);
                 } catch (InvalidFormatException) {
-                    throw new ImportException('End date ("'.$record['End date'].'") or time ("'.$record['End time'].'") are invalid');
+                    throw new ImportException('End date ("' . $record['End date'] . '") or time ("' . $record['End time'] . '") are invalid');
                 }
                 if ($end === null) {
-                    throw new ImportException('End date ("'.$record['End date'].'") or time ("'.$record['End time'].'") are invalid');
+                    throw new ImportException('End date ("' . $record['End date'] . '") or time ("' . $record['End time'] . '") are invalid');
                 }
-                $timeEntry->end = $end->utc();
+                $timeEntry->end           = $end->utc();
                 $timeEntry->billable_rate = $this->billableRateService->getBillableRateForTimeEntryWithGivenRelations(
                     $timeEntry,
                     $projectMember,
@@ -164,8 +142,43 @@ class TogglTimeEntriesImporter extends DefaultImporter
         }
     }
 
+    #[Override]
+    public function getName(): string
+    {
+        return __('importer.toggl_time_entries.name');
+    }
+
+    #[Override]
+    public function getDescription(): string
+    {
+        return __('importer.toggl_time_entries.description');
+    }
+
     /**
-     * @param  array<string>  $header
+     * @return array<string>
+     *
+     * @throws ImportException
+     */
+    private function getTags(string $tags): array
+    {
+        if (Str::trim($tags) === '') {
+            return [];
+        }
+        $tagsParsed = explode(', ', $tags);
+        $tagIds     = [];
+        foreach ($tagsParsed as $tagParsed) {
+            $tagId = $this->tagImportHelper->getKey([
+                'name'            => $tagParsed,
+                'organization_id' => $this->organization->id,
+            ]);
+            $tagIds[] = $tagId;
+        }
+
+        return $tagIds;
+    }
+
+    /**
+     * @param array<string> $header
      *
      * @throws ImportException
      */
@@ -186,21 +199,9 @@ class TogglTimeEntriesImporter extends DefaultImporter
             'Tags',
         ];
         foreach ($requiredFields as $requiredField) {
-            if (! in_array($requiredField, $header, true)) {
-                throw new ImportException('Invalid CSV header, missing field: '.$requiredField);
+            if ( ! in_array($requiredField, $header, true)) {
+                throw new ImportException('Invalid CSV header, missing field: ' . $requiredField);
             }
         }
-    }
-
-    #[\Override]
-    public function getName(): string
-    {
-        return __('importer.toggl_time_entries.name');
-    }
-
-    #[\Override]
-    public function getDescription(): string
-    {
-        return __('importer.toggl_time_entries.description');
     }
 }

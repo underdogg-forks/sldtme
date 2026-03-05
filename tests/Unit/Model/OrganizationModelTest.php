@@ -15,7 +15,7 @@ class OrganizationModelTest extends ModelTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $members = Member::factory()->forOrganization($organization)->createMany(3);
+        $members      = Member::factory()->forOrganization($organization)->createMany(3);
 
         // Act
         $organization->refresh();

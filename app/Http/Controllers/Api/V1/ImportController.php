@@ -16,7 +16,7 @@ use Illuminate\Http\JsonResponse;
 class ImportController extends Controller
 {
     /**
-     * Get information about available importers
+     * Get information about available importers.
      *
      * @operationId getImporters
      *
@@ -35,10 +35,10 @@ class ImportController extends Controller
 
         foreach ($importers as $key => $importerClass) {
             /** @var ImporterContract $importer */
-            $importer = new $importerClass;
+            $importer            = new $importerClass();
             $importersResponse[] = [
-                'key' => $key,
-                'name' => $importer->getName(),
+                'key'         => $key,
+                'name'        => $importer->getName(),
                 'description' => $importer->getDescription(),
             ];
         }
@@ -49,7 +49,7 @@ class ImportController extends Controller
     }
 
     /**
-     * Import data into the organization
+     * Import data into the organization.
      *
      * @throws AuthorizationException
      *
@@ -68,7 +68,7 @@ class ImportController extends Controller
             }
 
             $timezone = $this->user()->timezone;
-            $report = $importService->import(
+            $report   = $importService->import(
                 $organization,
                 $request->input('type'),
                 $importData,
@@ -76,7 +76,7 @@ class ImportController extends Controller
             );
 
             return new JsonResponse([
-                /** @var array{
+                /* @var array{
                  *   clients: array{
                  *     created: int,
                  *   },

@@ -26,7 +26,6 @@ use Laravel\Octane\Listeners\StopWorkerIfNecessary;
 use Laravel\Octane\Octane;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Octane Server
@@ -75,11 +74,9 @@ return [
         RequestReceived::class => [
             ...Octane::prepareApplicationForNextOperation(),
             ...Octane::prepareApplicationForNextRequest(),
-            //
         ],
 
         RequestHandled::class => [
-            //
         ],
 
         RequestTerminated::class => [
@@ -88,20 +85,16 @@ return [
 
         TaskReceived::class => [
             ...Octane::prepareApplicationForNextOperation(),
-            //
         ],
 
         TaskTerminated::class => [
-            //
         ],
 
         TickReceived::class => [
             ...Octane::prepareApplicationForNextOperation(),
-            //
         ],
 
         TickTerminated::class => [
-            //
         ],
 
         OperationTerminated::class => [
@@ -137,7 +130,6 @@ return [
     ],
 
     'flush' => [
-        //
     ],
 
     /*
@@ -153,7 +145,7 @@ return [
 
     'tables' => [
         'example:1000' => [
-            'name' => 'string:1000',
+            'name'  => 'string:1000',
             'votes' => 'int',
         ],
     ],
@@ -170,7 +162,7 @@ return [
     */
 
     'cache' => [
-        'rows' => 1000,
+        'rows'  => 1000,
         'bytes' => 10000,
     ],
 
@@ -223,21 +215,20 @@ return [
 
     'max_execution_time' => 120,
 
-    /**
+    /*
      * Custom swoole config
      *
      * @source https://github.com/exaco/laravel-octane-dockerfile?tab=readme-ov-file#recommended-swoole-options-in-octanephp
      */
     'swoole' => [
         'options' => [
-            'http_compression' => true,
+            'http_compression'       => true,
             'http_compression_level' => 6, // 1 - 9
             'compression_min_length' => 20,
-            'package_max_length' => 20 * 1024 * 1024, // 20MB
-            'open_http2_protocol' => true,
-            'document_root' => public_path(),
-            'enable_static_handler' => true,
+            'package_max_length'     => 20 * 1024 * 1024, // 20MB
+            'open_http2_protocol'    => true,
+            'document_root'          => public_path(),
+            'enable_static_handler'  => true,
         ],
     ],
-
 ];

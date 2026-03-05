@@ -33,26 +33,25 @@ class OrganizationDeleteCommand extends Command
     {
         $organizationId = $this->argument('organization');
 
-        if (! Str::isUuid($organizationId)) {
+        if ( ! Str::isUuid($organizationId)) {
             $this->error('Organization ID must be a valid UUID.');
 
             return self::FAILURE;
-
         }
 
         /** @var Organization|null $organization */
         $organization = Organization::find($organizationId);
         if ($organization === null) {
-            $this->error('Organization with ID '.$organizationId.' not found.');
+            $this->error('Organization with ID ' . $organizationId . ' not found.');
 
             return self::FAILURE;
         }
 
-        $this->info('Deleting organization with ID '.$organization->getKey());
+        $this->info('Deleting organization with ID ' . $organization->getKey());
 
         $deletionService->deleteOrganization($organization);
 
-        $this->info('Organization with ID '.$organization->getKey().' has been deleted.');
+        $this->info('Organization with ID ' . $organization->getKey() . ' has been deleted.');
 
         return self::SUCCESS;
     }

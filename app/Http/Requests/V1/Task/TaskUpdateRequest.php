@@ -13,7 +13,7 @@ use Korridor\LaravelModelValidationRules\Rules\UniqueEloquent;
 
 /**
  * @property Organization $organization Organization from model binding
- * @property Task|null $task Task from model binding
+ * @property Task|null    $task         Task from model binding
  */
 class TaskUpdateRequest extends BaseFormRequest
 {
@@ -30,8 +30,8 @@ class TaskUpdateRequest extends BaseFormRequest
                 'string',
                 'min:1',
                 'max:255',
-                UniqueEloquent::make(Task::class, 'name', function (Builder $builder): Builder {
-                    /** @var Builder<Task> $builder */
+                UniqueEloquent::make(Task::class, 'name', static function (Builder $builder): Builder {
+                    /* @var Builder<Task> $builder */
                     return $builder->where('project_id', '=', $this->task->project_id);
                 })->ignore($this->task?->getKey())->withCustomTranslation('validation.task_name_already_exists'),
             ],

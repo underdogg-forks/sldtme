@@ -25,7 +25,7 @@ class RegistrationTest extends TestCase
 
     public function test_registration_screen_can_be_rendered(): void
     {
-        if (! Features::enabled(Features::registration())) {
+        if ( ! Features::enabled(Features::registration())) {
             $this->markTestSkipped('Registration support is not enabled.');
         }
 
@@ -43,11 +43,11 @@ class RegistrationTest extends TestCase
 
         // Act
         $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
+            'name'                  => 'Test User',
+            'email'                 => 'test@example.com',
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+            'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature(),
         ]);
 
         // Assert
@@ -74,11 +74,11 @@ class RegistrationTest extends TestCase
 
         // Act
         $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
+            'name'                  => 'Test User',
+            'email'                 => 'test@example.com',
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+            'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature(),
         ]);
 
         // Assert
@@ -93,11 +93,11 @@ class RegistrationTest extends TestCase
     {
         // Act
         $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'peter.test@gmail',
-            'password' => 'password',
+            'name'                  => 'Test User',
+            'email'                 => 'peter.test@gmail',
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+            'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature(),
         ]);
 
         // Assert
@@ -108,11 +108,11 @@ class RegistrationTest extends TestCase
     {
         // Act
         $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'PETER.test@gmail.com ',
-            'password' => 'password',
+            'name'                  => 'Test User',
+            'email'                 => 'PETER.test@gmail.com ',
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+            'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature(),
         ]);
 
         // Assert
@@ -128,12 +128,12 @@ class RegistrationTest extends TestCase
 
         // Act
         $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
+            'name'                  => 'Test User',
+            'email'                 => 'test@example.com',
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
-            'newsletter_consent' => true,
+            'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+            'newsletter_consent'    => true,
         ]);
 
         // Assert
@@ -150,12 +150,12 @@ class RegistrationTest extends TestCase
     {
         // Act
         $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
+            'name'                  => 'Test User',
+            'email'                 => 'test@example.com',
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
-            'timezone' => 'Europe/Berlin',
+            'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+            'timezone'              => 'Europe/Berlin',
         ]);
 
         // Assert
@@ -168,7 +168,7 @@ class RegistrationTest extends TestCase
     public function test_new_users_can_register_and_uses_ip_lookup_service_to_get_information_about_currency_and_start_of_week(): void
     {
         // Arrange
-        $this->mock(IpLookupServiceContract::class, function ($mock): void {
+        $this->mock(IpLookupServiceContract::class, static function ($mock): void {
             $mock->shouldReceive('lookup')->andReturn(new IpLookupResponseDto(
                 'America/New_York',
                 Weekday::Sunday,
@@ -178,12 +178,12 @@ class RegistrationTest extends TestCase
 
         // Act
         $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
+            'name'                  => 'Test User',
+            'email'                 => 'test@example.com',
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
-            'timezone' => 'Europe/Berlin',
+            'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+            'timezone'              => 'Europe/Berlin',
         ]);
 
         // Assert
@@ -199,7 +199,7 @@ class RegistrationTest extends TestCase
     public function test_new_users_can_register_and_uses_ip_lookup_service_to_get_information_about_timezone_if_client_did_not_send_one(): void
     {
         // Arrange
-        $this->mock(IpLookupServiceContract::class, function ($mock): void {
+        $this->mock(IpLookupServiceContract::class, static function ($mock): void {
             $mock->shouldReceive('lookup')->andReturn(new IpLookupResponseDto(
                 'America/New_York',
                 Weekday::Sunday,
@@ -209,12 +209,12 @@ class RegistrationTest extends TestCase
 
         // Act
         $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
+            'name'                  => 'Test User',
+            'email'                 => 'test@example.com',
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
-            'timezone' => null,
+            'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+            'timezone'              => null,
         ]);
 
         // Assert
@@ -230,7 +230,7 @@ class RegistrationTest extends TestCase
     public function test_new_users_can_register_and_uses_ip_lookup_service_to_get_information_about_timezone_if_client_sends_invalid_one(): void
     {
         // Arrange
-        $this->mock(IpLookupServiceContract::class, function ($mock): void {
+        $this->mock(IpLookupServiceContract::class, static function ($mock): void {
             $mock->shouldReceive('lookup')->andReturn(new IpLookupResponseDto(
                 'America/New_York',
                 Weekday::Sunday,
@@ -240,12 +240,12 @@ class RegistrationTest extends TestCase
 
         // Act
         $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
+            'name'                  => 'Test User',
+            'email'                 => 'test@example.com',
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
-            'timezone' => 'Unknown timezone',
+            'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+            'timezone'              => 'Unknown timezone',
         ]);
 
         // Assert
@@ -261,7 +261,7 @@ class RegistrationTest extends TestCase
     public function test_new_users_can_register_and_legacy_timezone_from_client_is_mapped_to_new_timezone(): void
     {
         // Arrange
-        $this->mock(IpLookupServiceContract::class, function ($mock): void {
+        $this->mock(IpLookupServiceContract::class, static function ($mock): void {
             $mock->shouldReceive('lookup')->andReturn(new IpLookupResponseDto(
                 'America/New_York',
                 Weekday::Sunday,
@@ -271,12 +271,12 @@ class RegistrationTest extends TestCase
 
         // Act
         $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
+            'name'                  => 'Test User',
+            'email'                 => 'test@example.com',
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
-            'timezone' => 'Asia/Calcutta',
+            'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+            'timezone'              => 'Asia/Calcutta',
         ]);
 
         // Assert
@@ -292,12 +292,12 @@ class RegistrationTest extends TestCase
     public function test_new_users_can_register_and_ignores_invalid_timezones_from_frontend(): void
     {
         $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
+            'name'                  => 'Test User',
+            'email'                 => 'test@example.com',
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
-            'timezone' => 'Unknown timezone',
+            'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+            'timezone'              => 'Unknown timezone',
         ]);
 
         $this->assertAuthenticated();
@@ -315,11 +315,11 @@ class RegistrationTest extends TestCase
 
         // Act
         $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
+            'name'                  => 'Test User',
+            'email'                 => 'test@example.com',
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+            'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature(),
         ]);
 
         $this->assertFalse($this->isAuthenticated(), 'The user is authenticated');
@@ -330,17 +330,17 @@ class RegistrationTest extends TestCase
     {
         // Arrange
         $user = User::factory()->create([
-            'email' => 'test@example.com',
+            'email'          => 'test@example.com',
             'is_placeholder' => true,
         ]);
 
         // Act
         $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
+            'name'                  => 'Test User',
+            'email'                 => 'test@example.com',
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+            'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature(),
         ]);
 
         $this->assertAuthenticated();

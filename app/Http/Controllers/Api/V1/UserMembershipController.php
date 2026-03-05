@@ -12,7 +12,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class UserMembershipController extends Controller
 {
     /**
-     * Get the memberships of the current user
+     * Get the memberships of the current user.
      *
      * This endpoint is independent of organization.
      *

@@ -33,7 +33,6 @@ class OwnedOrganizationsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('name'),
             ])
             ->filters([
-                //
             ])
             ->headerActions([
             ])

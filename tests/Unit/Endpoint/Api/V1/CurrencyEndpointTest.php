@@ -24,8 +24,8 @@ class CurrencyEndpointTest extends ApiEndpointTestAbstract
         $response->assertJsonCount(166);
         $responseObj = collect($response->json());
         $this->assertSame([
-            'code' => 'EUR',
-            'name' => 'Euro',
+            'code'   => 'EUR',
+            'name'   => 'Euro',
             'symbol' => '€',
         ], $responseObj->firstWhere('code', '=', 'EUR'));
     }

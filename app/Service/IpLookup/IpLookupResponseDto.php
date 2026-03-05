@@ -16,8 +16,8 @@ class IpLookupResponseDto
 
     public function __construct(?string $timezone, ?Weekday $startOfWeek, ?string $currency)
     {
-        $this->timezone = $timezone;
+        $this->timezone    = $timezone;
         $this->startOfWeek = $startOfWeek;
-        $this->currency = $currency;
+        $this->currency    = $currency;
     }
 }

@@ -93,7 +93,7 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         // Act
         $response = $this->putJson(route('api.v1.members.update', [$data->organization->getKey(), $data->member->getKey()]), [
             'billable_rate' => 10001,
-            'role' => Role::Employee->value,
+            'role'          => Role::Employee->value,
         ]);
 
         // Assert
@@ -114,7 +114,7 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         // Act
         $response = $this->putJson(route('api.v1.members.update', [$data->organization->getKey(), $otherData->member->getKey()]), [
             'billable_rate' => 10001,
-            'role' => Role::Employee->value,
+            'role'          => Role::Employee->value,
         ]);
 
         // Assert
@@ -134,7 +134,7 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         // Act
         $response = $this->putJson(route('api.v1.members.update', [$data->organization->id, $member]), [
             'billable_rate' => $member->billable_rate,
-            'role' => Role::Employee->value,
+            'role'          => Role::Employee->value,
         ]);
 
         // Assert
@@ -151,7 +151,7 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'members:update',
         ]);
-        $this->mock(BillableRateService::class, function (MockInterface $mock) use ($data): void {
+        $this->mock(BillableRateService::class, static function (MockInterface $mock) use ($data): void {
             $mock->shouldReceive('updateTimeEntriesBillableRateForMember')
                 ->once()
                 ->withArgs(fn (Member $memberArg) => $memberArg->is($data->member) && $memberArg->billable_rate === 10001);
@@ -176,7 +176,7 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'members:update',
         ]);
-        $otherUser = User::factory()->create();
+        $otherUser   = User::factory()->create();
         $otherMember = Member::factory()->forUser($otherUser)->forOrganization($data->organization)->role(Role::Employee)->create();
         Passport::actingAs($data->user);
 
@@ -233,7 +233,7 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'members:update',
         ]);
-        $user = User::factory()->placeholder()->create();
+        $user   = User::factory()->placeholder()->create();
         $member = Member::factory()->forOrganization($data->organization)->forUser($user)->role(Role::Placeholder)->create();
         Passport::actingAs($data->user);
 
@@ -245,8 +245,8 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         // Assert
         $response->assertStatus(400);
         $response->assertExactJson([
-            'error' => true,
-            'key' => 'changing_role_of_placeholder_is_not_allowed',
+            'error'   => true,
+            'key'     => 'changing_role_of_placeholder_is_not_allowed',
             'message' => 'Changing role of placeholder is not allowed',
         ]);
     }
@@ -257,10 +257,10 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'members:merge-into',
         ]);
-        $userSource = User::factory()->placeholder()->create();
+        $userSource   = User::factory()->placeholder()->create();
         $memberSource = Member::factory()->forUser($userSource)->role(Role::Placeholder)->create();
 
-        $userDestination = User::factory()->create();
+        $userDestination   = User::factory()->create();
         $memberDestination = Member::factory()->forUser($userDestination)->forOrganization($data->organization)->role(Role::Admin)->create();
         Passport::actingAs($data->user);
 
@@ -279,10 +279,10 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'members:merge-into',
         ]);
-        $userSource = User::factory()->placeholder()->create();
+        $userSource   = User::factory()->placeholder()->create();
         $memberSource = Member::factory()->forUser($userSource)->forOrganization($data->organization)->role(Role::Placeholder)->create();
 
-        $userDestination = User::factory()->create();
+        $userDestination   = User::factory()->create();
         $memberDestination = Member::factory()->forUser($userDestination)->role(Role::Admin)->create();
         Passport::actingAs($data->user);
 
@@ -309,10 +309,10 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'members:merge-into',
         ]);
-        $userSource = User::factory()->placeholder()->create();
+        $userSource   = User::factory()->placeholder()->create();
         $memberSource = Member::factory()->forUser($userSource)->forOrganization($data->organization)->role(Role::Admin)->create();
 
-        $userDestination = User::factory()->create();
+        $userDestination   = User::factory()->create();
         $memberDestination = Member::factory()->forUser($userDestination)->forOrganization($data->organization)->role(Role::Admin)->create();
         Passport::actingAs($data->user);
 
@@ -324,8 +324,8 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         // Assert
         $response->assertStatus(400);
         $response->assertExactJson([
-            'error' => true,
-            'key' => 'only_placeholders_can_be_merged_into_another_member',
+            'error'   => true,
+            'key'     => 'only_placeholders_can_be_merged_into_another_member',
             'message' => 'Only placeholders can be merged into another member',
         ]);
     }
@@ -333,11 +333,11 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
     public function test_merge_into_fails_if_user_has_no_permission_to_merge_members(): void
     {
         // Arrange
-        $data = $this->createUserWithPermission([]);
-        $userSource = User::factory()->placeholder()->create();
+        $data         = $this->createUserWithPermission([]);
+        $userSource   = User::factory()->placeholder()->create();
         $memberSource = Member::factory()->forUser($userSource)->forOrganization($data->organization)->role(Role::Placeholder)->create();
 
-        $userDestination = User::factory()->create();
+        $userDestination   = User::factory()->create();
         $memberDestination = Member::factory()->forUser($userDestination)->forOrganization($data->organization)->role(Role::Admin)->create();
         Passport::actingAs($data->user);
 
@@ -356,13 +356,13 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'members:merge-into',
         ]);
-        $userSource = User::factory()->placeholder()->create();
+        $userSource   = User::factory()->placeholder()->create();
         $memberSource = Member::factory()->forUser($userSource)->forOrganization($data->organization)->role(Role::Placeholder)->create();
         TimeEntry::factory()->forMember($memberSource)->createMany(3);
         $project = Project::factory()->forOrganization($data->organization)->create();
         ProjectMember::factory()->forMember($memberSource)->forProject($project)->create();
 
-        $userDestination = User::factory()->create();
+        $userDestination   = User::factory()->create();
         $memberDestination = Member::factory()->forUser($userDestination)->forOrganization($data->organization)->role(Role::Admin)->create();
         Passport::actingAs($data->user);
 
@@ -385,8 +385,8 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         $this->assertCount(1, $memberDestination->projectMembers);
         $this->assertDatabaseHas(ProjectMember::class, [
             'project_id' => $project->getKey(),
-            'member_id' => $memberDestination->getKey(),
-            'user_id' => $userDestination->getKey(),
+            'member_id'  => $memberDestination->getKey(),
+            'user_id'    => $userDestination->getKey(),
         ]);
     }
 
@@ -396,7 +396,7 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'members:merge-into',
         ]);
-        $userSource = User::factory()->placeholder()->create();
+        $userSource   = User::factory()->placeholder()->create();
         $memberSource = Member::factory()->forUser($userSource)->forOrganization($data->organization)->role(Role::Placeholder)->create();
         TimeEntry::factory()->forMember($memberSource)->createMany(3);
         $project = Project::factory()->forOrganization($data->organization)->create();
@@ -404,7 +404,7 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
             'billable_rate' => 32100,
         ]);
 
-        $userDestination = User::factory()->create();
+        $userDestination   = User::factory()->create();
         $memberDestination = Member::factory()->forUser($userDestination)->forOrganization($data->organization)->role(Role::Admin)->create();
         ProjectMember::factory()->forMember($memberDestination)->forProject($project)->create([
             'billable_rate' => 12300,
@@ -430,10 +430,10 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         $this->assertCount(6, $memberDestination->timeEntries);
         $this->assertCount(1, $memberDestination->projectMembers);
         $this->assertDatabaseHas(ProjectMember::class, [
-            'project_id' => $project->getKey(),
+            'project_id'    => $project->getKey(),
             'billable_rate' => 12300,
-            'member_id' => $memberDestination->getKey(),
-            'user_id' => $userDestination->getKey(),
+            'member_id'     => $memberDestination->getKey(),
+            'user_id'       => $userDestination->getKey(),
         ]);
     }
 
@@ -483,9 +483,9 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
             'members:update',
             'members:change-ownership',
         ]);
-        $oldOwner = $data->ownerMember;
+        $oldOwner     = $data->ownerMember;
         $organization = $data->organization;
-        $member = Member::factory()->forOrganization($data->organization)->role(Role::Employee)->create();
+        $member       = Member::factory()->forOrganization($data->organization)->role(Role::Employee)->create();
         Passport::actingAs($data->user);
 
         // Act
@@ -537,7 +537,7 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         // Act
         $response = $this->postJson(route('api.v1.members.invite-placeholder', [
             'organization' => $data->organization->getKey(),
-            'member' => $member->getKey(),
+            'member'       => $member->getKey(),
         ]));
 
         // Assert
@@ -553,7 +553,7 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         ]);
         $user = User::factory()->create([
             'is_placeholder' => true,
-            'email' => 'some.user@solidtime-import.test',
+            'email'          => 'some.user@solidtime-import.test',
         ]);
         $member = Member::factory()
             ->forUser($user)
@@ -565,14 +565,14 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         // Act
         $response = $this->postJson(route('api.v1.members.invite-placeholder', [
             'organization' => $data->organization->getKey(),
-            'member' => $member->getKey(),
+            'member'       => $member->getKey(),
         ]));
 
         // Assert
         $response->assertStatus(400);
         $response->assertExactJson([
-            'error' => true,
-            'key' => 'this_placeholder_can_not_be_invited_use_the_merge_tool_instead_api_exception',
+            'error'   => true,
+            'key'     => 'this_placeholder_can_not_be_invited_use_the_merge_tool_instead_api_exception',
             'message' => 'This placeholder can not be invited use the merge tool instead',
         ]);
     }
@@ -692,7 +692,7 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'members:delete',
         ]);
-        $user = User::factory()->placeholder()->create();
+        $user   = User::factory()->placeholder()->create();
         $member = Member::factory()->forUser($user)->forOrganization($data->organization)->role(Role::Placeholder)->create();
         Passport::actingAs($data->user);
         Event::fake([
@@ -711,8 +711,8 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
             'id' => $user->getKey(),
         ]);
         Event::assertDispatched(function (MemberRemoved $event) use ($data, $member): bool {
-            return $event->organization->is($data->organization) &&
-                $event->member->is($member);
+            return $event->organization->is($data->organization)
+                && $event->member->is($member);
         }, 1);
     }
 
@@ -722,9 +722,9 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'members:delete',
         ]);
-        $user = $data->user;
+        $user              = $data->user;
         $otherOrganization = Organization::factory()->create();
-        $otherMember = Member::factory()->forOrganization($otherOrganization)->forUser($user)->role(Role::Employee)->create();
+        $otherMember       = Member::factory()->forOrganization($otherOrganization)->forUser($user)->role(Role::Employee)->create();
         Passport::actingAs($user);
         Event::fake([
             MemberRemoved::class,
@@ -741,8 +741,8 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         $user->refresh();
         $this->assertSame($otherOrganization->getKey(), $user->currentOrganization->getKey());
         Event::assertDispatched(function (MemberRemoved $event) use ($data): bool {
-            return $event->organization->is($data->organization) &&
-                $event->member->is($data->member);
+            return $event->organization->is($data->organization)
+                && $event->member->is($data->member);
         }, 1);
     }
 
@@ -753,7 +753,7 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
             'members:delete',
         ]);
         $organization = $data->organization;
-        $user = $data->user;
+        $user         = $data->user;
         Passport::actingAs($user);
         Event::fake([
             MemberRemoved::class,
@@ -773,13 +773,13 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         ]);
         $this->assertDatabaseHas(Member::class, [
             'organization_id' => $newOrganization->getKey(),
-            'user_id' => $user->getKey(),
+            'user_id'         => $user->getKey(),
         ]);
         $user->refresh();
         $this->assertNotNull($user->currentOrganization);
         Event::assertDispatched(function (MemberRemoved $event) use ($data): bool {
-            return $event->organization->is($data->organization) &&
-                $event->member->is($data->member);
+            return $event->organization->is($data->organization)
+                && $event->member->is($data->member);
         }, 1);
     }
 
@@ -789,9 +789,9 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'members:delete',
         ]);
-        $otherMember = Member::factory()->forOrganization($data->organization)->role(Role::Employee)->create();
-        $project = Project::factory()->forOrganization($data->organization)->create();
-        $projectMember = ProjectMember::factory()->forProject($project)->forMember($data->member)->create();
+        $otherMember        = Member::factory()->forOrganization($data->organization)->role(Role::Employee)->create();
+        $project            = Project::factory()->forOrganization($data->organization)->create();
+        $projectMember      = ProjectMember::factory()->forProject($project)->forMember($data->member)->create();
         $otherProjectMember = ProjectMember::factory()->forProject($project)->forMember($otherMember)->create();
         Passport::actingAs($data->user);
         Event::fake([
@@ -800,8 +800,8 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->deleteJson(route('api.v1.members.destroy', [
-            'organization' => $data->organization->getKey(),
-            'member' => $data->member->getKey(),
+            'organization'   => $data->organization->getKey(),
+            'member'         => $data->member->getKey(),
             'delete_related' => 'true',
         ]));
 
@@ -811,16 +811,16 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
             'id' => $data->member->getKey(),
         ]);
         $this->assertDatabaseHas(ProjectMember::class, [
-            'id' => $otherProjectMember->getKey(),
+            'id'        => $otherProjectMember->getKey(),
             'member_id' => $otherMember->getKey(),
-            'user_id' => $otherMember->user_id,
+            'user_id'   => $otherMember->user_id,
         ]);
         $this->assertDatabaseMissing(ProjectMember::class, [
             'id' => $projectMember->getKey(),
         ]);
         Event::assertDispatched(function (MemberRemoved $event) use ($data): bool {
-            return $event->organization->is($data->organization) &&
-                $event->member->is($data->member);
+            return $event->organization->is($data->organization)
+                && $event->member->is($data->member);
         }, 1);
     }
 
@@ -830,8 +830,8 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'members:delete',
         ]);
-        $otherMember = Member::factory()->forOrganization($data->organization)->role(Role::Employee)->create();
-        $timeEntry = TimeEntry::factory()->forMember($data->member)->forOrganization($data->organization)->create();
+        $otherMember    = Member::factory()->forOrganization($data->organization)->role(Role::Employee)->create();
+        $timeEntry      = TimeEntry::factory()->forMember($data->member)->forOrganization($data->organization)->create();
         $otherTimeEntry = TimeEntry::factory()->forMember($otherMember)->forOrganization($data->organization)->create();
         Passport::actingAs($data->user);
         Event::fake([
@@ -840,8 +840,8 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->deleteJson(route('api.v1.members.destroy', [
-            'organization' => $data->organization->getKey(),
-            'member' => $data->member->getKey(),
+            'organization'   => $data->organization->getKey(),
+            'member'         => $data->member->getKey(),
             'delete_related' => 'true',
         ]));
 
@@ -857,8 +857,8 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
             'id' => $timeEntry->getKey(),
         ]);
         Event::assertDispatched(function (MemberRemoved $event) use ($data): bool {
-            return $event->organization->is($data->organization) &&
-                $event->member->is($data->member);
+            return $event->organization->is($data->organization)
+                && $event->member->is($data->member);
         }, 1);
     }
 
@@ -882,8 +882,8 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
             'id' => $data->member->getKey(),
         ]);
         Event::assertDispatched(function (MemberRemoved $event) use ($data): bool {
-            return $event->organization->is($data->organization) &&
-                $event->member->is($data->member);
+            return $event->organization->is($data->organization)
+                && $event->member->is($data->member);
         }, 1);
     }
 
@@ -899,7 +899,7 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         // Act
         $response = $this->postJson(route('api.v1.members.make-placeholder', [
             'organization' => $data->organization->getKey(),
-            'member' => $data->member->getKey(),
+            'member'       => $data->member->getKey(),
         ]));
 
         // Assert
@@ -916,21 +916,21 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'members:make-placeholder',
         ]);
-        $user = User::factory()->placeholder()->create();
+        $user   = User::factory()->placeholder()->create();
         $member = Member::factory()->forUser($user)->forOrganization($data->organization)->role(Role::Placeholder)->create();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->postJson(route('api.v1.members.make-placeholder', [
             'organization' => $data->organization->getKey(),
-            'member' => $member->getKey(),
+            'member'       => $member->getKey(),
         ]));
 
         // Assert
         $response->assertStatus(400);
         $response->assertExactJson([
-            'error' => true,
-            'key' => 'changing_role_of_placeholder_is_not_allowed',
+            'error'   => true,
+            'key'     => 'changing_role_of_placeholder_is_not_allowed',
             'message' => 'Changing role of placeholder is not allowed',
         ]);
     }
@@ -950,7 +950,7 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         // Act
         $response = $this->postJson(route('api.v1.members.make-placeholder', [
             'organization' => $data->organization->getKey(),
-            'member' => $member->getKey(),
+            'member'       => $member->getKey(),
         ]));
 
         // Assert
@@ -976,7 +976,7 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         // Act
         $response = $this->postJson(route('api.v1.members.make-placeholder', [
             'organization' => $data->organization->getKey(),
-            'member' => $otherData->member->getKey(),
+            'member'       => $otherData->member->getKey(),
         ]));
 
         // Assert
@@ -992,17 +992,17 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'members:make-placeholder',
         ]);
-        $user = User::factory()->create();
-        $member = Member::factory()->forOrganization($data->organization)->forUser($user)->role(Role::Admin)->create();
-        $timeEntry = TimeEntry::factory()->forMember($member)->forOrganization($data->organization)->create();
-        $project = Project::factory()->forOrganization($data->organization)->create();
+        $user          = User::factory()->create();
+        $member        = Member::factory()->forOrganization($data->organization)->forUser($user)->role(Role::Admin)->create();
+        $timeEntry     = TimeEntry::factory()->forMember($member)->forOrganization($data->organization)->create();
+        $project       = Project::factory()->forOrganization($data->organization)->create();
         $projectMember = ProjectMember::factory()->forProject($project)->forMember($member)->create();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->postJson(route('api.v1.members.make-placeholder', [
             'organization' => $data->organization->getKey(),
-            'member' => $member->getKey(),
+            'member'       => $member->getKey(),
         ]));
 
         // Assert
@@ -1018,8 +1018,8 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         $projectMember->refresh();
         $this->assertSame($member->user_id, $projectMember->user_id);
         Event::assertDispatched(function (MemberMadeToPlaceholder $event) use ($data, $member): bool {
-            return $event->organization->is($data->organization) &&
-                $event->member->is($member);
+            return $event->organization->is($data->organization)
+                && $event->member->is($member);
         }, 1);
     }
 
@@ -1036,7 +1036,7 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         // Act
         $response = $this->postJson(route('api.v1.members.invite-placeholder', [
             'organization' => $data->organization->id,
-            'member' => $member->id,
+            'member'       => $member->id,
         ]));
 
         // Assert
@@ -1051,7 +1051,7 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
             'invitations:create',
         ]);
         $otherOrganization = Organization::factory()->create();
-        $user = User::factory()->create([
+        $user              = User::factory()->create([
             'is_placeholder' => true,
         ]);
         $member = Member::factory()->forUser($user)->forOrganization($otherOrganization)->create();
@@ -1060,7 +1060,7 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         // Act
         $response = $this->postJson(route('api.v1.members.invite-placeholder', [
             'organization' => $data->organization->id,
-            'member' => $member->id,
+            'member'       => $member->id,
         ]));
 
         // Assert
@@ -1086,14 +1086,14 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         // Act
         $response = $this->postJson(route('api.v1.members.invite-placeholder', [
             'organization' => $data->organization->id,
-            'member' => $placeholderMember->id,
+            'member'       => $placeholderMember->id,
         ]));
 
         // Assert
         $response->assertStatus(400);
         $response->assertExactJson([
-            'error' => true,
-            'key' => 'invitation_for_the_email_already_exists',
+            'error'   => true,
+            'key'     => 'invitation_for_the_email_already_exists',
             'message' => 'The email has already been invited to the organization. Please wait for the user to accept the invitation or resend the invitation email.',
         ]);
     }
@@ -1110,14 +1110,14 @@ class MemberEndpointTest extends ApiEndpointTestAbstract
         // Act
         $response = $this->postJson(route('api.v1.members.invite-placeholder', [
             'organization' => $data->organization->id,
-            'member' => $data->member->id,
+            'member'       => $data->member->id,
         ]));
 
         // Assert
         $response->assertStatus(400);
         $response->assertExactJson([
-            'error' => true,
-            'key' => 'user_not_placeholder',
+            'error'   => true,
+            'key'     => 'user_not_placeholder',
             'message' => 'The given user is not a placeholder',
         ]);
     }

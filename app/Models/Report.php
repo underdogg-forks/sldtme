@@ -13,17 +13,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
- * @property string $id
- * @property string $name
- * @property string|null $description
- * @property string $organization_id
- * @property bool $is_public
- * @property Carbon|null $public_until
- * @property string|null $share_secret
+ * @property string              $id
+ * @property string              $name
+ * @property string|null         $description
+ * @property string              $organization_id
+ * @property bool                $is_public
+ * @property Carbon|null         $public_until
+ * @property string|null         $share_secret
  * @property ReportPropertiesDto $properties
- * @property-read Organization $organization
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
+ * @property Organization        $organization
+ * @property Carbon|null         $created_at
+ * @property Carbon|null         $updated_at
  *
  * @method static ReportFactory factory()
  */
@@ -40,15 +40,15 @@ class Report extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'is_public' => 'bool',
+        'is_public'    => 'bool',
         'public_until' => 'datetime',
-        'properties' => ReportPropertiesDto::class,
+        'properties'   => ReportPropertiesDto::class,
     ];
 
     public function getShareableLink(): ?string
     {
         if ($this->is_public && $this->share_secret !== null) {
-            return route('shared-report').'#'.$this->share_secret;
+            return route('shared-report') . '#' . $this->share_secret;
         }
 
         return null;

@@ -8,13 +8,14 @@ use Exception;
 use Illuminate\Support\Str;
 use League\Csv\Exception as CsvException;
 use League\Csv\Reader;
+use Override;
 
 class ClockifyProjectsImporter extends DefaultImporter
 {
     /**
      * @throws ImportException
      */
-    #[\Override]
+    #[Override]
     public function importData(string $data, string $timezone): void
     {
         try {
@@ -24,25 +25,25 @@ class ClockifyProjectsImporter extends DefaultImporter
             $header = $reader->getHeader();
             $this->validateHeader($header);
             $billableRateKey = $this->getBillableRateKey($header);
-            $records = $reader->getRecords();
+            $records         = $reader->getRecords();
             foreach ($records as $record) {
                 $clientId = null;
                 if ($record['Client'] !== '') {
                     $clientId = $this->clientImportHelper->getKey([
-                        'name' => $record['Client'],
+                        'name'            => $record['Client'],
                         'organization_id' => $this->organization->id,
                     ]);
                 }
                 $projectId = null;
                 if ($record['Project'] !== '') {
                     $projectId = $this->projectImportHelper->getKey([
-                        'name' => $record['Project'],
-                        'client_id' => $clientId,
+                        'name'            => $record['Project'],
+                        'client_id'       => $clientId,
                         'organization_id' => $this->organization->id,
                     ], [
-                        'color' => $this->colorService->getRandomColor(),
-                        'is_billable' => $record['Billability'] === 'Yes',
-                        'billable_rate' => $billableRateKey !== null && $record[$billableRateKey] !== '' ? (int) (((float) $record[$billableRateKey]) * 100) : null,
+                        'color'          => $this->colorService->getRandomColor(),
+                        'is_billable'    => $record['Billability'] === 'Yes',
+                        'billable_rate'  => $billableRateKey !== null && $record[$billableRateKey] !== '' ? (int) (((float) $record[$billableRateKey]) * 100) : null,
                         'estimated_time' => $record['Estimated (h)'] !== '' && is_numeric($record['Estimated (h)']) ? (int) ($record['Estimated (h)'] * 3600) : null,
                     ]);
                 }
@@ -51,8 +52,8 @@ class ClockifyProjectsImporter extends DefaultImporter
                     $tasks = explode(', ', $record['Task']);
                     foreach ($tasks as $task) {
                         $this->taskImportHelper->getKey([
-                            'name' => $task,
-                            'project_id' => $projectId,
+                            'name'            => $task,
+                            'project_id'      => $projectId,
                             'organization_id' => $this->organization->id,
                         ]);
                     }
@@ -68,8 +69,20 @@ class ClockifyProjectsImporter extends DefaultImporter
         }
     }
 
+    #[Override]
+    public function getName(): string
+    {
+        return __('importer.clockify_projects.name');
+    }
+
+    #[Override]
+    public function getDescription(): string
+    {
+        return __('importer.clockify_projects.description');
+    }
+
     /**
-     * @param  array<string>  $header
+     * @param array<string> $header
      *
      * @throws ImportException
      */
@@ -84,14 +97,14 @@ class ClockifyProjectsImporter extends DefaultImporter
             'Task',
         ];
         foreach ($requiredFields as $requiredField) {
-            if (! in_array($requiredField, $header, true)) {
-                throw new ImportException('Invalid CSV header, missing field: '.$requiredField);
+            if ( ! in_array($requiredField, $header, true)) {
+                throw new ImportException('Invalid CSV header, missing field: ' . $requiredField);
             }
         }
     }
 
     /**
-     * @param  array<string>  $header
+     * @param array<string> $header
      */
     private function getBillableRateKey(array $header): ?string
     {
@@ -104,17 +117,5 @@ class ClockifyProjectsImporter extends DefaultImporter
         }
 
         return $billableRateKey;
-    }
-
-    #[\Override]
-    public function getName(): string
-    {
-        return __('importer.clockify_projects.name');
-    }
-
-    #[\Override]
-    public function getDescription(): string
-    {
-        return __('importer.clockify_projects.description');
     }
 }

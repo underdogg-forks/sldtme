@@ -37,23 +37,23 @@ class UserCreateCommand extends Command
      */
     public function handle(): int
     {
-        $name = $this->argument('name');
-        $email = $this->argument('email');
+        $name           = $this->argument('name');
+        $email          = $this->argument('email');
         $askForPassword = (bool) $this->option('ask-for-password');
-        $verifyEmail = (bool) $this->option('verify-email');
+        $verifyEmail    = (bool) $this->option('verify-email');
 
         if (User::query()->where('email', $email)->where('is_placeholder', '=', false)->exists()) {
-            $this->error('User with email "'.$email.'" already exists.');
+            $this->error('User with email "' . $email . '" already exists.');
 
             return self::FAILURE;
         }
 
         if ($askForPassword) {
             $outputPassword = false;
-            $password = $this->secret('Enter the password');
+            $password       = $this->secret('Enter the password');
         } else {
             $outputPassword = true;
-            $password = bin2hex(random_bytes(16));
+            $password       = bin2hex(random_bytes(16));
         }
 
         $user = null;
@@ -74,18 +74,18 @@ class UserCreateCommand extends Command
             throw new LogicException('User does not have an organization');
         }
 
-        $this->info('Created user "'.$name.'" ("'.$email.'")');
-        $this->line('ID: '.$user->getKey());
-        $this->line('Name: '.$name);
-        $this->line('Email: '.$email);
+        $this->info('Created user "' . $name . '" ("' . $email . '")');
+        $this->line('ID: ' . $user->getKey());
+        $this->line('Name: ' . $name);
+        $this->line('Email: ' . $email);
         if ($outputPassword) {
-            $this->line('Password: '.$password);
+            $this->line('Password: ' . $password);
         }
-        $this->line('Timezone: '.$user->timezone);
-        $this->line('Week start: '.$user->week_start->value);
+        $this->line('Timezone: ' . $user->timezone);
+        $this->line('Week start: ' . $user->week_start->value);
 
         // Organization
-        $this->line('Currency: '.$organization->currency);
+        $this->line('Currency: ' . $organization->currency);
 
         return self::SUCCESS;
     }

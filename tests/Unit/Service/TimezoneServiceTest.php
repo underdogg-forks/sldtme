@@ -54,7 +54,7 @@ class TimezoneServiceTest extends TestCase
     {
         // Arrange
         $corruptTimezone = 'Invalid/Timezone';
-        $user = User::factory()->create([
+        $user            = User::factory()->create([
             'timezone' => $corruptTimezone,
         ]);
 
@@ -66,7 +66,8 @@ class TimezoneServiceTest extends TestCase
 
         // Assert
         $this->assertEquals('UTC', $result->getName());
-        Log::assertLogged(fn (LogEntry $log) => $log->level === 'error'
+        Log::assertLogged(
+            fn (LogEntry $log) => $log->level === 'error'
             && $log->message === 'User has a invalid timezone'
         );
     }

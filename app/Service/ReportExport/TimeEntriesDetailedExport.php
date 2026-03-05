@@ -40,13 +40,13 @@ class TimeEntriesDetailedExport implements FromQuery, ShouldAutoSize, WithColumn
     private LocalizationService $localizationService;
 
     /**
-     * @param  Builder<TimeEntry>  $builder
+     * @param Builder<TimeEntry> $builder
      */
     public function __construct(Builder $builder, ExportFormat $exportFormat, string $timezone, LocalizationService $localizationService)
     {
-        $this->builder = $builder;
-        $this->exportFormat = $exportFormat;
-        $this->timezone = $timezone;
+        $this->builder             = $builder;
+        $this->exportFormat        = $exportFormat;
+        $this->timezone            = $timezone;
         $this->localizationService = $localizationService;
     }
 
@@ -69,14 +69,13 @@ class TimeEntriesDetailedExport implements FromQuery, ShouldAutoSize, WithColumn
                 'G' => 'yyyy-mm-dd hh:mm:ss',
                 'I' => NumberFormat::FORMAT_NUMBER_00,
             ];
-        } elseif ($this->exportFormat === ExportFormat::ODS) {
+        }
+        if ($this->exportFormat === ExportFormat::ODS) {
             return [
                 'I' => NumberFormat::FORMAT_NUMBER_00,
             ];
-        } else {
-            throw new LogicException('Unsupported export format.');
         }
-
+        throw new LogicException('Unsupported export format.');
     }
 
     /**
@@ -111,7 +110,8 @@ class TimeEntriesDetailedExport implements FromQuery, ShouldAutoSize, WithColumn
     }
 
     /**
-     * @param  TimeEntry  $model
+     * @param TimeEntry $model
+     *
      * @return array<int, string|float|null>
      */
     public function map($model): array
@@ -132,7 +132,8 @@ class TimeEntriesDetailedExport implements FromQuery, ShouldAutoSize, WithColumn
                 $model->billable ? 'Yes' : 'No',
                 $model->tagsRelation->pluck('name')->implode(', '),
             ];
-        } elseif ($this->exportFormat === ExportFormat::ODS) {
+        }
+        if ($this->exportFormat === ExportFormat::ODS) {
             return [
                 $model->description,
                 $model->task?->name,
@@ -146,8 +147,7 @@ class TimeEntriesDetailedExport implements FromQuery, ShouldAutoSize, WithColumn
                 $model->billable ? 'Yes' : 'No',
                 $model->tagsRelation->pluck('name')->implode(', '),
             ];
-        } else {
-            throw new LogicException('Unsupported export format.');
         }
+        throw new LogicException('Unsupported export format.');
     }
 }

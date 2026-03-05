@@ -20,8 +20,8 @@ class GenericTimeEntriesImporterTest extends ImporterTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $timezone = 'Europe/Vienna';
-        $importer = new GenericTimeEntriesImporter;
+        $timezone     = 'Europe/Vienna';
+        $importer     = new GenericTimeEntriesImporter();
         $importer->init($organization);
         $data = Storage::disk('testfiles')->get('generic_time_entries_import_test_1.csv');
 
@@ -44,12 +44,12 @@ class GenericTimeEntriesImporterTest extends ImporterTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $timezone = 'Europe/Vienna';
-        $importer = new GenericTimeEntriesImporter;
+        $timezone     = 'Europe/Vienna';
+        $importer     = new GenericTimeEntriesImporter();
         $importer->init($organization);
         $data = Storage::disk('testfiles')->get('generic_time_entries_import_test_1.csv');
         $importer->importData($data, $timezone);
-        $importer = new GenericTimeEntriesImporter;
+        $importer = new GenericTimeEntriesImporter();
         $importer->init($organization);
 
         // Act

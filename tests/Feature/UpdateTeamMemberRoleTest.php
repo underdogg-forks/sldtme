@@ -20,11 +20,12 @@ class UpdateTeamMemberRoleTest extends TestCase
         $this->actingAs($user);
 
         $user->currentTeam->users()->attach(
-            $otherUser = User::factory()->create(), ['role' => 'admin']
+            $otherUser = User::factory()->create(),
+            ['role' => 'admin']
         );
 
         // Act
-        $response = $this->put('/teams/'.$user->currentTeam->id.'/members/'.$otherUser->id, [
+        $response = $this->put('/teams/' . $user->currentTeam->id . '/members/' . $otherUser->id, [
             'role' => Role::Employee->value,
         ]);
 

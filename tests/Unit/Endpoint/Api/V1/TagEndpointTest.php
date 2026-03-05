@@ -45,15 +45,16 @@ class TagEndpointTest extends ApiEndpointTestAbstract
         $response->assertStatus(200);
         $response->assertJsonCount(4, 'data');
         $tags = Tag::query()->orderBy('created_at', 'desc')->get();
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->has('links')
-            ->has('meta')
-            ->count('data', 4)
-            ->where('data.0.id', $tags->get(0)->getKey())
-            ->where('data.1.id', $tags->get(1)->getKey())
-            ->where('data.2.id', $tags->get(2)->getKey())
-            ->where('data.3.id', $tags->get(3)->getKey())
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->has('links')
+                ->has('meta')
+                ->count('data', 4)
+                ->where('data.0.id', $tags->get(0)->getKey())
+                ->where('data.1.id', $tags->get(1)->getKey())
+                ->where('data.2.id', $tags->get(2)->getKey())
+                ->where('data.3.id', $tags->get(3)->getKey())
         );
     }
 
@@ -78,7 +79,7 @@ class TagEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'tags:create',
         ]);
-        $name = 'Test Tag';
+        $name        = 'Test Tag';
         $tagWithName = Tag::factory()->forOrganization($data->organization)->create([
             'name' => $name,
         ]);
@@ -102,7 +103,7 @@ class TagEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'tags:create',
         ]);
-        $name = 'Test Tag';
+        $name        = 'Test Tag';
         $tagWithName = Tag::factory()->create([
             'name' => $name,
         ]);
@@ -115,9 +116,10 @@ class TagEndpointTest extends ApiEndpointTestAbstract
 
         // Assert
         $response->assertStatus(201);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.name', $tagWithName->name)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.name', $tagWithName->name)
         );
     }
 
@@ -137,17 +139,18 @@ class TagEndpointTest extends ApiEndpointTestAbstract
 
         // Assert
         $response->assertStatus(201);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.name', $tagFake->name)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.name', $tagFake->name)
         );
     }
 
     public function test_update_endpoint_fails_if_user_has_no_permission_to_update_tags(): void
     {
         // Arrange
-        $data = $this->createUserWithPermission();
-        $tag = Tag::factory()->forOrganization($data->organization)->create();
+        $data    = $this->createUserWithPermission();
+        $tag     = Tag::factory()->forOrganization($data->organization)->create();
         $tagFake = Tag::factory()->make();
         Passport::actingAs($data->user);
 
@@ -167,8 +170,8 @@ class TagEndpointTest extends ApiEndpointTestAbstract
             'tags:update',
         ]);
         $otherOrganization = Organization::factory()->create();
-        $tag = Tag::factory()->forOrganization($otherOrganization)->create();
-        $tagFake = Tag::factory()->make();
+        $tag               = Tag::factory()->forOrganization($otherOrganization)->create();
+        $tagFake           = Tag::factory()->make();
         Passport::actingAs($data->user);
 
         // Act
@@ -179,8 +182,8 @@ class TagEndpointTest extends ApiEndpointTestAbstract
         // Assert
         $response->assertForbidden();
         $this->assertDatabaseHas(Tag::class, [
-            'id' => $tag->getKey(),
-            'name' => $tag->name,
+            'id'              => $tag->getKey(),
+            'name'            => $tag->name,
             'organization_id' => $otherOrganization->getKey(),
         ]);
     }
@@ -191,7 +194,7 @@ class TagEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'tags:update',
         ]);
-        $tag = Tag::factory()->forOrganization($data->organization)->create();
+        $tag         = Tag::factory()->forOrganization($data->organization)->create();
         $tagWithName = Tag::factory()->forOrganization($data->organization)->create();
         Passport::actingAs($data->user);
 
@@ -213,7 +216,7 @@ class TagEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'tags:update',
         ]);
-        $tag = Tag::factory()->forOrganization($data->organization)->create();
+        $tag         = Tag::factory()->forOrganization($data->organization)->create();
         $tagWithName = Tag::factory()->create([
             'name' => 'Test Tag',
         ]);
@@ -226,12 +229,13 @@ class TagEndpointTest extends ApiEndpointTestAbstract
 
         // Assert
         $response->assertStatus(200);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.name', $tagWithName->name)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.name', $tagWithName->name)
         );
         $this->assertDatabaseHas(Tag::class, [
-            'name' => $tagWithName->name,
+            'name'            => $tagWithName->name,
             'organization_id' => $data->organization->getKey(),
         ]);
     }
@@ -242,7 +246,7 @@ class TagEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'tags:update',
         ]);
-        $tag = Tag::factory()->forOrganization($data->organization)->create();
+        $tag     = Tag::factory()->forOrganization($data->organization)->create();
         $tagFake = Tag::factory()->make();
         Passport::actingAs($data->user);
 
@@ -253,12 +257,13 @@ class TagEndpointTest extends ApiEndpointTestAbstract
 
         // Assert
         $response->assertStatus(200);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.name', $tagFake->name)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.name', $tagFake->name)
         );
         $this->assertDatabaseHas(Tag::class, [
-            'name' => $tagFake->name,
+            'name'            => $tagFake->name,
             'organization_id' => $data->organization->getKey(),
         ]);
     }
@@ -267,7 +272,7 @@ class TagEndpointTest extends ApiEndpointTestAbstract
     {
         // Arrange
         $data = $this->createUserWithPermission();
-        $tag = Tag::factory()->forOrganization($data->organization)->create();
+        $tag  = Tag::factory()->forOrganization($data->organization)->create();
         Passport::actingAs($data->user);
 
         // Act
@@ -284,7 +289,7 @@ class TagEndpointTest extends ApiEndpointTestAbstract
             'tags:delete',
         ]);
         $otherOrganization = Organization::factory()->create();
-        $tag = Tag::factory()->forOrganization($otherOrganization)->create();
+        $tag               = Tag::factory()->forOrganization($otherOrganization)->create();
         Passport::actingAs($data->user);
 
         // Act
@@ -293,8 +298,8 @@ class TagEndpointTest extends ApiEndpointTestAbstract
         // Assert
         $response->assertForbidden();
         $this->assertDatabaseHas(Tag::class, [
-            'id' => $tag->getKey(),
-            'name' => $tag->name,
+            'id'              => $tag->getKey(),
+            'name'            => $tag->name,
             'organization_id' => $otherOrganization->getKey(),
         ]);
     }

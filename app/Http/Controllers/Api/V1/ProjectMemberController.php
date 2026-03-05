@@ -22,19 +22,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProjectMemberController extends Controller
 {
-    protected function checkPermission(Organization $organization, string $permission, ?Project $project = null, ?ProjectMember $projectMember = null): void
-    {
-        parent::checkPermission($organization, $permission);
-        if ($project !== null && $project->organization_id !== $organization->id) {
-            throw new AuthorizationException('Project does not belong to organization');
-        }
-        if ($projectMember !== null && $projectMember->project->organization_id !== $organization->id) {
-            throw new AuthorizationException('Project member does not belong to organization');
-        }
-    }
-
     /**
-     * Get project members for project
+     * Get project members for project.
      *
      * @return ProjectMemberCollection<ProjectMemberResource>
      *
@@ -55,7 +44,7 @@ class ProjectMemberController extends Controller
     }
 
     /**
-     * Add project member to project
+     * Add project member to project.
      *
      * @throws AuthorizationException|InactiveUserCanNotBeUsedApiException|UserIsAlreadyMemberOfProjectApiException
      *
@@ -67,13 +56,13 @@ class ProjectMemberController extends Controller
 
         $member = Member::findOrFail((string) $request->input('member_id'));
         if ($member->user->is_placeholder) {
-            throw new InactiveUserCanNotBeUsedApiException;
+            throw new InactiveUserCanNotBeUsedApiException();
         }
         if (ProjectMember::whereBelongsTo($project, 'project')->whereBelongsTo($member, 'member')->exists()) {
-            throw new UserIsAlreadyMemberOfProjectApiException;
+            throw new UserIsAlreadyMemberOfProjectApiException();
         }
 
-        $projectMember = new ProjectMember;
+        $projectMember                = new ProjectMember();
         $projectMember->billable_rate = $request->getBillableRate();
         $projectMember->member()->associate($member);
         $projectMember->user()->associate($member->user);
@@ -88,7 +77,7 @@ class ProjectMemberController extends Controller
     }
 
     /**
-     * Update project member
+     * Update project member.
      *
      * @throws AuthorizationException
      *
@@ -97,7 +86,7 @@ class ProjectMemberController extends Controller
     public function update(Organization $organization, ProjectMember $projectMember, ProjectMemberUpdateRequest $request, BillableRateService $billableRateService): JsonResource
     {
         $this->checkPermission($organization, 'project-members:update', projectMember: $projectMember);
-        $oldBillableRate = $projectMember->billable_rate;
+        $oldBillableRate              = $projectMember->billable_rate;
         $projectMember->billable_rate = $request->getBillableRate();
         $projectMember->save();
 
@@ -109,7 +98,7 @@ class ProjectMemberController extends Controller
     }
 
     /**
-     * Delete project member
+     * Delete project member.
      *
      * @throws AuthorizationException
      *
@@ -120,8 +109,8 @@ class ProjectMemberController extends Controller
         $this->checkPermission($organization, 'project-members:delete', projectMember: $projectMember);
 
         $hadBillableRate = $projectMember->billable_rate !== null;
-        $project = $projectMember->project;
-        $member = $projectMember->member;
+        $project         = $projectMember->project;
+        $member          = $projectMember->member;
 
         $projectMember->delete();
 
@@ -133,5 +122,16 @@ class ProjectMemberController extends Controller
 
         return response()
             ->json(null, 204);
+    }
+
+    protected function checkPermission(Organization $organization, string $permission, ?Project $project = null, ?ProjectMember $projectMember = null): void
+    {
+        parent::checkPermission($organization, $permission);
+        if ($project !== null && $project->organization_id !== $organization->id) {
+            throw new AuthorizationException('Project does not belong to organization');
+        }
+        if ($projectMember !== null && $projectMember->project->organization_id !== $organization->id) {
+            throw new AuthorizationException('Project member does not belong to organization');
+        }
     }
 }

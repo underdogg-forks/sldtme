@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Passport Guard
@@ -44,5 +43,4 @@ return [
     */
 
     'connection' => env('PASSPORT_CONNECTION'),
-
 ];

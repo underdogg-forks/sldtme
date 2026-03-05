@@ -28,7 +28,8 @@ class CreateOrganization extends CreateRecord
         $user = $organization->owner;
 
         $organization->users()->attach(
-            $user, [
+            $user,
+            [
                 'role' => Role::Owner->value,
             ]
         );

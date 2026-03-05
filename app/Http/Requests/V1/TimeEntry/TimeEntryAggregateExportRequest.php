@@ -17,11 +17,13 @@ use App\Models\Tag;
 use App\Models\Task;
 use App\Models\User;
 use App\Service\TimeEntryFilter;
+use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Korridor\LaravelModelValidationRules\Rules\ExistsEloquent;
+use LogicException;
 
 /**
  * @property Organization $organization
@@ -31,7 +33,7 @@ class TimeEntryAggregateExportRequest extends BaseFormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, array<string|ValidationRule|\Illuminate\Contracts\Validation\Rule|\Closure>>
+     * @return array<string, array<string|ValidationRule|\Illuminate\Contracts\Validation\Rule|Closure>>
      */
     public function rules(): array
     {
@@ -62,8 +64,8 @@ class TimeEntryAggregateExportRequest extends BaseFormRequest
             // Filter by member ID
             'member_id' => [
                 'string',
-                ExistsEloquent::make(Member::class, null, function (Builder $builder): Builder {
-                    /** @var Builder<Member> $builder */
+                ExistsEloquent::make(Member::class, null, static function (Builder $builder): Builder {
+                    /* @var Builder<Member> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization');
                 })->uuid(),
             ],
@@ -74,8 +76,8 @@ class TimeEntryAggregateExportRequest extends BaseFormRequest
             ],
             'member_ids.*' => [
                 'string',
-                ExistsEloquent::make(Member::class, null, function (Builder $builder): Builder {
-                    /** @var Builder<Member> $builder */
+                ExistsEloquent::make(Member::class, null, static function (Builder $builder): Builder {
+                    /* @var Builder<Member> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization');
                 })->uuid(),
             ],
@@ -83,8 +85,8 @@ class TimeEntryAggregateExportRequest extends BaseFormRequest
             // Filter by user ID
             'user_id' => [
                 'string',
-                ExistsEloquent::make(User::class, null, function (Builder $builder): Builder {
-                    /** @var Builder<User> $builder */
+                ExistsEloquent::make(User::class, null, static function (Builder $builder): Builder {
+                    /* @var Builder<User> $builder */
                     return $builder->belongsToOrganization($this->organization);
                 })->uuid(),
             ],
@@ -95,12 +97,12 @@ class TimeEntryAggregateExportRequest extends BaseFormRequest
             ],
             'project_ids.*' => [
                 'string',
-                function (string $attribute, mixed $value, \Closure $fail): void {
+                function (string $attribute, mixed $value, Closure $fail): void {
                     if ($value === TimeEntryFilter::NONE_VALUE) {
                         return;
                     }
-                    ExistsEloquent::make(Project::class, null, function (Builder $builder): Builder {
-                        /** @var Builder<Project> $builder */
+                    ExistsEloquent::make(Project::class, null, static function (Builder $builder): Builder {
+                        /* @var Builder<Project> $builder */
                         return $builder->whereBelongsTo($this->organization, 'organization');
                     })->uuid()->validate($attribute, $value, $fail);
                 },
@@ -112,12 +114,12 @@ class TimeEntryAggregateExportRequest extends BaseFormRequest
             ],
             'client_ids.*' => [
                 'string',
-                function (string $attribute, mixed $value, \Closure $fail): void {
+                function (string $attribute, mixed $value, Closure $fail): void {
                     if ($value === TimeEntryFilter::NONE_VALUE) {
                         return;
                     }
-                    ExistsEloquent::make(Client::class, null, function (Builder $builder): Builder {
-                        /** @var Builder<Client> $builder */
+                    ExistsEloquent::make(Client::class, null, static function (Builder $builder): Builder {
+                        /* @var Builder<Client> $builder */
                         return $builder->whereBelongsTo($this->organization, 'organization');
                     })->uuid()->validate($attribute, $value, $fail);
                 },
@@ -129,12 +131,12 @@ class TimeEntryAggregateExportRequest extends BaseFormRequest
             ],
             'tag_ids.*' => [
                 'string',
-                function (string $attribute, mixed $value, \Closure $fail): void {
+                function (string $attribute, mixed $value, Closure $fail): void {
                     if ($value === TimeEntryFilter::NONE_VALUE) {
                         return;
                     }
-                    ExistsEloquent::make(Tag::class, null, function (Builder $builder): Builder {
-                        /** @var Builder<Tag> $builder */
+                    ExistsEloquent::make(Tag::class, null, static function (Builder $builder): Builder {
+                        /* @var Builder<Tag> $builder */
                         return $builder->whereBelongsTo($this->organization, 'organization');
                     })->uuid()->validate($attribute, $value, $fail);
                 },
@@ -146,11 +148,11 @@ class TimeEntryAggregateExportRequest extends BaseFormRequest
             ],
             'task_ids.*' => [
                 'string',
-                function (string $attribute, mixed $value, \Closure $fail): void {
+                function (string $attribute, mixed $value, Closure $fail): void {
                     if ($value === TimeEntryFilter::NONE_VALUE) {
                         return;
                     }
-                    ExistsEloquent::make(Task::class, null, function (Builder $builder): Builder {
+                    ExistsEloquent::make(Task::class, null, static function (Builder $builder): Builder {
                         return $builder->whereBelongsTo($this->organization, 'organization');
                     })->uuid()->validate($attribute, $value, $fail);
                 },
@@ -225,7 +227,7 @@ class TimeEntryAggregateExportRequest extends BaseFormRequest
     {
         $start = Carbon::createFromFormat('Y-m-d\TH:i:s\Z', $this->input('start'), 'UTC');
         if ($start === null) {
-            throw new \LogicException('Start date validation is not working');
+            throw new LogicException('Start date validation is not working');
         }
 
         return $start;
@@ -235,7 +237,7 @@ class TimeEntryAggregateExportRequest extends BaseFormRequest
     {
         $end = Carbon::createFromFormat('Y-m-d\TH:i:s\Z', $this->input('end'), 'UTC');
         if ($end === null) {
-            throw new \LogicException('End date validation is not working');
+            throw new LogicException('End date validation is not working');
         }
 
         return $end;
@@ -248,7 +250,7 @@ class TimeEntryAggregateExportRequest extends BaseFormRequest
 
     public function getRoundingType(): ?TimeEntryRoundingType
     {
-        if (! $this->has('rounding_type') || $this->validated('rounding_type') === null) {
+        if ( ! $this->has('rounding_type') || $this->validated('rounding_type') === null) {
             return null;
         }
 
@@ -257,7 +259,7 @@ class TimeEntryAggregateExportRequest extends BaseFormRequest
 
     public function getRoundingMinutes(): ?int
     {
-        if (! $this->has('rounding_minutes') || $this->validated('rounding_minutes') === null) {
+        if ( ! $this->has('rounding_minutes') || $this->validated('rounding_minutes') === null) {
             return null;
         }
 

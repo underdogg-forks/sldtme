@@ -27,8 +27,8 @@ class MemberMergeIntoRequest extends BaseFormRequest
             // ID of the member to which the data should be transferred (destination)
             'member_id' => [
                 'string',
-                ExistsEloquent::make(Member::class, null, function (Builder $builder): Builder {
-                    /** @var Builder<Member> $builder */
+                ExistsEloquent::make(Member::class, null, static function (Builder $builder): Builder {
+                    /* @var Builder<Member> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization');
                 })->uuid(),
             ],

@@ -11,9 +11,9 @@ use Flowframe\Trend\TrendValue;
 
 class TimeEntriesCreated extends ChartWidget
 {
-    protected static ?string $heading = 'Time Entries Created';
-
     public ?string $filter = 'week';
+
+    protected static ?string $heading = 'Time Entries Created';
 
     protected static ?int $sort = 3;
 
@@ -54,7 +54,7 @@ class TimeEntriesCreated extends ChartWidget
             'datasets' => [
                 [
                     'label' => self::$heading,
-                    'data' => $data->map(fn (TrendValue $value) => $value->aggregate),
+                    'data'  => $data->map(fn (TrendValue $value) => $value->aggregate),
                 ],
             ],
             'labels' => $data->map(fn (TrendValue $value) => $value->date),
@@ -64,9 +64,9 @@ class TimeEntriesCreated extends ChartWidget
     protected function getFilters(): ?array
     {
         return [
-            'week' => 'Last week',
+            'week'  => 'Last week',
             'month' => 'Last month',
-            'year' => 'Last year',
+            'year'  => 'Last year',
         ];
     }
 

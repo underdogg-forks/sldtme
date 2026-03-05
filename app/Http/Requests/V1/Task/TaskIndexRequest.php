@@ -32,11 +32,11 @@ class TaskIndexRequest extends BaseFormRequest
                 'max:2147483647',
             ],
             'project_id' => [
-                ExistsEloquent::make(Project::class, null, function (Builder $builder): Builder {
+                ExistsEloquent::make(Project::class, null, static function (Builder $builder): Builder {
                     /** @var Builder<Project> $builder */
                     $builder = $builder->whereBelongsTo($this->organization, 'organization');
 
-                    if (! app(PermissionStore::class)->has($this->organization, 'tasks:view:all')) {
+                    if ( ! app(PermissionStore::class)->has($this->organization, 'tasks:view:all')) {
                         $builder = $builder->visibleByEmployee(Auth::user());
                     }
 

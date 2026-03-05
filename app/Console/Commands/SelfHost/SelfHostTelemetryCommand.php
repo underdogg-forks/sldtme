@@ -32,11 +32,10 @@ class SelfHostTelemetryCommand extends Command
 
         $success = $apiService->telemetry();
 
-        if (! $success) {
+        if ( ! $success) {
             $this->error('Failed to send telemetry data, check the logs for more information.');
 
             return self::FAILURE;
-
         }
 
         return self::SUCCESS;

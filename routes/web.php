@@ -21,7 +21,7 @@ use Laravel\Jetstream\Jetstream;
 
 Route::get('/', [HomeController::class, 'index']);
 
-Route::get('/shared-report', function () {
+Route::get('/shared-report', static function () {
     return Inertia::render('SharedReport');
 })->name('shared-report');
 
@@ -32,54 +32,53 @@ Route::middleware([
 ])->group(function (): void {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
-    Route::get('/time', function () {
+    Route::get('/time', static function () {
         return Inertia::render('Time');
     })->name('time');
 
-    Route::get('/calendar', function () {
+    Route::get('/calendar', static function () {
         return Inertia::render('Calendar');
     })->name('calendar');
 
-    Route::get('/timesheet', function () {
+    Route::get('/timesheet', static function () {
         return Inertia::render('Timesheet');
     })->name('timesheet');
 
-    Route::get('/reporting', function () {
+    Route::get('/reporting', static function () {
         return Inertia::render('Reporting');
     })->name('reporting');
 
-    Route::get('/reporting/detailed', function () {
+    Route::get('/reporting/detailed', static function () {
         return Inertia::render('ReportingDetailed');
     })->name('reporting.detailed');
 
-    Route::get('/reporting/shared', function () {
+    Route::get('/reporting/shared', static function () {
         return Inertia::render('ReportingShared');
     })->name('reporting.shared');
 
-    Route::get('/projects', function () {
+    Route::get('/projects', static function () {
         return Inertia::render('Projects');
     })->name('projects');
 
-    Route::get('/projects/{project}', function () {
+    Route::get('/projects/{project}', static function () {
         return Inertia::render('ProjectShow');
     })->name('projects.show');
 
-    Route::get('/clients', function () {
+    Route::get('/clients', static function () {
         return Inertia::render('Clients');
     })->name('clients');
 
-    Route::get('/members', function () {
+    Route::get('/members', static function () {
         return Inertia::render('Members', [
             'availableRoles' => array_values(Jetstream::$roles),
         ]);
     })->name('members');
 
-    Route::get('/tags', function () {
+    Route::get('/tags', static function () {
         return Inertia::render('Tags');
     })->name('tags');
 
-    Route::get('/import', function () {
+    Route::get('/import', static function () {
         return Inertia::render('Import');
     })->name('import');
-
 });

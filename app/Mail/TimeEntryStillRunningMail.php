@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\URL;
 
 class TimeEntryStillRunningMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public TimeEntry $timeEntry;
 
@@ -27,7 +28,7 @@ class TimeEntryStillRunningMail extends Mailable
     public function __construct(TimeEntry $timeEntry, User $user)
     {
         $this->timeEntry = $timeEntry;
-        $this->user = $user;
+        $this->user      = $user;
     }
 
     /**

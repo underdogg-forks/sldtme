@@ -6,16 +6,16 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('clients', function (Blueprint $table): void {
+        Schema::create('clients', static function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->string('name', 255);
+            $table->dateTime('archived_at')->nullable();
             $table->uuid('organization_id');
             $table->foreign('organization_id')
                 ->references('id')

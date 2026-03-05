@@ -29,7 +29,7 @@ class DeletionService
 
     public function __construct(UserService $userService, MemberService $memberService)
     {
-        $this->userService = $userService;
+        $this->userService   = $userService;
         $this->memberService = $memberService;
     }
 
@@ -45,8 +45,8 @@ class DeletionService
 
         Log::debug('Start deleting organization', [
             'organization_id' => $organization->getKey(),
-            'name' => $organization->name,
-            'owner_id' => $organization->user_id,
+            'name'            => $organization->name,
+            'owner_id'        => $organization->user_id,
         ]);
 
         BeforeOrganizationDeletion::dispatch($organization);
@@ -122,8 +122,8 @@ class DeletionService
 
         Log::debug('Finished deleting organization', [
             'organization_id' => $organization->getKey(),
-            'name' => $organization->name,
-            'owner_id' => $organization->user_id,
+            'name'            => $organization->name,
+            'owner_id'        => $organization->user_id,
         ]);
     }
 
@@ -141,8 +141,8 @@ class DeletionService
         }
 
         Log::debug('Start deleting user', [
-            'id' => $user->getKey(),
-            'name' => $user->name,
+            'id'    => $user->getKey(),
+            'name'  => $user->name,
             'email' => $user->email,
         ]);
 
@@ -156,7 +156,7 @@ class DeletionService
         foreach ($members as $member) {
             /** @var Member $member */
             if ($member->role === Role::Owner->value && $member->organization->users()->count() > 1) {
-                throw new CanNotDeleteUserWhoIsOwnerOfOrganizationWithMultipleMembers;
+                throw new CanNotDeleteUserWhoIsOwnerOfOrganizationWithMultipleMembers();
             }
         }
 
@@ -178,8 +178,8 @@ class DeletionService
         $user->delete();
 
         Log::debug('Finished deleting user', [
-            'id' => $user->getKey(),
-            'name' => $user->name,
+            'id'    => $user->getKey(),
+            'name'  => $user->name,
             'email' => $user->email,
         ]);
     }

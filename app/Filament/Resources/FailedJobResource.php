@@ -112,7 +112,7 @@ class FailedJobResource extends Resource
     {
         return [
             'index' => ListFailedJobs::route('/'),
-            'view' => ViewFailedJobs::route('/{record}'),
+            'view'  => ViewFailedJobs::route('/{record}'),
         ];
     }
 }

@@ -104,15 +104,15 @@ class TokenResource extends Resource
                 TernaryFilter::make('is_personal_access_client')
                     ->queries(
                         true: function (Builder $query) {
-                            /** @var Builder<Token> $query */
+                            /* @var Builder<Token> $query */
                             return $query->isApiToken();
                         },
                         false: function (Builder $query) {
-                            /** @var Builder<Token> $query */
+                            /* @var Builder<Token> $query */
                             return $query->isApiToken(false);
                         },
                         blank: function (Builder $query) {
-                            /** @var Builder<Token> $query */
+                            /* @var Builder<Token> $query */
                             return $query;
                         },
                     )
@@ -137,7 +137,7 @@ class TokenResource extends Resource
     {
         return [
             'index' => Pages\ListTokens::route('/'),
-            'view' => Pages\ViewToken::route('/{record}'),
+            'view'  => Pages\ViewToken::route('/{record}'),
         ];
     }
 }

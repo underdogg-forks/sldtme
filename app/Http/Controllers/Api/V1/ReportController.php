@@ -22,18 +22,7 @@ use Illuminate\Http\JsonResponse;
 class ReportController extends Controller
 {
     /**
-     * @throws AuthorizationException
-     */
-    protected function checkPermission(Organization $organization, string $permission, ?Report $report = null): void
-    {
-        parent::checkPermission($organization, $permission);
-        if ($report !== null && $report->organization_id !== $organization->id) {
-            throw new AuthorizationException('Report does not belong to organization');
-        }
-    }
-
-    /**
-     * Get reports
+     * Get reports.
      *
      * @return ReportCollection<ReportResource>
      *
@@ -54,7 +43,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Get report
+     * Get report.
      *
      * @throws AuthorizationException
      *
@@ -68,7 +57,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Create report
+     * Create report.
      *
      * @throws AuthorizationException
      *
@@ -79,18 +68,18 @@ class ReportController extends Controller
         $this->checkPermission($organization, 'reports:create');
         $user = $this->user();
 
-        $report = new Report;
-        $report->name = $request->getName();
-        $report->description = $request->getDescription();
-        $isPublic = $request->getIsPublic();
-        $report->is_public = $isPublic;
-        $properties = new ReportPropertiesDto;
-        $properties->group = $request->getPropertyGroup();
-        $properties->subGroup = $request->getPropertySubGroup();
+        $report                   = new Report();
+        $report->name             = $request->getName();
+        $report->description      = $request->getDescription();
+        $isPublic                 = $request->getIsPublic();
+        $report->is_public        = $isPublic;
+        $properties               = new ReportPropertiesDto();
+        $properties->group        = $request->getPropertyGroup();
+        $properties->subGroup     = $request->getPropertySubGroup();
         $properties->historyGroup = $request->getPropertyHistoryGroup();
-        $properties->start = $request->getPropertyStart();
-        $properties->end = $request->getPropertyEnd();
-        $properties->active = $request->getPropertyActive();
+        $properties->start        = $request->getPropertyStart();
+        $properties->end          = $request->getPropertyEnd();
+        $properties->active       = $request->getPropertyActive();
         $properties->setMemberIds($request->input('properties.member_ids', null));
         $properties->billable = $request->getPropertyBillable();
         $properties->setClientIds($request->input('properties.client_ids', null));
@@ -98,7 +87,7 @@ class ReportController extends Controller
         $properties->setTagIds($request->input('properties.tag_ids', null));
         $properties->setTaskIds($request->input('properties.task_ids', null));
         $properties->weekStart = $request->has('properties.week_start') ? Weekday::from($request->input('properties.week_start')) : $user->week_start;
-        $timezone = $user->timezone;
+        $timezone              = $user->timezone;
         if ($request->has('properties.timezone')) {
             if ($timezoneService->isValid($request->input('properties.timezone'))) {
                 $timezone = $request->input('properties.timezone');
@@ -107,10 +96,10 @@ class ReportController extends Controller
                 $timezone = $timezoneService->mapLegacyTimezone($request->input('properties.timezone'));
             }
         }
-        $properties->timezone = $timezone;
-        $properties->roundingType = $request->getPropertyRoundingType();
+        $properties->timezone        = $timezone;
+        $properties->roundingType    = $request->getPropertyRoundingType();
         $properties->roundingMinutes = $request->getPropertyRoundingMinutes();
-        $report->properties = $properties;
+        $report->properties          = $properties;
         if ($isPublic) {
             $report->share_secret = $reportService->generateSecret();
             $report->public_until = $request->getPublicUntil();
@@ -125,7 +114,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Update report
+     * Update report.
      *
      * @throws AuthorizationException
      *
@@ -142,7 +131,7 @@ class ReportController extends Controller
             $report->description = $request->getDescription();
         }
         if ($request->has('is_public') && $request->getIsPublic() !== $report->is_public) {
-            $isPublic = $request->getIsPublic();
+            $isPublic          = $request->getIsPublic();
             $report->is_public = $isPublic;
             if ($isPublic) {
                 $report->share_secret = $reportService->generateSecret();
@@ -161,7 +150,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Delete report
+     * Delete report.
      *
      * @throws AuthorizationException
      *
@@ -174,5 +163,16 @@ class ReportController extends Controller
         $report->delete();
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * @throws AuthorizationException
+     */
+    protected function checkPermission(Organization $organization, string $permission, ?Report $report = null): void
+    {
+        parent::checkPermission($organization, $permission);
+        if ($report !== null && $report->organization_id !== $organization->id) {
+            throw new AuthorizationException('Report does not belong to organization');
+        }
     }
 }

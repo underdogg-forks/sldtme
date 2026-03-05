@@ -14,7 +14,7 @@ class IntervalServiceTest extends TestCase
     {
         // Arrange
         $intervalService = app(IntervalService::class);
-        $interval = CarbonInterval::seconds(123456789123);
+        $interval        = CarbonInterval::seconds(123456789123);
 
         // Act
         $result = $intervalService->format($interval);

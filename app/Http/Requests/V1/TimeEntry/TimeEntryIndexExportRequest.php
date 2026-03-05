@@ -13,11 +13,13 @@ use App\Models\Project;
 use App\Models\Tag;
 use App\Models\Task;
 use App\Service\TimeEntryFilter;
+use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Korridor\LaravelModelValidationRules\Rules\ExistsEloquent;
+use LogicException;
 
 /**
  * @property Organization $organization
@@ -27,7 +29,7 @@ class TimeEntryIndexExportRequest extends TimeEntryIndexRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, array<string|ValidationRule|\Illuminate\Contracts\Validation\Rule|\Closure>>
+     * @return array<string, array<string|ValidationRule|\Illuminate\Contracts\Validation\Rule|Closure>>
      */
     public function rules(): array
     {
@@ -41,8 +43,8 @@ class TimeEntryIndexExportRequest extends TimeEntryIndexRequest
             'member_id' => [
                 'string',
                 'uuid',
-                new ExistsEloquent(Member::class, null, function (Builder $builder): Builder {
-                    /** @var Builder<Member> $builder */
+                new ExistsEloquent(Member::class, null, static function (Builder $builder): Builder {
+                    /* @var Builder<Member> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization');
                 }),
             ],
@@ -54,8 +56,8 @@ class TimeEntryIndexExportRequest extends TimeEntryIndexRequest
             'member_ids.*' => [
                 'string',
                 'uuid',
-                new ExistsEloquent(Member::class, null, function (Builder $builder): Builder {
-                    /** @var Builder<Member> $builder */
+                new ExistsEloquent(Member::class, null, static function (Builder $builder): Builder {
+                    /* @var Builder<Member> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization');
                 }),
             ],
@@ -66,12 +68,12 @@ class TimeEntryIndexExportRequest extends TimeEntryIndexRequest
             ],
             'client_ids.*' => [
                 'string',
-                function (string $attribute, mixed $value, \Closure $fail): void {
+                function (string $attribute, mixed $value, Closure $fail): void {
                     if ($value === TimeEntryFilter::NONE_VALUE) {
                         return;
                     }
-                    ExistsEloquent::make(Client::class, null, function (Builder $builder): Builder {
-                        /** @var Builder<Client> $builder */
+                    ExistsEloquent::make(Client::class, null, static function (Builder $builder): Builder {
+                        /* @var Builder<Client> $builder */
                         return $builder->whereBelongsTo($this->organization, 'organization');
                     })->uuid()->validate($attribute, $value, $fail);
                 },
@@ -83,12 +85,12 @@ class TimeEntryIndexExportRequest extends TimeEntryIndexRequest
             ],
             'project_ids.*' => [
                 'string',
-                function (string $attribute, mixed $value, \Closure $fail): void {
+                function (string $attribute, mixed $value, Closure $fail): void {
                     if ($value === TimeEntryFilter::NONE_VALUE) {
                         return;
                     }
-                    ExistsEloquent::make(Project::class, null, function (Builder $builder): Builder {
-                        /** @var Builder<Project> $builder */
+                    ExistsEloquent::make(Project::class, null, static function (Builder $builder): Builder {
+                        /* @var Builder<Project> $builder */
                         return $builder->whereBelongsTo($this->organization, 'organization');
                     })->uuid()->validate($attribute, $value, $fail);
                 },
@@ -100,12 +102,12 @@ class TimeEntryIndexExportRequest extends TimeEntryIndexRequest
             ],
             'tag_ids.*' => [
                 'string',
-                function (string $attribute, mixed $value, \Closure $fail): void {
+                function (string $attribute, mixed $value, Closure $fail): void {
                     if ($value === TimeEntryFilter::NONE_VALUE) {
                         return;
                     }
-                    ExistsEloquent::make(Tag::class, null, function (Builder $builder): Builder {
-                        /** @var Builder<Tag> $builder */
+                    ExistsEloquent::make(Tag::class, null, static function (Builder $builder): Builder {
+                        /* @var Builder<Tag> $builder */
                         return $builder->whereBelongsTo($this->organization, 'organization');
                     })->uuid()->validate($attribute, $value, $fail);
                 },
@@ -117,12 +119,12 @@ class TimeEntryIndexExportRequest extends TimeEntryIndexRequest
             ],
             'task_ids.*' => [
                 'string',
-                function (string $attribute, mixed $value, \Closure $fail): void {
+                function (string $attribute, mixed $value, Closure $fail): void {
                     if ($value === TimeEntryFilter::NONE_VALUE) {
                         return;
                     }
-                    ExistsEloquent::make(Task::class, null, function (Builder $builder): Builder {
-                        /** @var Builder<Task> $builder */
+                    ExistsEloquent::make(Task::class, null, static function (Builder $builder): Builder {
+                        /* @var Builder<Task> $builder */
                         return $builder->whereBelongsTo($this->organization, 'organization');
                     })->uuid()->validate($attribute, $value, $fail);
                 },
@@ -189,7 +191,7 @@ class TimeEntryIndexExportRequest extends TimeEntryIndexRequest
     {
         $start = Carbon::createFromFormat('Y-m-d\TH:i:s\Z', $this->input('start'), 'UTC');
         if ($start === null) {
-            throw new \LogicException('Start date validation is not working');
+            throw new LogicException('Start date validation is not working');
         }
 
         return $start;
@@ -199,7 +201,7 @@ class TimeEntryIndexExportRequest extends TimeEntryIndexRequest
     {
         $end = Carbon::createFromFormat('Y-m-d\TH:i:s\Z', $this->input('end'), 'UTC');
         if ($end === null) {
-            throw new \LogicException('End date validation is not working');
+            throw new LogicException('End date validation is not working');
         }
 
         return $end;
@@ -217,7 +219,7 @@ class TimeEntryIndexExportRequest extends TimeEntryIndexRequest
 
     public function getRoundingType(): ?TimeEntryRoundingType
     {
-        if (! $this->has('rounding_type') || $this->validated('rounding_type') === null) {
+        if ( ! $this->has('rounding_type') || $this->validated('rounding_type') === null) {
             return null;
         }
 
@@ -226,7 +228,7 @@ class TimeEntryIndexExportRequest extends TimeEntryIndexRequest
 
     public function getRoundingMinutes(): ?int
     {
-        if (! $this->has('rounding_minutes') || $this->validated('rounding_minutes') === null) {
+        if ( ! $this->has('rounding_minutes') || $this->validated('rounding_minutes') === null) {
             return null;
         }
 

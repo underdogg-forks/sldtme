@@ -33,19 +33,12 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Throwable;
 
 class MemberController extends Controller
 {
-    protected function checkPermission(Organization $organization, string $permission, ?Member $member = null): void
-    {
-        parent::checkPermission($organization, $permission);
-        if ($member !== null && $member->organization_id !== $organization->id) {
-            throw new AuthorizationException('Member does not belong to organization');
-        }
-    }
-
     /**
-     * List all members of an organization
+     * List all members of an organization.
      *
      * @return MemberCollection<MemberResource>
      *
@@ -67,7 +60,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Update a member of the organization
+     * Update a member of the organization.
      *
      * @throws AuthorizationException
      * @throws OrganizationNeedsAtLeastOneOwner
@@ -87,7 +80,7 @@ class MemberController extends Controller
             $billableRateService->updateTimeEntriesBillableRateForMember($member);
         }
         if ($request->has('role') && $member->role !== $request->getRole()->value) {
-            $newRole = $request->getRole();
+            $newRole          = $request->getRole();
             $allowOwnerChange = $this->hasPermission($organization, 'members:change-ownership');
             $memberService->changeRole($member, $organization, $newRole, $allowOwnerChange);
         }
@@ -116,7 +109,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Make a member a placeholder member
+     * Make a member a placeholder member.
      *
      * @throws AuthorizationException|CanNotRemoveOwnerFromOrganization|ChangingRoleOfPlaceholderIsNotAllowed
      *
@@ -127,10 +120,10 @@ class MemberController extends Controller
         $this->checkPermission($organization, 'members:make-placeholder', $member);
 
         if ($member->role === Role::Owner->value) {
-            throw new CanNotRemoveOwnerFromOrganization;
+            throw new CanNotRemoveOwnerFromOrganization();
         }
         if ($member->role === Role::Placeholder->value) {
-            throw new ChangingRoleOfPlaceholderIsNotAllowed;
+            throw new ChangingRoleOfPlaceholderIsNotAllowed();
         }
 
         $memberService->makeMemberToPlaceholder($member);
@@ -141,11 +134,11 @@ class MemberController extends Controller
     }
 
     /**
-     * Merge one member into another
+     * Merge one member into another.
      *
      * @throws AuthorizationException
      * @throws OnlyPlaceholdersCanBeMergedIntoAnotherMember
-     * @throws \Throwable
+     * @throws Throwable
      *
      * @operationId mergeMember
      */
@@ -155,7 +148,7 @@ class MemberController extends Controller
 
         $user = $member->user;
         if ($member->role !== Role::Placeholder->value || ! $user->is_placeholder) {
-            throw new OnlyPlaceholdersCanBeMergedIntoAnotherMember;
+            throw new OnlyPlaceholdersCanBeMergedIntoAnotherMember();
         }
         $memberTo = Member::findOrFail($request->getMemberId());
 
@@ -169,7 +162,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Invite a placeholder member to become a real member of the organization
+     * Invite a placeholder member to become a real member of the organization.
      *
      * @throws AuthorizationException
      * @throws UserNotPlaceholderApiException
@@ -184,16 +177,24 @@ class MemberController extends Controller
         $this->checkPermission($organization, 'members:invite-placeholder', $member);
         $user = $member->user;
 
-        if (! $user->is_placeholder) {
-            throw new UserNotPlaceholderApiException;
+        if ( ! $user->is_placeholder) {
+            throw new UserNotPlaceholderApiException();
         }
 
         if (Str::endsWith($user->email, '@solidtime-import.test')) {
-            throw new ThisPlaceholderCanNotBeInvitedUseTheMergeToolInsteadException;
+            throw new ThisPlaceholderCanNotBeInvitedUseTheMergeToolInsteadException();
         }
 
         $invitationService->inviteUser($organization, $user->email, Role::Employee);
 
         return response()->json(null, 204);
+    }
+
+    protected function checkPermission(Organization $organization, string $permission, ?Member $member = null): void
+    {
+        parent::checkPermission($organization, $permission);
+        if ($member !== null && $member->organization_id !== $organization->id) {
+            throw new AuthorizationException('Member does not belong to organization');
+        }
     }
 }

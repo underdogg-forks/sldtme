@@ -17,7 +17,7 @@ class TokenModelTest extends ModelTestAbstract
     {
         // Arrange
         $client = Client::factory()->create();
-        $token = Token::factory()->forClient($client)->create();
+        $token  = Token::factory()->forClient($client)->create();
 
         // Act
         $token->refresh();
@@ -31,9 +31,9 @@ class TokenModelTest extends ModelTestAbstract
     public function test_it_belongs_to_a_user(): void
     {
         // Arrange
-        $user = User::factory()->create();
+        $user   = User::factory()->create();
         $client = Client::factory()->create();
-        $token = Token::factory()->forUser($user)->forClient($client)->create();
+        $token  = Token::factory()->forUser($user)->forClient($client)->create();
 
         // Act
         $token->refresh();
@@ -47,10 +47,10 @@ class TokenModelTest extends ModelTestAbstract
     public function test_scope_is_api_tokens_only_returns_api_tokens_with_no_parameters(): void
     {
         // Arrange
-        $clientApi = Client::factory()->apiClient()->create();
+        $clientApi     = Client::factory()->apiClient()->create();
         $clientDesktop = Client::factory()->desktopClient()->create();
-        $token1 = Token::factory()->forClient($clientApi)->create();
-        $token2 = Token::factory()->forClient($clientDesktop)->create();
+        $token1        = Token::factory()->forClient($clientApi)->create();
+        $token2        = Token::factory()->forClient($clientDesktop)->create();
 
         // Act
         $apiTokens = Token::query()
@@ -65,10 +65,10 @@ class TokenModelTest extends ModelTestAbstract
     public function test_scope_is_api_tokens_only_returns_api_tokens_with_true(): void
     {
         // Arrange
-        $clientApi = Client::factory()->apiClient()->create();
+        $clientApi     = Client::factory()->apiClient()->create();
         $clientDesktop = Client::factory()->desktopClient()->create();
-        $token1 = Token::factory()->forClient($clientApi)->create();
-        $token2 = Token::factory()->forClient($clientDesktop)->create();
+        $token1        = Token::factory()->forClient($clientApi)->create();
+        $token2        = Token::factory()->forClient($clientDesktop)->create();
 
         // Act
         $apiTokens = Token::query()
@@ -83,10 +83,10 @@ class TokenModelTest extends ModelTestAbstract
     public function test_scope_is_api_tokens_only_returns_api_tokens_with_false(): void
     {
         // Arrange
-        $clientApi = Client::factory()->apiClient()->create();
+        $clientApi     = Client::factory()->apiClient()->create();
         $clientDesktop = Client::factory()->desktopClient()->create();
-        $token1 = Token::factory()->forClient($clientApi)->create();
-        $token2 = Token::factory()->forClient($clientDesktop)->create();
+        $token1        = Token::factory()->forClient($clientApi)->create();
+        $token2        = Token::factory()->forClient($clientDesktop)->create();
 
         // Act
         $apiTokens = Token::query()

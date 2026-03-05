@@ -32,8 +32,8 @@ class TimeEntryUpdateRequest extends BaseFormRequest
             // ID of the organization member that the time entry should belong to
             'member_id' => [
                 'string',
-                ExistsEloquent::make(Member::class, null, function (Builder $builder): Builder {
-                    /** @var Builder<Member> $builder */
+                ExistsEloquent::make(Member::class, null, static function (Builder $builder): Builder {
+                    /* @var Builder<Member> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization');
                 })->uuid(),
             ],
@@ -42,13 +42,13 @@ class TimeEntryUpdateRequest extends BaseFormRequest
                 'nullable',
                 'string',
                 'required_with:task_id',
-                ExistsEloquent::make(Project::class, null, function (Builder $builder): Builder {
+                ExistsEloquent::make(Project::class, null, static function (Builder $builder): Builder {
                     /** @var Builder<Project> $builder */
                     $builder = $builder->whereBelongsTo($this->organization, 'organization');
 
                     // If user doesn't have 'all' permission for time entries or projects, only allow access to public projects or projects they're a member of
                     $permissionStore = app(PermissionStore::class);
-                    if (! $permissionStore->has($this->organization, 'time-entries:update:all')
+                    if ( ! $permissionStore->has($this->organization, 'time-entries:update:all')
                         && ! $permissionStore->has($this->organization, 'projects:view:all')) {
                         $builder = $builder->visibleByEmployee(Auth::user());
                     }
@@ -60,12 +60,12 @@ class TimeEntryUpdateRequest extends BaseFormRequest
             'task_id' => [
                 'nullable',
                 'string',
-                ExistsEloquent::make(Task::class, null, function (Builder $builder): Builder {
-                    /** @var Builder<Task> $builder */
+                ExistsEloquent::make(Task::class, null, static function (Builder $builder): Builder {
+                    /* @var Builder<Task> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization');
                 })->uuid(),
-                ExistsEloquent::make(Task::class, null, function (Builder $builder): Builder {
-                    /** @var Builder<Task> $builder */
+                ExistsEloquent::make(Task::class, null, static function (Builder $builder): Builder {
+                    /* @var Builder<Task> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization')
                         ->where('project_id', $this->input('project_id'));
                 })->uuid()->withMessage(__('validation.task_belongs_to_project')),
@@ -97,8 +97,8 @@ class TimeEntryUpdateRequest extends BaseFormRequest
             ],
             'tags.*' => [
                 'string',
-                ExistsEloquent::make(Tag::class, null, function (Builder $builder): Builder {
-                    /** @var Builder<Tag> $builder */
+                ExistsEloquent::make(Tag::class, null, static function (Builder $builder): Builder {
+                    /* @var Builder<Tag> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization');
                 })->uuid(),
             ],

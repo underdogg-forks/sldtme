@@ -24,8 +24,8 @@ class SolidtimeImporterTest extends ImporterTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $timezone = 'Europe/Vienna';
-        $importer = new SolidtimeImporter;
+        $timezone     = 'Europe/Vienna';
+        $importer     = new SolidtimeImporter();
         $importer->init($organization);
 
         // Act
@@ -43,10 +43,10 @@ class SolidtimeImporterTest extends ImporterTestAbstract
     public function test_import_of_test_file_succeeds(): void
     {
         // Arrange
-        $zipPath = $this->createTestZip('solidtime_import_test_1');
-        $timezone = 'Europe/Vienna';
+        $zipPath      = $this->createTestZip('solidtime_import_test_1');
+        $timezone     = 'Europe/Vienna';
         $organization = Organization::factory()->create();
-        $importer = new SolidtimeImporter;
+        $importer     = new SolidtimeImporter();
         $importer->init($organization);
         $data = file_get_contents($zipPath);
         Queue::fake([
@@ -58,7 +58,7 @@ class SolidtimeImporterTest extends ImporterTestAbstract
         DB::enableQueryLog();
         DB::flushQueryLog();
         $importer->importData($data, $timezone);
-        $report = $importer->getReport();
+        $report   = $importer->getReport();
         $queryLog = DB::getQueryLog();
 
         // Assert
@@ -78,14 +78,14 @@ class SolidtimeImporterTest extends ImporterTestAbstract
     public function test_import_of_test_file_twice_succeeds(): void
     {
         // Arrange
-        $zipPath = $this->createTestZip('solidtime_import_test_1');
-        $timezone = 'Europe/Vienna';
+        $zipPath      = $this->createTestZip('solidtime_import_test_1');
+        $timezone     = 'Europe/Vienna';
         $organization = Organization::factory()->create();
-        $importer = new SolidtimeImporter;
+        $importer     = new SolidtimeImporter();
         $importer->init($organization);
         $data = file_get_contents($zipPath);
         $importer->importData($data, $timezone);
-        $importer = new SolidtimeImporter;
+        $importer = new SolidtimeImporter();
         $importer->init($organization);
         Queue::fake([
             RecalculateSpentTimeForProject::class,
@@ -96,7 +96,7 @@ class SolidtimeImporterTest extends ImporterTestAbstract
         DB::enableQueryLog();
         DB::flushQueryLog();
         $importer->importData($data, $timezone);
-        $report = $importer->getReport();
+        $report   = $importer->getReport();
         $queryLog = DB::getQueryLog();
 
         // Assert

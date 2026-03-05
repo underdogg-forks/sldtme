@@ -22,9 +22,9 @@ class PermissionStoreTest extends TestCase
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $user = User::factory()->create();
+        $user         = User::factory()->create();
         $organization->users()->attach($user, ['role' => Role::Employee->value]);
-        $permissionStore = new PermissionStore;
+        $permissionStore = new PermissionStore();
 
         // Act
         $result = $permissionStore->has($organization, 'permission');
@@ -36,9 +36,9 @@ class PermissionStoreTest extends TestCase
     public function test_has_method_returns_false_when_user_does_not_belong_to_organization(): void
     {
         // Arrange
-        $organization = Organization::factory()->create();
-        $user = User::factory()->create();
-        $permissionStore = new PermissionStore;
+        $organization    = Organization::factory()->create();
+        $user            = User::factory()->create();
+        $permissionStore = new PermissionStore();
         $this->actingAs($user);
 
         // Act
@@ -52,9 +52,9 @@ class PermissionStoreTest extends TestCase
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $user = User::factory()->create();
+        $user         = User::factory()->create();
         $organization->users()->attach($user, ['role' => Role::Employee->value]);
-        $permissionStore = new PermissionStore;
+        $permissionStore = new PermissionStore();
         $this->actingAs($user);
 
         // Act
@@ -68,9 +68,9 @@ class PermissionStoreTest extends TestCase
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $user = User::factory()->create();
+        $user         = User::factory()->create();
         $organization->users()->attach($user, ['role' => Role::Employee->value]);
-        $permissionStore = new PermissionStore;
+        $permissionStore = new PermissionStore();
         $this->actingAs($user);
 
         // Act
@@ -84,9 +84,9 @@ class PermissionStoreTest extends TestCase
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $user = User::factory()->create();
+        $user         = User::factory()->create();
         $organization->users()->attach($user, ['role' => Role::Employee->value]);
-        $permissionStore = new PermissionStore;
+        $permissionStore = new PermissionStore();
 
         // Act
         $result = $permissionStore->getPermissions($organization);
@@ -97,9 +97,9 @@ class PermissionStoreTest extends TestCase
 
     public function test_get_permissions_method_returns_empty_array_when_user_does_not_belong_to_organization(): void
     {
-        $organization = Organization::factory()->create();
-        $user = User::factory()->create();
-        $permissionStore = new PermissionStore;
+        $organization    = Organization::factory()->create();
+        $user            = User::factory()->create();
+        $permissionStore = new PermissionStore();
         $this->actingAs($user);
 
         // Act
@@ -113,9 +113,9 @@ class PermissionStoreTest extends TestCase
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $user = User::factory()->create();
+        $user         = User::factory()->create();
         $organization->users()->attach($user, ['role' => Role::Employee->value]);
-        $permissionStore = new PermissionStore;
+        $permissionStore = new PermissionStore();
         $this->actingAs($user);
 
         // Act
@@ -133,7 +133,7 @@ class PermissionStoreTest extends TestCase
         ]);
         $user = User::factory()->create();
         $organization->users()->attach($user, ['role' => Role::Employee->value]);
-        $permissionStore = new PermissionStore;
+        $permissionStore = new PermissionStore();
         $this->actingAs($user);
 
         // Act & Assert
@@ -153,7 +153,7 @@ class PermissionStoreTest extends TestCase
         ]);
         $user = User::factory()->create();
         $organization->users()->attach($user, ['role' => Role::Employee->value]);
-        $permissionStore = new PermissionStore;
+        $permissionStore = new PermissionStore();
         $this->actingAs($user);
 
         // Act & Assert
@@ -174,7 +174,7 @@ class PermissionStoreTest extends TestCase
         ]);
         $admin = User::factory()->create();
         $organization->users()->attach($admin, ['role' => Role::Admin->value]);
-        $permissionStore = new PermissionStore;
+        $permissionStore = new PermissionStore();
         $this->actingAs($admin);
 
         // Act & Assert - Admin should have task permissions regardless of the setting
@@ -194,7 +194,7 @@ class PermissionStoreTest extends TestCase
         ]);
         $user = User::factory()->create();
         $organization->users()->attach($user, ['role' => Role::Employee->value]);
-        $permissionStore = new PermissionStore;
+        $permissionStore = new PermissionStore();
         $this->actingAs($user);
 
         // Act

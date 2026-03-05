@@ -22,24 +22,24 @@ class ClientFactory extends BaseClientFactory
     public function definition(): array
     {
         return [
-            'id' => $this->faker->uuid,
-            'owner_id' => null,
-            'owner_type' => null,
-            'name' => $this->faker->company(),
-            'secret' => $this->faker->regexify('[A-Za-z]{40}'),
-            'provider' => 'users',
+            'id'            => $this->faker->uuid,
+            'owner_id'      => null,
+            'owner_type'    => null,
+            'name'          => $this->faker->company(),
+            'secret'        => $this->faker->regexify('[A-Za-z]{40}'),
+            'provider'      => 'users',
             'redirect_uris' => [$this->faker->url()],
-            'grant_types' => [],
-            'revoked' => false,
-            'created_at' => $this->faker->dateTime(),
-            'updated_at' => $this->faker->dateTime(),
+            'grant_types'   => [],
+            'revoked'       => false,
+            'created_at'    => $this->faker->dateTime(),
+            'updated_at'    => $this->faker->dateTime(),
         ];
     }
 
     public function desktopClient(): self
     {
         return $this->state(fn (array $attributes) => [
-            'name' => 'Desktop',
+            'name'        => 'Desktop',
             'grant_types' => ['urn:ietf:params:oauth:grant-type:device_code', 'refresh_token', 'authorization_code', 'implicit'],
         ]);
     }
@@ -47,7 +47,7 @@ class ClientFactory extends BaseClientFactory
     public function apiClient(): self
     {
         return $this->state(fn (array $attributes) => [
-            'name' => 'API',
+            'name'        => 'API',
             'grant_types' => ['urn:ietf:params:oauth:grant-type:device_code', 'refresh_token', 'client_credentials', 'personal_access'],
         ]);
     }
@@ -65,8 +65,8 @@ class ClientFactory extends BaseClientFactory
     {
         return $this->state(function (array $attributes) use ($user): array {
             return [
-                'owner_id' => $user->getKey(),
-                'owner_type' => (new User)->getMorphClass(),
+                'owner_id'   => $user->getKey(),
+                'owner_type' => (new User())->getMorphClass(),
             ];
         });
     }

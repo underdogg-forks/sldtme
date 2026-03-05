@@ -18,7 +18,7 @@ class DashboardController extends Controller
      */
     public function dashboard(DashboardService $dashboardService, PermissionStore $permissionStore): Response
     {
-        $user = $this->user();
+        $user         = $this->user();
         $organization = $this->currentOrganization();
 
         $latestTeamActivity = null;

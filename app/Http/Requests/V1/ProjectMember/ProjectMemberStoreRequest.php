@@ -26,8 +26,8 @@ class ProjectMemberStoreRequest extends BaseFormRequest
         return [
             'member_id' => [
                 'required',
-                ExistsEloquent::make(Member::class, null, function (Builder $builder): Builder {
-                    /** @var Builder<Member> $builder */
+                ExistsEloquent::make(Member::class, null, static function (Builder $builder): Builder {
+                    /* @var Builder<Member> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization');
                 })->uuid(),
             ],

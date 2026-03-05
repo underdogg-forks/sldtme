@@ -20,36 +20,8 @@ use Illuminate\Support\Carbon;
 
 class TaskController extends Controller
 {
-    protected function checkPermission(Organization $organization, string $permission, ?Task $task = null): void
-    {
-        parent::checkPermission($organization, $permission);
-        if ($task !== null && $task->organization_id !== $organization->id) {
-            throw new AuthorizationException('Task does not belong to organization');
-        }
-    }
-
     /**
-     * Check scoped permission and verify user has access to the project
-     *
-     * @throws AuthorizationException
-     */
-    private function checkScopedPermissionForProject(Organization $organization, Project $project, string $permission): void
-    {
-        $this->checkPermission($organization, $permission);
-
-        $user = $this->user();
-        $hasAccess = Project::query()
-            ->where('id', $project->id)
-            ->visibleByEmployee($user)
-            ->exists();
-
-        if (! $hasAccess) {
-            throw new AuthorizationException('You do not have permission to '.$permission.' in this project.');
-        }
-    }
-
-    /**
-     * Get tasks
+     * Get tasks.
      *
      * @return TaskCollection<TaskResource>
      *
@@ -61,7 +33,7 @@ class TaskController extends Controller
     {
         $this->checkPermission($organization, 'tasks:view');
         $canViewAllTasks = $this->hasPermission($organization, 'tasks:view:all');
-        $user = $this->user();
+        $user            = $this->user();
 
         $projectId = $request->input('project_id');
 
@@ -72,7 +44,7 @@ class TaskController extends Controller
             $query->where('project_id', '=', $projectId);
         }
 
-        if (! $canViewAllTasks) {
+        if ( ! $canViewAllTasks) {
             $query->visibleByEmployee($user);
         }
         $doneFilter = $request->getFilterDone();
@@ -90,7 +62,7 @@ class TaskController extends Controller
     }
 
     /**
-     * Create task
+     * Create task.
      *
      * @throws AuthorizationException
      *
@@ -107,8 +79,8 @@ class TaskController extends Controller
             $this->checkScopedPermissionForProject($organization, $project, 'tasks:create');
         }
 
-        $task = new Task;
-        $task->name = $request->input('name');
+        $task             = new Task();
+        $task->name       = $request->input('name');
         $task->project_id = $request->input('project_id');
         if ($this->canAccessPremiumFeatures($organization) && $request->has('estimated_time')) {
             $task->estimated_time = $request->getEstimatedTime();
@@ -120,7 +92,7 @@ class TaskController extends Controller
     }
 
     /**
-     * Update task
+     * Update task.
      *
      * @throws AuthorizationException
      *
@@ -152,7 +124,7 @@ class TaskController extends Controller
     }
 
     /**
-     * Delete task
+     * Delete task.
      *
      * @throws AuthorizationException|EntityStillInUseApiException
      *
@@ -179,5 +151,33 @@ class TaskController extends Controller
 
         return response()
             ->json(null, 204);
+    }
+
+    protected function checkPermission(Organization $organization, string $permission, ?Task $task = null): void
+    {
+        parent::checkPermission($organization, $permission);
+        if ($task !== null && $task->organization_id !== $organization->id) {
+            throw new AuthorizationException('Task does not belong to organization');
+        }
+    }
+
+    /**
+     * Check scoped permission and verify user has access to the project.
+     *
+     * @throws AuthorizationException
+     */
+    private function checkScopedPermissionForProject(Organization $organization, Project $project, string $permission): void
+    {
+        $this->checkPermission($organization, $permission);
+
+        $user      = $this->user();
+        $hasAccess = Project::query()
+            ->where('id', $project->id)
+            ->visibleByEmployee($user)
+            ->exists();
+
+        if ( ! $hasAccess) {
+            throw new AuthorizationException('You do not have permission to ' . $permission . ' in this project.');
+        }
     }
 }

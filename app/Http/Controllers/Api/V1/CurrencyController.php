@@ -13,7 +13,7 @@ use Illuminate\Http\JsonResponse;
 class CurrencyController extends Controller
 {
     /**
-     * Get all currencies
+     * Get all currencies.
      *
      * @response array{code: string, name: string, symbol: string}[]
      *
@@ -25,8 +25,8 @@ class CurrencyController extends Controller
 
         $currencies = array_values(array_map(
             fn (Currency $currency): array => [
-                'code' => $currency->getCurrencyCode(),
-                'name' => $currency->getName(),
+                'code'   => $currency->getCurrencyCode(),
+                'name'   => $currency->getName(),
                 'symbol' => $currencyService->getCurrencySymbol($currency->getCurrencyCode()),
             ],
             ISOCurrencyProvider::getInstance()->getAvailableCurrencies()

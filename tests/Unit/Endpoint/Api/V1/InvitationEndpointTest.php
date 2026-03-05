@@ -47,9 +47,9 @@ class InvitationEndpointTest extends ApiEndpointTestAbstract
         $response->assertJson([
             'data' => [
                 [
-                    'id' => $invitation1->getKey(),
+                    'id'    => $invitation1->getKey(),
                     'email' => $invitation1->email,
-                    'role' => $invitation1->role,
+                    'role'  => $invitation1->role,
                 ],
             ],
         ]);
@@ -90,7 +90,7 @@ class InvitationEndpointTest extends ApiEndpointTestAbstract
         // Act
         $response = $this->postJson(route('api.v1.invitations.store', $data->organization->getKey()), [
             'email' => 'test@mail.test',
-            'role' => Role::Employee->value,
+            'role'  => Role::Employee->value,
         ]);
 
         // Assert
@@ -108,7 +108,7 @@ class InvitationEndpointTest extends ApiEndpointTestAbstract
         // Act
         $response = $this->postJson(route('api.v1.invitations.store', $data->organization->getKey()), [
             'email' => 'test@asdf.at',
-            'role' => Role::Owner->value,
+            'role'  => Role::Owner->value,
         ]);
 
         // Assert
@@ -127,7 +127,7 @@ class InvitationEndpointTest extends ApiEndpointTestAbstract
         // Act
         $response = $this->postJson(route('api.v1.invitations.store', $data->organization->getKey()), [
             'email' => 'test@asdf.at',
-            'role' => Role::Placeholder->value,
+            'role'  => Role::Placeholder->value,
         ]);
 
         // Assert
@@ -147,7 +147,7 @@ class InvitationEndpointTest extends ApiEndpointTestAbstract
         // Act
         $response = $this->postJson(route('api.v1.invitations.store', $data->organization->getKey()), [
             'email' => $member->user->email,
-            'role' => Role::Employee->value,
+            'role'  => Role::Employee->value,
         ]);
 
         // Assert
@@ -162,7 +162,7 @@ class InvitationEndpointTest extends ApiEndpointTestAbstract
             'invitations:create',
         ]);
         Passport::actingAs($data->user);
-        $email = 'user@email.test';
+        $email      = 'user@email.test';
         $invitation = OrganizationInvitation::factory()->forOrganization($data->organization)->create([
             'email' => $email,
         ]);
@@ -170,14 +170,14 @@ class InvitationEndpointTest extends ApiEndpointTestAbstract
         // Act
         $response = $this->postJson(route('api.v1.invitations.store', $data->organization->getKey()), [
             'email' => $email,
-            'role' => Role::Employee->value,
+            'role'  => Role::Employee->value,
         ]);
 
         // Assert
         $response->assertStatus(400);
         $response->assertExactJson([
-            'error' => true,
-            'key' => 'invitation_for_the_email_already_exists',
+            'error'   => true,
+            'key'     => 'invitation_for_the_email_already_exists',
             'message' => 'The email has already been invited to the organization. Please wait for the user to accept the invitation or resend the invitation email.',
         ]);
     }
@@ -188,14 +188,14 @@ class InvitationEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'invitations:create',
         ]);
-        $user = User::factory()->placeholder()->create();
+        $user   = User::factory()->placeholder()->create();
         $member = Member::factory()->forOrganization($data->organization)->forUser($user)->role(Role::Placeholder)->create();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->postJson(route('api.v1.invitations.store', $data->organization->getKey()), [
             'email' => $user->email,
-            'role' => Role::Employee->value,
+            'role'  => Role::Employee->value,
         ]);
 
         // Assert
@@ -219,7 +219,7 @@ class InvitationEndpointTest extends ApiEndpointTestAbstract
         // Act
         $response = $this->postJson(route('api.v1.invitations.store', $data->organization->getKey()), [
             'email' => 'test@asdf.at',
-            'role' => Role::Employee->value,
+            'role'  => Role::Employee->value,
         ]);
 
         // Assert

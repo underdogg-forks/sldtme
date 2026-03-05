@@ -17,14 +17,14 @@ use Illuminate\Support\Carbon;
 use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
 /**
- * @property string $id
- * @property string $name
- * @property string $organization_id
- * @property-read bool $is_archived
- * @property Carbon|null $archived_at
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property-read Organization $organization
+ * @property string       $id
+ * @property string       $name
+ * @property string       $organization_id
+ * @property bool         $is_archived
+ * @property Carbon|null  $archived_at
+ * @property Carbon|null  $created_at
+ * @property Carbon|null  $updated_at
+ * @property Organization $organization
  *
  * @method static ClientFactory factory()
  */
@@ -43,7 +43,7 @@ class Client extends Model implements AuditableContract
      * @var array<string, string>
      */
     protected $casts = [
-        'name' => 'string',
+        'name'        => 'string',
         'archived_at' => 'datetime',
     ];
 
@@ -64,13 +64,14 @@ class Client extends Model implements AuditableContract
     }
 
     /**
-     * @param  Builder<Client>  $builder
+     * @param Builder<Client> $builder
+     *
      * @return Builder<Client>
      */
     public function scopeVisibleByEmployee(Builder $builder, User $user): Builder
     {
-        return $builder->whereHas('projects', function (Builder $builder) use ($user): Builder {
-            /** @var Builder<Project> $builder */
+        return $builder->whereHas('projects', static function (Builder $builder) use ($user): Builder {
+            /* @var Builder<Project> $builder */
             return $builder->visibleByEmployee($user);
         });
     }

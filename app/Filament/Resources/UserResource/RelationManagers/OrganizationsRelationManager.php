@@ -77,7 +77,7 @@ class OrganizationsRelationManager extends RelationManager
                 Tables\Actions\DetachAction::make()
                     ->using(function (Organization $record): void {
                         /** @var User $user */
-                        $user = $this->getOwnerRecord();
+                        $user   = $this->getOwnerRecord();
                         $member = Member::query()
                             ->whereBelongsTo($user, 'user')
                             ->whereBelongsTo($record, 'organization')

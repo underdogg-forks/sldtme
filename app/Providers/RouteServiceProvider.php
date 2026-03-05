@@ -27,8 +27,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        RateLimiter::for('api', function (Request $request) {
-            if (! $this->app->isProduction()) {
+        RateLimiter::for('api', static function (Request $request) {
+            if ( ! $this->app->isProduction()) {
                 return Limit::none();
             }
 

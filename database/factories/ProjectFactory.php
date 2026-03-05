@@ -26,15 +26,15 @@ class ProjectFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->company(),
-            'color' => app(ColorService::class)->getRandomColor(),
-            'is_billable' => false,
-            'billable_rate' => null,
-            'is_public' => false,
-            'archived_at' => null,
-            'client_id' => null,
+            'name'            => $this->faker->company(),
+            'color'           => app(ColorService::class)->getRandomColor(),
+            'is_billable'     => false,
+            'billable_rate'   => null,
+            'is_public'       => false,
+            'archived_at'     => null,
+            'client_id'       => null,
             'organization_id' => Organization::factory(),
-            'estimated_time' => null,
+            'estimated_time'  => null,
         ];
     }
 
@@ -51,7 +51,7 @@ class ProjectFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($billableRate): array {
             return [
-                'is_billable' => true,
+                'is_billable'   => true,
                 'billable_rate' => $billableRate === null ? $this->faker->numberBetween(50, 1000) * 100 : $billableRate,
             ];
         });

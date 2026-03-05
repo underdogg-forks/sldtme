@@ -10,7 +10,7 @@ enum TimeFormat: string
 {
     use LaravelEnumHelper;
 
-    case TwelveHours = '12-hours';
+    case TwelveHours     = '12-hours';
     case TwentyFourHours = '24-hours';
 
     /**
@@ -20,7 +20,7 @@ enum TimeFormat: string
     {
         $selectArray = [];
         foreach (self::values() as $value) {
-            $selectArray[(string) $value] = (string) __('enum.time_format.'.$value);
+            $selectArray[(string) $value] = (string) __('enum.time_format.' . $value);
         }
 
         return $selectArray;

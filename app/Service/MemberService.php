@@ -35,11 +35,11 @@ class MemberService
 
     public function addMember(User $user, Organization $organization, Role $role, bool $asSuperAdmin = false): Member
     {
-        if (! $asSuperAdmin) {
+        if ( ! $asSuperAdmin) {
             AddingTeamMember::dispatch($organization, $user);
         }
 
-        $member = new Member;
+        $member = new Member();
         DB::transaction(function () use ($organization, $user, $role, &$member): void {
             $member->user()->associate($user);
             $member->organization()->associate($organization);
@@ -50,7 +50,7 @@ class MemberService
             $user->save();
         });
 
-        if (! $asSuperAdmin) {
+        if ( ! $asSuperAdmin) {
             TeamMemberAdded::dispatch($organization, $user);
         }
 
@@ -64,13 +64,13 @@ class MemberService
     public function removeMember(Member $member, Organization $organization, bool $withRelations = false): void
     {
         if ($member->role === Role::Owner->value) {
-            throw new CanNotRemoveOwnerFromOrganization;
+            throw new CanNotRemoveOwnerFromOrganization();
         }
 
-        $user = $member->user;
+        $user          = $member->user;
         $isPlaceholder = $user->is_placeholder;
 
-        if (! $isPlaceholder && $user->current_team_id === $member->organization_id) {
+        if ( ! $isPlaceholder && $user->current_team_id === $member->organization_id) {
             $user->currentTeam()->disassociate();
             $user->save();
         }
@@ -109,19 +109,19 @@ class MemberService
     {
         $oldRole = Role::from($member->role);
         if ($oldRole === Role::Owner) {
-            throw new OrganizationNeedsAtLeastOneOwner;
+            throw new OrganizationNeedsAtLeastOneOwner();
         }
         if ($oldRole === Role::Placeholder) {
-            throw new ChangingRoleOfPlaceholderIsNotAllowed;
+            throw new ChangingRoleOfPlaceholderIsNotAllowed();
         }
         if ($newRole === Role::Placeholder) {
-            throw new ChangingRoleToPlaceholderIsNotAllowed;
+            throw new ChangingRoleToPlaceholderIsNotAllowed();
         }
         if ($newRole === Role::Owner) {
             if ($allowOwnerChange) {
                 $this->changeOwnership($organization, $member);
             } else {
-                throw new OnlyOwnerCanChangeOwnership;
+                throw new OnlyOwnerCanChangeOwnership();
             }
         } else {
             $member->role = $newRole->value;
@@ -135,7 +135,7 @@ class MemberService
             ->whereBelongsTo($organization, 'organization')
             ->whereBelongsTo($fromMember, 'member')
             ->update([
-                'user_id' => $toMember->user_id,
+                'user_id'   => $toMember->user_id,
                 'member_id' => $toMember->getKey(),
             ]);
 
@@ -143,15 +143,15 @@ class MemberService
         ProjectMember::query()
             ->whereBelongsToOrganization($organization)
             ->whereBelongsTo($fromMember, 'member')
-            ->whereDoesntHave('project', function (Builder $builder) use ($toMember): void {
-                /** @var Builder<Project> $builder */
-                $builder->whereHas('members', function (Builder $builder) use ($toMember): void {
-                    /** @var Builder<ProjectMember> $builder */
+            ->whereDoesntHave('project', static function (Builder $builder) use ($toMember): void {
+                /* @var Builder<Project> $builder */
+                $builder->whereHas('members', static function (Builder $builder) use ($toMember): void {
+                    /* @var Builder<ProjectMember> $builder */
                     $builder->where('member_id', $toMember->getKey());
                 });
             })
             ->update([
-                'user_id' => $toMember->user_id,
+                'user_id'   => $toMember->user_id,
                 'member_id' => $toMember->getKey(),
             ]);
 
@@ -194,8 +194,8 @@ class MemberService
             $user->save();
         }
 
-        $placeholderUser = $user->replicate();
-        $placeholderUser->is_placeholder = true;
+        $placeholderUser                  = $user->replicate();
+        $placeholderUser->is_placeholder  = true;
         $placeholderUser->current_team_id = $member->organization_id;
         $placeholderUser->save();
 

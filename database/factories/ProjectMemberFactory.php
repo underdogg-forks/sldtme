@@ -24,9 +24,9 @@ class ProjectMemberFactory extends Factory
     {
         return [
             'billable_rate' => $this->faker->numberBetween(10, 10000) * 100,
-            'project_id' => Project::factory(),
-            'user_id' => User::factory(),
-            'member_id' => Member::factory(),
+            'project_id'    => Project::factory(),
+            'user_id'       => User::factory(),
+            'member_id'     => Member::factory(),
         ];
     }
 
@@ -47,7 +47,7 @@ class ProjectMemberFactory extends Factory
         return $this->state(function (array $attributes) use ($member): array {
             return [
                 'member_id' => $member->getKey(),
-                'user_id' => $member->user_id, // Legacy
+                'user_id'   => $member->user_id, // Legacy
             ];
         });
     }

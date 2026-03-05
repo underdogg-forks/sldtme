@@ -19,7 +19,7 @@ class OrganizationDeleteCommandTest extends TestCaseWithDatabase
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $this->mock(DeletionService::class, function (MockInterface $mock) use ($organization): void {
+        $this->mock(DeletionService::class, static function (MockInterface $mock) use ($organization): void {
             $mock->shouldReceive('deleteOrganization')
                 ->withArgs(fn (Organization $organizationArg) => $organizationArg->is($organization))
                 ->once();
@@ -43,7 +43,7 @@ class OrganizationDeleteCommandTest extends TestCaseWithDatabase
         $command = $this->artisan('admin:organization:delete', ['organization' => $organizationId]);
 
         // Assert
-        $command->expectsOutput('Organization with ID '.$organizationId.' not found.');
+        $command->expectsOutput('Organization with ID ' . $organizationId . ' not found.');
         $command->assertExitCode(1);
     }
 

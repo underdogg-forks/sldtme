@@ -20,8 +20,8 @@ class TimeEntrySendStillRunningMailsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'time-entry:send-still-running-mails '.
-        ' { --dry-run : Do not actually send emails or save anything to the database, just output what would happen }';
+    protected $signature = 'time-entry:send-still-running-mails '
+        . ' { --dry-run : Do not actually send emails or save anything to the database, just output what would happen }';
 
     /**
      * The console command description.
@@ -49,18 +49,18 @@ class TimeEntrySendStillRunningMailsCommand extends Command
             ->with([
                 'user',
             ])
-            ->whereHas('user', function (Builder $query): void {
-                /** @var Builder<User> $query */
+            ->whereHas('user', static function (Builder $query): void {
+                /* @var Builder<User> $query */
                 $query->where('is_placeholder', '=', false);
             })
             ->orderBy('created_at', 'asc')
-            ->chunk(500, function (Collection $timeEntries) use ($dryRun, &$sentMails): void {
+            ->chunk(500, static function (Collection $timeEntries) use ($dryRun, &$sentMails): void {
                 /** @var Collection<int, TimeEntry> $timeEntries */
                 foreach ($timeEntries as $timeEntry) {
                     $user = $timeEntry->user;
-                    $this->info('Start sending email to user "'.$user->email.'" ('.$user->getKey().') for time entry '.$timeEntry->getKey());
+                    $this->info('Start sending email to user "' . $user->email . '" (' . $user->getKey() . ') for time entry ' . $timeEntry->getKey());
                     $sentMails++;
-                    if (! $dryRun) {
+                    if ( ! $dryRun) {
                         Mail::to($user->email)
                             ->queue(new TimeEntryStillRunningMail($timeEntry, $user));
                         $timeEntry->still_active_email_sent_at = Carbon::now();
@@ -69,7 +69,7 @@ class TimeEntrySendStillRunningMailsCommand extends Command
                 }
             });
 
-        $this->comment('Finished sending '.$sentMails.' still running time entry emails...');
+        $this->comment('Finished sending ' . $sentMails . ' still running time entry emails...');
 
         return self::SUCCESS;
     }

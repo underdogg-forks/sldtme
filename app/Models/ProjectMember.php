@@ -15,19 +15,19 @@ use Illuminate\Support\Carbon;
 use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
 /**
- * @property string $id
- * @property int|null $billable_rate
- * @property string $project_id Project ID
- * @property string $member_id Member ID
- * @property string $user_id User ID (legacy)
+ * @property string      $id
+ * @property int|null    $billable_rate
+ * @property string      $project_id    Project ID
+ * @property string      $member_id     Member ID
+ * @property string      $user_id       User ID (legacy)
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Project $project
- * @property-read Member $member
- * @property-read User $user
+ * @property Project     $project
+ * @property Member      $member
+ * @property User        $user
  *
  * @method static Builder<ProjectMember> whereBelongsToOrganization(Organization $organization)
- * @method static ProjectMemberFactory factory()
+ * @method static ProjectMemberFactory   factory()
  */
 class ProjectMember extends Model implements AuditableContract
 {
@@ -74,7 +74,7 @@ class ProjectMember extends Model implements AuditableContract
     }
 
     /**
-     * @param  Builder<ProjectMember>  $builder
+     * @param Builder<ProjectMember> $builder
      */
     public function scopeWhereBelongsToOrganization(Builder $builder, Organization $organization): void
     {

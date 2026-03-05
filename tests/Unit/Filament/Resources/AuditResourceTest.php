@@ -31,9 +31,9 @@ class AuditResourceTest extends FilamentTestCase
     public function test_can_list_audits(): void
     {
         // Arrange
-        $user = $this->createUserWithPermission();
+        $user      = $this->createUserWithPermission();
         $timeEntry = TimeEntry::factory()->forMember($user->member)->create();
-        DB::table((new Audit)->getTable())->delete();
+        DB::table((new Audit())->getTable())->delete();
         $audits = Audit::factory()->auditFor($timeEntry)->auditUser($user->user)->createMany(5);
 
         // Act
@@ -47,7 +47,7 @@ class AuditResourceTest extends FilamentTestCase
     public function test_can_see_view_page_of_audit(): void
     {
         // Arrange
-        DB::table((new Audit)->getTable())->delete();
+        DB::table((new Audit())->getTable())->delete();
         $audit = Audit::factory()->create();
 
         // Act

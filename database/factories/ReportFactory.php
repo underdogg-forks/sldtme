@@ -26,20 +26,20 @@ class ReportFactory extends Factory
      */
     public function definition(): array
     {
-        $reportDto = new ReportPropertiesDto;
-        $reportDto->start = Carbon::createFromDate($this->faker->dateTimeBetween('-1 year', '-1 month'));
-        $reportDto->end = Carbon::createFromDate($this->faker->dateTimeBetween('-1 month', 'now'));
-        $reportDto->group = TimeEntryAggregationType::Project;
-        $reportDto->subGroup = TimeEntryAggregationType::Task;
+        $reportDto               = new ReportPropertiesDto();
+        $reportDto->start        = Carbon::createFromDate($this->faker->dateTimeBetween('-1 year', '-1 month'));
+        $reportDto->end          = Carbon::createFromDate($this->faker->dateTimeBetween('-1 month', 'now'));
+        $reportDto->group        = TimeEntryAggregationType::Project;
+        $reportDto->subGroup     = TimeEntryAggregationType::Task;
         $reportDto->historyGroup = TimeEntryAggregationTypeInterval::Day;
-        $reportDto->weekStart = Weekday::from($this->faker->randomElement(Weekday::values()));
-        $reportDto->timezone = $this->faker->timezone();
+        $reportDto->weekStart    = Weekday::from($this->faker->randomElement(Weekday::values()));
+        $reportDto->timezone     = $this->faker->timezone();
 
         return [
-            'name' => $this->faker->company(),
-            'description' => $this->faker->paragraph(),
-            'is_public' => $this->faker->boolean(),
-            'properties' => $reportDto,
+            'name'            => $this->faker->company(),
+            'description'     => $this->faker->paragraph(),
+            'is_public'       => $this->faker->boolean(),
+            'properties'      => $reportDto,
             'organization_id' => Organization::factory(),
         ];
     }
@@ -54,7 +54,7 @@ class ReportFactory extends Factory
     public function public(): self
     {
         return $this->state(fn (array $attributes): array => [
-            'is_public' => true,
+            'is_public'    => true,
             'share_secret' => app(ReportService::class)->generateSecret(),
         ]);
     }
@@ -62,7 +62,7 @@ class ReportFactory extends Factory
     public function private(): self
     {
         return $this->state(fn (array $attributes): array => [
-            'is_public' => false,
+            'is_public'    => false,
             'share_secret' => null,
         ]);
     }

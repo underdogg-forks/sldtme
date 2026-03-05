@@ -17,7 +17,7 @@ class MemberModelTest extends ModelTestAbstract
     public function test_it_belongs_to_a_user(): void
     {
         // Arrange
-        $user = User::factory()->create();
+        $user   = User::factory()->create();
         $member = Member::factory()->forUser($user)->create();
 
         // Act
@@ -33,7 +33,7 @@ class MemberModelTest extends ModelTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $member = Member::factory()->forOrganization($organization)->create();
+        $member       = Member::factory()->forOrganization($organization)->create();
 
         // Act
         $member->refresh();
@@ -47,9 +47,9 @@ class MemberModelTest extends ModelTestAbstract
     public function test_it_has_many_project_members(): void
     {
         // Arrange
-        $member = Member::factory()->create();
-        $project1 = Project::factory()->create();
-        $project2 = Project::factory()->create();
+        $member         = Member::factory()->create();
+        $project1       = Project::factory()->create();
+        $project2       = Project::factory()->create();
         $projectMember1 = ProjectMember::factory()->forMember($member)->forProject($project1)->create();
         $projectMember2 = ProjectMember::factory()->forMember($member)->forProject($project2)->createMany();
 

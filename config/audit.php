@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 return [
-
     'enabled' => env('AUDITING_ENABLED', false),
 
     /*
@@ -28,7 +27,7 @@ return [
 
     'user' => [
         'morph_prefix' => 'user',
-        'guards' => [
+        'guards'       => [
             'web',
             'api',
         ],
@@ -46,7 +45,7 @@ return [
     'resolvers' => [
         'ip_address' => App\Extensions\Auditing\Resolvers\CustomIpAddressResolver::class,
         'user_agent' => OwenIt\Auditing\Resolvers\UserAgentResolver::class,
-        'url' => OwenIt\Auditing\Resolvers\UrlResolver::class,
+        'url'        => OwenIt\Auditing\Resolvers\UrlResolver::class,
     ],
 
     /*
@@ -103,7 +102,7 @@ return [
     |
     */
 
-    'empty_values' => false,
+    'empty_values'         => false,
     'allowed_empty_values' => [
         'retrieved',
     ],
@@ -166,7 +165,7 @@ return [
 
     'drivers' => [
         'database' => [
-            'table' => 'audits',
+            'table'      => 'audits',
             'connection' => null,
         ],
     ],
@@ -181,10 +180,10 @@ return [
     */
 
     'queue' => [
-        'enable' => false,
+        'enable'     => false,
         'connection' => 'sync',
-        'queue' => 'default',
-        'delay' => 0,
+        'queue'      => 'default',
+        'delay'      => 0,
     ],
 
     /*

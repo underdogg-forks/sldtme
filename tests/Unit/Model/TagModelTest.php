@@ -16,7 +16,7 @@ class TagModelTest extends ModelTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $tag = Tag::factory()->forOrganization($organization)->create();
+        $tag          = Tag::factory()->forOrganization($organization)->create();
 
         // Act
         $tag->refresh();
@@ -31,9 +31,9 @@ class TagModelTest extends ModelTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $tag1 = Tag::factory()->forOrganization($organization)->create();
-        $tag2 = Tag::factory()->forOrganization($organization)->create();
-        $timeEntry1 = TimeEntry::factory()->forOrganization($organization)->create([
+        $tag1         = Tag::factory()->forOrganization($organization)->create();
+        $tag2         = Tag::factory()->forOrganization($organization)->create();
+        $timeEntry1   = TimeEntry::factory()->forOrganization($organization)->create([
             'tags' => [$tag1->id, $tag2->id],
         ]);
         $timeEntry2 = TimeEntry::factory()->forOrganization($organization)->create([

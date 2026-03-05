@@ -28,10 +28,10 @@ class BillableRateService
             ->where('billable', '=', true)
             ->where('organization_id', '=', $project->organization_id)
             ->whereBelongsTo($project, 'project')
-            ->whereDoesntHave('member', function (Builder $query) use ($project): void {
-                /** @var Builder<Member> $query */
-                $query->whereHas('projectMembers', function (Builder $query) use ($project): void {
-                    /** @var Builder<ProjectMember> $query */
+            ->whereDoesntHave('member', static function (Builder $query) use ($project): void {
+                /* @var Builder<Member> $query */
+                $query->whereHas('projectMembers', static function (Builder $query) use ($project): void {
+                    /* @var Builder<ProjectMember> $query */
                     $query->whereBelongsTo($project, 'project')
                         ->whereNotNull('billable_rate');
                 });
@@ -45,11 +45,11 @@ class BillableRateService
             ->where('billable', '=', true)
             ->where('organization_id', '=', $member->organization_id)
             ->where('member_id', '=', $member->getKey())
-            ->whereDoesntHave('project', function (Builder $builder) use ($member): void {
-                /** @var Builder<Project> $builder */
+            ->whereDoesntHave('project', static function (Builder $builder) use ($member): void {
+                /* @var Builder<Project> $builder */
                 $builder->whereNotNull('billable_rate')
-                    ->orWhereHas('members', function (Builder $builder) use ($member): void {
-                        /** @var Builder<ProjectMember> $builder */
+                    ->orWhereHas('members', static function (Builder $builder) use ($member): void {
+                        /* @var Builder<ProjectMember> $builder */
                         $builder->whereNotNull('billable_rate')
                             ->where('member_id', '=', $member->getKey());
                     });
@@ -62,15 +62,15 @@ class BillableRateService
         TimeEntry::query()
             ->where('billable', '=', true)
             ->where('organization_id', '=', $organization->getKey())
-            ->whereDoesntHave('member', function (Builder $builder): void {
-                /** @var Builder<Member> $builder */
+            ->whereDoesntHave('member', static function (Builder $builder): void {
+                /* @var Builder<Member> $builder */
                 $builder->whereNotNull('billable_rate');
             })
-            ->whereDoesntHave('project', function (Builder $builder): void {
-                /** @var Builder<Project> $builder */
+            ->whereDoesntHave('project', static function (Builder $builder): void {
+                /* @var Builder<Project> $builder */
                 $builder->whereNotNull('billable_rate')
-                    ->orWhereHas('members', function (Builder $builder): void {
-                        /** @var Builder<ProjectMember> $builder */
+                    ->orWhereHas('members', static function (Builder $builder): void {
+                        /* @var Builder<ProjectMember> $builder */
                         $builder->whereNotNull('billable_rate')
                             ->whereRaw('member_id = time_entries.member_id');
                     });
@@ -80,7 +80,7 @@ class BillableRateService
 
     public function getBillableRateForTimeEntryWithGivenRelations(TimeEntry $timeEntry, ?ProjectMember $projectMember, ?Project $project, ?Member $member, ?Organization $organization): ?int
     {
-        if (! $timeEntry->billable) {
+        if ( ! $timeEntry->billable) {
             return null;
         }
         if ($projectMember !== null && $projectMember->billable_rate !== null) {
@@ -101,7 +101,7 @@ class BillableRateService
 
     public function getBillableRateForTimeEntry(TimeEntry $timeEntry): ?int
     {
-        if (! $timeEntry->billable) {
+        if ( ! $timeEntry->billable) {
             return null;
         }
         if ($timeEntry->project_id !== null) {

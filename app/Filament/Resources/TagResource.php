@@ -81,16 +81,15 @@ class TagResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTags::route('/'),
+            'index'  => Pages\ListTags::route('/'),
             'create' => Pages\CreateTag::route('/create'),
-            'edit' => Pages\EditTag::route('/{record}/edit'),
+            'edit'   => Pages\EditTag::route('/{record}/edit'),
         ];
     }
 }

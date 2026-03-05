@@ -43,8 +43,8 @@ class ReportSetExpiredToPrivateCommandTest extends TestCaseWithDatabase
         $this->assertSame(Command::SUCCESS, $exitCode);
         $output = Artisan::output();
         $this->assertStringContainsString('Makes public reports private if the public_until date has passed...', $output);
-        $this->assertStringContainsString('Make report "'.$reportPrivateExpired->name.'" ('.$reportPrivateExpired->getKey().') private, expired: '.$reportPrivateExpired->public_until->toIso8601ZuluString().' ('.$reportPrivateExpired->public_until->diffForHumans().')', $output);
-        $this->assertStringContainsString('Make report "'.$reportPublicExpired->name.'" ('.$reportPublicExpired->getKey().') private, expired: '.$reportPublicExpired->public_until->toIso8601ZuluString().' ('.$reportPublicExpired->public_until->diffForHumans().')', $output);
+        $this->assertStringContainsString('Make report "' . $reportPrivateExpired->name . '" (' . $reportPrivateExpired->getKey() . ') private, expired: ' . $reportPrivateExpired->public_until->toIso8601ZuluString() . ' (' . $reportPrivateExpired->public_until->diffForHumans() . ')', $output);
+        $this->assertStringContainsString('Make report "' . $reportPublicExpired->name . '" (' . $reportPublicExpired->getKey() . ') private, expired: ' . $reportPublicExpired->public_until->toIso8601ZuluString() . ' (' . $reportPublicExpired->public_until->diffForHumans() . ')', $output);
         $this->assertStringContainsString('Finished setting 2 expired reports to private...', $output);
         $reportPrivateExpired->refresh();
         $reportPublicExpired->refresh();
@@ -96,8 +96,8 @@ class ReportSetExpiredToPrivateCommandTest extends TestCaseWithDatabase
         $output = Artisan::output();
         $this->assertStringContainsString('Makes public reports private if the public_until date has passed...', $output);
         $this->assertStringContainsString('Running in dry-run mode. Nothing will be saved to the database.', $output);
-        $this->assertStringContainsString('Make report "'.$reportPrivateExpired->name.'" ('.$reportPrivateExpired->getKey().') private, expired: '.$reportPrivateExpired->public_until->toIso8601ZuluString().' ('.$reportPrivateExpired->public_until->diffForHumans().')', $output);
-        $this->assertStringContainsString('Make report "'.$reportPublicExpired->name.'" ('.$reportPublicExpired->getKey().') private, expired: '.$reportPublicExpired->public_until->toIso8601ZuluString().' ('.$reportPublicExpired->public_until->diffForHumans().')', $output);
+        $this->assertStringContainsString('Make report "' . $reportPrivateExpired->name . '" (' . $reportPrivateExpired->getKey() . ') private, expired: ' . $reportPrivateExpired->public_until->toIso8601ZuluString() . ' (' . $reportPrivateExpired->public_until->diffForHumans() . ')', $output);
+        $this->assertStringContainsString('Make report "' . $reportPublicExpired->name . '" (' . $reportPublicExpired->getKey() . ') private, expired: ' . $reportPublicExpired->public_until->toIso8601ZuluString() . ' (' . $reportPublicExpired->public_until->diffForHumans() . ')', $output);
         $this->assertStringContainsString('Finished setting 2 expired reports to private...', $output);
         $reportPrivateExpired->refresh();
         $reportPublicExpired->refresh();

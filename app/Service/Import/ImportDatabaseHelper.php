@@ -9,6 +9,7 @@ use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
+use RuntimeException;
 
 /**
  * @template TModel of Model
@@ -61,87 +62,25 @@ class ImportDatabaseHelper
     private ?Closure $beforeSave;
 
     /**
-     * @param  class-string<TModel>  $model
-     * @param  array<string>  $identifiers
-     * @param  array<string, array<int, string>>  $validate
+     * @param class-string<TModel>              $model
+     * @param array<string>                     $identifiers
+     * @param array<string, array<int, string>> $validate
      */
     public function __construct(string $model, array $identifiers, bool $attachToExisting = false, ?Closure $queryModifier = null, ?Closure $afterCreate = null, array $validate = [], ?Closure $beforeSave = null)
     {
-        $this->model = $model;
-        $this->identifiers = $identifiers;
+        $this->model            = $model;
+        $this->identifiers      = $identifiers;
         $this->attachToExisting = $attachToExisting;
-        $this->queryModifier = $queryModifier;
-        $this->afterCreate = $afterCreate;
-        $this->createdCount = 0;
-        $this->validate = $validate;
-        $this->beforeSave = $beforeSave;
+        $this->queryModifier    = $queryModifier;
+        $this->afterCreate      = $afterCreate;
+        $this->createdCount     = 0;
+        $this->validate         = $validate;
+        $this->beforeSave       = $beforeSave;
     }
 
     /**
-     * @return Builder<TModel>
-     */
-    private function getModelInstance(): Builder
-    {
-        return (new $this->model)->query();
-    }
-
-    /**
-     * @param  array<string, mixed>  $identifierData
-     * @param  array<string, mixed>  $createValues
-     */
-    private function createEntity(array $identifierData, array $createValues, ?string $externalIdentifier): string
-    {
-        $data = array_merge($identifierData, $createValues);
-
-        $validator = Validator::make($data, $this->validate);
-        if ($validator->fails()) {
-            throw new ImportException('Invalid data: '.implode(', ', $validator->errors()->all()));
-        }
-
-        /** @var TModel $model */
-        $model = new $this->model;
-        foreach ($data as $key => $value) {
-            $model->{$key} = $value;
-        }
-        if ($this->beforeSave !== null) {
-            ($this->beforeSave)($model);
-        }
-        if (method_exists($model, 'disableAuditing')) {
-            $model->disableAuditing();
-        }
-        $model->save();
-
-        if ($this->afterCreate !== null) {
-            ($this->afterCreate)($model);
-        }
-
-        $hash = $this->getHash($identifierData);
-        $this->mapIdentifierToKey[$hash] = $model->getKey();
-        $this->createdCount++;
-
-        if ($externalIdentifier !== null) {
-            $this->mapExternalIdentifierToInternalIdentifier[$externalIdentifier] = $hash;
-        }
-
-        return $model->getKey();
-    }
-
-    /**
-     * @param  array<string, mixed>  $data
-     */
-    private function getHash(array $data): string
-    {
-        $jsonData = json_encode($data);
-        if ($jsonData === false) {
-            throw new \RuntimeException('Failed to encode data to JSON');
-        }
-
-        return md5($jsonData);
-    }
-
-    /**
-     * @param  array<string, mixed>  $identifierData
-     * @param  array<string, mixed>  $createValues
+     * @param array<string, mixed> $identifierData
+     * @param array<string, mixed> $createValues
      *
      * @throws ImportException
      */
@@ -163,9 +102,8 @@ class ImportDatabaseHelper
             }
 
             return $this->createEntity($identifierData, $createValues, $externalIdentifier);
-        } else {
-            throw new \RuntimeException('Not implemented');
         }
+        throw new RuntimeException('Not implemented');
     }
 
     /**
@@ -201,7 +139,8 @@ class ImportDatabaseHelper
     }
 
     /**
-     * @param  array<string, mixed>  $identifierData
+     * @param array<string, mixed> $identifierData
+     *
      * @return TModel|null
      */
     public function getModel(array $identifierData): ?Model
@@ -219,18 +158,6 @@ class ImportDatabaseHelper
         }
 
         return $model;
-    }
-
-    /**
-     * @param  array<string, mixed>  $identifierData
-     *
-     * @throws ImportException
-     */
-    private function validateIdentifierData(array $identifierData): void
-    {
-        if (array_keys($identifierData) !== $this->identifiers) {
-            throw new ImportException('Invalid identifier data');
-        }
     }
 
     public function getKeyByExternalIdentifier(string $externalIdentifier): ?string
@@ -252,12 +179,91 @@ class ImportDatabaseHelper
         return array_map(fn ($value) => (string) $value, array_keys($this->mapExternalIdentifierToInternalIdentifier));
     }
 
+    public function getCreatedCount(): int
+    {
+        return $this->createdCount;
+    }
+
+    /**
+     * @return Builder<TModel>
+     */
+    private function getModelInstance(): Builder
+    {
+        return (new $this->model())->query();
+    }
+
+    /**
+     * @param array<string, mixed> $identifierData
+     * @param array<string, mixed> $createValues
+     */
+    private function createEntity(array $identifierData, array $createValues, ?string $externalIdentifier): string
+    {
+        $data = array_merge($identifierData, $createValues);
+
+        $validator = Validator::make($data, $this->validate);
+        if ($validator->fails()) {
+            throw new ImportException('Invalid data: ' . implode(', ', $validator->errors()->all()));
+        }
+
+        /** @var TModel $model */
+        $model = new $this->model();
+        foreach ($data as $key => $value) {
+            $model->{$key} = $value;
+        }
+        if ($this->beforeSave !== null) {
+            ($this->beforeSave)($model);
+        }
+        if (method_exists($model, 'disableAuditing')) {
+            $model->disableAuditing();
+        }
+        $model->save();
+
+        if ($this->afterCreate !== null) {
+            ($this->afterCreate)($model);
+        }
+
+        $hash                            = $this->getHash($identifierData);
+        $this->mapIdentifierToKey[$hash] = $model->getKey();
+        $this->createdCount++;
+
+        if ($externalIdentifier !== null) {
+            $this->mapExternalIdentifierToInternalIdentifier[$externalIdentifier] = $hash;
+        }
+
+        return $model->getKey();
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function getHash(array $data): string
+    {
+        $jsonData = json_encode($data);
+        if ($jsonData === false) {
+            throw new RuntimeException('Failed to encode data to JSON');
+        }
+
+        return md5($jsonData);
+    }
+
+    /**
+     * @param array<string, mixed> $identifierData
+     *
+     * @throws ImportException
+     */
+    private function validateIdentifierData(array $identifierData): void
+    {
+        if (array_keys($identifierData) !== $this->identifiers) {
+            throw new ImportException('Invalid identifier data');
+        }
+    }
+
     private function checkMap(): void
     {
         if ($this->mapIdentifierToKey === null) {
-            $select = $this->identifiers;
-            $select[] = (new $this->model)->getKeyName();
-            $builder = $this->getModelInstance();
+            $select   = $this->identifiers;
+            $select[] = (new $this->model())->getKeyName();
+            $builder  = $this->getModelInstance();
 
             if ($this->queryModifier !== null) {
                 $builder = ($this->queryModifier)($builder);
@@ -271,14 +277,9 @@ class ImportDatabaseHelper
                 foreach ($this->identifiers as $identifier) {
                     $identifierData[$identifier] = $databaseEntry->{$identifier};
                 }
-                $hash = $this->getHash($identifierData);
+                $hash                            = $this->getHash($identifierData);
                 $this->mapIdentifierToKey[$hash] = $databaseEntry->getKey();
             }
         }
-    }
-
-    public function getCreatedCount(): int
-    {
-        return $this->createdCount;
     }
 }

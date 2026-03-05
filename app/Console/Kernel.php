@@ -25,11 +25,11 @@ class Kernel extends ConsoleKernel
         if (config('app.key') && (config('scheduling.tasks.self_hosting_check_for_update') || config('scheduling.tasks.self_hosting_telemetry'))) {
             // Convert string to a stable integer for seeding
             /** @var int $seed Take the first 8 hex chars → 32-bit int */
-            $seed = hexdec(substr(hash('md5', config('app.key')), 0, 8));
+            $seed = hexdec(mb_substr(hash('md5', config('app.key')), 0, 8));
             $seed = abs($seed); // Ensure it's positive
             mt_srand($seed);
-            $firstHour = mt_rand(0, 23);
-            $secondHour = ($firstHour + 12) % 24;
+            $firstHour    = mt_rand(0, 23);
+            $secondHour   = ($firstHour + 12) % 24;
             $minuteOffset = mt_rand(0, 59);
             mt_srand(null); // Reset the random number generator
 
@@ -54,6 +54,6 @@ class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
     }
 }

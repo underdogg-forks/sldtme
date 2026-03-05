@@ -18,12 +18,12 @@ class ActiveUserOverview extends BaseWidget
 
     protected function getCards(): array
     {
-        $usersCount = User::query()->where('is_placeholder', '=', false)->count();
+        $usersCount           = User::query()->where('is_placeholder', '=', false)->count();
         $placeholderUserCount = User::query()->where('is_placeholder', '=', true)->count();
-        $activeInLastWeek = User::query()
+        $activeInLastWeek     = User::query()
             ->where('is_placeholder', '=', false)
-            ->whereHas('timeEntries', function (Builder $query): void {
-                /** @var Builder<TimeEntry> $query */
+            ->whereHas('timeEntries', static function (Builder $query): void {
+                /* @var Builder<TimeEntry> $query */
                 $query->where('created_at', '>=', now()->subWeek())
                     ->orWhere('updated_at', '>=', now()->subWeek());
             })

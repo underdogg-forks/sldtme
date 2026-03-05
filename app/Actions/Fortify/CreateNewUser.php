@@ -26,13 +26,13 @@ class CreateNewUser implements CreatesNewUsers
     /**
      * Create a newly registered user.
      *
-     * @param  array<string, mixed>  $input
+     * @param array<string, mixed> $input
      *
      * @throws ValidationException
      */
     public function create(array $input): User
     {
-        if (! config('app.enable_registration')) {
+        if ( ! config('app.enable_registration')) {
             throw ValidationException::withMessages([
                 'email' => [__('Registration is disabled.')],
             ]);
@@ -49,13 +49,13 @@ class CreateNewUser implements CreatesNewUsers
                 'string',
                 'email:rfc,strict',
                 'max:255',
-                UniqueEloquent::make(User::class, 'email', function (Builder $builder): Builder {
-                    /** @var Builder<User> $builder */
+                UniqueEloquent::make(User::class, 'email', static function (Builder $builder): Builder {
+                    /* @var Builder<User> $builder */
                     return $builder->where('is_placeholder', '=', false);
                 }),
             ],
-            'password' => $this->passwordRules(),
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
+            'password'           => $this->passwordRules(),
+            'terms'              => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
             'newsletter_consent' => [
                 'boolean',
             ],
@@ -75,13 +75,13 @@ class CreateNewUser implements CreatesNewUsers
 
         $ipLookupResponse = app(IpLookupServiceContract::class)->lookup(request()->ip());
 
-        $startOfWeek = Weekday::Monday;
-        $numberFormat = null;
+        $startOfWeek    = Weekday::Monday;
+        $numberFormat   = null;
         $currencyFormat = null;
-        $dateFormat = null;
+        $dateFormat     = null;
         $intervalFormat = null;
-        $timeFormat = null;
-        $currency = null;
+        $timeFormat     = null;
+        $currency       = null;
         if ($ipLookupResponse !== null) {
             $startOfWeek = $ipLookupResponse->startOfWeek ?? Weekday::Monday;
             if ($timezone === null) {
@@ -92,7 +92,7 @@ class CreateNewUser implements CreatesNewUsers
         $user = null;
         DB::transaction(function () use (&$user, $input, $timezone, $startOfWeek, $currency, $numberFormat, $currencyFormat, $dateFormat, $intervalFormat, $timeFormat): void {
             $userService = app(UserService::class);
-            $user = $userService->createUser(
+            $user        = $userService->createUser(
                 $input['name'],
                 $input['email'],
                 $input['password'],

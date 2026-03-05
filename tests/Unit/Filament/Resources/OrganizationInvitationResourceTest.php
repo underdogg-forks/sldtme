@@ -31,8 +31,8 @@ class OrganizationInvitationResourceTest extends FilamentTestCase
     public function test_can_list_organization_invitations(): void
     {
         // Arrange
-        $user = User::factory()->create();
-        $organization = Organization::factory()->withOwner($user)->create();
+        $user                    = User::factory()->create();
+        $organization            = Organization::factory()->withOwner($user)->create();
         $organizationInvitations = OrganizationInvitation::factory()->forOrganization($organization)->createMany(5);
 
         // Act
@@ -46,7 +46,7 @@ class OrganizationInvitationResourceTest extends FilamentTestCase
     public function test_can_see_edit_page_of_organization_invitation(): void
     {
         // Arrange
-        $organization = Organization::factory()->create();
+        $organization           = Organization::factory()->create();
         $organizationInvitation = OrganizationInvitation::factory()->forOrganization($organization)->create();
 
         // Act
@@ -61,7 +61,7 @@ class OrganizationInvitationResourceTest extends FilamentTestCase
     public function test_can_delete_a_organization_invitation(): void
     {
         // Arrange
-        $organization = Organization::factory()->create();
+        $organization           = Organization::factory()->create();
         $organizationInvitation = OrganizationInvitation::factory()->forOrganization($organization)->create();
 
         // Act

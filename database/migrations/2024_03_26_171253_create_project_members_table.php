@@ -6,30 +6,32 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('project_members', function (Blueprint $table): void {
+        Schema::create('project_members', static function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->integer('billable_rate')->unsigned()->nullable();
             $table->uuid('project_id');
+            $table->uuid('member_id');
+            $table->timestamps();
+
+            $table->unique(['project_id', 'member_id']);
+
+            // Foreign keys with restrict on delete
             $table->foreign('project_id')
                 ->references('id')
                 ->on('projects')
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
-            $table->uuid('user_id');
-            $table->foreign('user_id')
+            $table->foreign('member_id')
                 ->references('id')
-                ->on('users')
+                ->on('members')
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
-            $table->timestamps();
-            $table->unique(['project_id', 'user_id']);
         });
     }
 

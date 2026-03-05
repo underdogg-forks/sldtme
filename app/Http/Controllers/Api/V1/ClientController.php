@@ -18,16 +18,8 @@ use Illuminate\Support\Carbon;
 
 class ClientController extends Controller
 {
-    protected function checkPermission(Organization $organization, string $permission, ?Client $client = null): void
-    {
-        parent::checkPermission($organization, $permission);
-        if ($client !== null && $client->organization_id !== $organization->getKey()) {
-            throw new AuthorizationException('Tag does not belong to organization');
-        }
-    }
-
     /**
-     * Get clients
+     * Get clients.
      *
      * @return ClientCollection<ClientResource>
      *
@@ -39,13 +31,13 @@ class ClientController extends Controller
     {
         $this->checkPermission($organization, 'clients:view');
         $canViewAllClients = $this->hasPermission($organization, 'clients:view:all');
-        $user = $this->user();
+        $user              = $this->user();
 
         $clientsQuery = Client::query()
             ->whereBelongsTo($organization, 'organization')
             ->orderBy('created_at', 'desc');
 
-        if (! $canViewAllClients) {
+        if ( ! $canViewAllClients) {
             $clientsQuery->visibleByEmployee($user);
         }
 
@@ -62,7 +54,7 @@ class ClientController extends Controller
     }
 
     /**
-     * Create client
+     * Create client.
      *
      * @throws AuthorizationException
      *
@@ -72,7 +64,7 @@ class ClientController extends Controller
     {
         $this->checkPermission($organization, 'clients:create');
 
-        $client = new Client;
+        $client       = new Client();
         $client->name = $request->input('name');
         $client->organization()->associate($organization);
         $client->save();
@@ -81,7 +73,7 @@ class ClientController extends Controller
     }
 
     /**
-     * Update client
+     * Update client.
      *
      * @throws AuthorizationException
      *
@@ -101,7 +93,7 @@ class ClientController extends Controller
     }
 
     /**
-     * Delete client
+     * Delete client.
      *
      * @throws AuthorizationException|EntityStillInUseApiException
      *
@@ -118,5 +110,13 @@ class ClientController extends Controller
         $client->delete();
 
         return response()->json(null, 204);
+    }
+
+    protected function checkPermission(Organization $organization, string $permission, ?Client $client = null): void
+    {
+        parent::checkPermission($organization, $permission);
+        if ($client !== null && $client->organization_id !== $organization->getKey()) {
+            throw new AuthorizationException('Tag does not belong to organization');
+        }
     }
 }

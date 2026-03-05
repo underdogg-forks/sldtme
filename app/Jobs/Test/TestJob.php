@@ -31,9 +31,9 @@ class TestJob implements ShouldQueue
      */
     public function __construct(User $user, string $message, bool $fail = false)
     {
-        $this->user = $user;
+        $this->user    = $user;
         $this->message = $message;
-        $this->fail = $fail;
+        $this->fail    = $fail;
     }
 
     /**
@@ -43,7 +43,7 @@ class TestJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::debug('TestJob: '.$this->message, [
+        Log::debug('TestJob: ' . $this->message, [
             'user' => $this->user->getKey(),
         ]);
         if ($this->fail) {

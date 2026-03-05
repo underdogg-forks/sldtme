@@ -19,21 +19,24 @@ class KernelTest extends TestCase
         ]);
 
         // Act
-        $schedule1 = app()->make(Kernel::class)->resolveConsoleSchedule();
-        $firstRunEvents = collect($schedule1->events())->filter(fn ($event) => str_contains($event->command, 'self-host:check-for-update') ||
-            str_contains($event->command, 'self-host:telemetry')
+        $schedule1      = app()->make(Kernel::class)->resolveConsoleSchedule();
+        $firstRunEvents = collect($schedule1->events())->filter(
+            fn ($event) => str_contains($event->command, 'self-host:check-for-update')
+            || str_contains($event->command, 'self-host:telemetry')
         );
 
-        $schedule2 = app()->make(Kernel::class)->resolveConsoleSchedule();
-        $secondRunEvents = collect($schedule2->events())->filter(fn ($event) => str_contains($event->command, 'self-host:check-for-update') ||
-            str_contains($event->command, 'self-host:telemetry')
+        $schedule2       = app()->make(Kernel::class)->resolveConsoleSchedule();
+        $secondRunEvents = collect($schedule2->events())->filter(
+            fn ($event) => str_contains($event->command, 'self-host:check-for-update')
+            || str_contains($event->command, 'self-host:telemetry')
         );
         config([
             'app.key' => 'base64:eP58hkQ8l3guqf8wvWJR7pB0weVQtnpjMdYpaVwX4Jw=',
         ]);
-        $schedule3 = app()->make(Kernel::class)->resolveConsoleSchedule();
-        $thirdRunEvents = collect($schedule3->events())->filter(fn ($event) => str_contains($event->command, 'self-host:check-for-update') ||
-            str_contains($event->command, 'self-host:telemetry')
+        $schedule3      = app()->make(Kernel::class)->resolveConsoleSchedule();
+        $thirdRunEvents = collect($schedule3->events())->filter(
+            fn ($event) => str_contains($event->command, 'self-host:check-for-update')
+            || str_contains($event->command, 'self-host:telemetry')
         );
 
         // Assert
@@ -57,7 +60,8 @@ class KernelTest extends TestCase
 
         // Act
         $schedule = app()->make(Kernel::class)->resolveConsoleSchedule();
-        $events = collect($schedule->events())->filter(fn ($event) => str_contains($event->command, 'self-host:telemetry')
+        $events   = collect($schedule->events())->filter(
+            fn ($event) => str_contains($event->command, 'self-host:telemetry')
         );
 
         // Assert
@@ -73,7 +77,8 @@ class KernelTest extends TestCase
 
         // Act
         $schedule = app()->make(Kernel::class)->resolveConsoleSchedule();
-        $events = collect($schedule->events())->filter(fn ($event) => str_contains($event->command, 'self-host:telemetry')
+        $events   = collect($schedule->events())->filter(
+            fn ($event) => str_contains($event->command, 'self-host:telemetry')
         );
 
         // Assert
@@ -89,7 +94,8 @@ class KernelTest extends TestCase
 
         // Act
         $schedule = app()->make(Kernel::class)->resolveConsoleSchedule();
-        $events = collect($schedule->events())->filter(fn ($event) => str_contains($event->command, 'self-host:check-for-update')
+        $events   = collect($schedule->events())->filter(
+            fn ($event) => str_contains($event->command, 'self-host:check-for-update')
         );
 
         // Assert
@@ -105,7 +111,8 @@ class KernelTest extends TestCase
 
         // Act
         $schedule = app()->make(Kernel::class)->resolveConsoleSchedule();
-        $events = collect($schedule->events())->filter(fn ($event) => str_contains($event->command, 'self-host:check-for-update')
+        $events   = collect($schedule->events())->filter(
+            fn ($event) => str_contains($event->command, 'self-host:check-for-update')
         );
 
         // Assert

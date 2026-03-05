@@ -24,8 +24,8 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
     public function test_index_endpoint_fails_if_user_has_no_permission_to_view_projects(): void
     {
         // Arrange
-        $data = $this->createUserWithPermission();
-        $projects = Project::factory()->forOrganization($data->organization)->createMany(4);
+        $data                = $this->createUserWithPermission();
+        $projects            = Project::factory()->forOrganization($data->organization)->createMany(4);
         $projectsWithClients = Project::factory()->forOrganization($data->organization)->withClient()->createMany(4);
         Passport::actingAs($data->user);
 
@@ -88,7 +88,7 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
             'projects:view',
             'projects:view:all',
         ]);
-        $archivedProjects = Project::factory()->forOrganization($data->organization)->archived()->createMany(2);
+        $archivedProjects    = Project::factory()->forOrganization($data->organization)->archived()->createMany(2);
         $nonArchivedProjects = Project::factory()->forOrganization($data->organization)->createMany(2);
         Passport::actingAs($data->user);
 
@@ -108,7 +108,7 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
             'projects:view',
             'projects:view:all',
         ]);
-        $archivedProjects = Project::factory()->forOrganization($data->organization)->archived()->createMany(2);
+        $archivedProjects    = Project::factory()->forOrganization($data->organization)->archived()->createMany(2);
         $nonArchivedProjects = Project::factory()->forOrganization($data->organization)->createMany(2);
         Passport::actingAs($data->user);
 
@@ -131,7 +131,7 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
             'projects:view',
             'projects:view:all',
         ]);
-        $archivedProjects = Project::factory()->forOrganization($data->organization)->archived()->createMany(2);
+        $archivedProjects    = Project::factory()->forOrganization($data->organization)->archived()->createMany(2);
         $nonArchivedProjects = Project::factory()->forOrganization($data->organization)->createMany(2);
         Passport::actingAs($data->user);
 
@@ -153,7 +153,7 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
             'projects:view',
             'projects:view:all',
         ]);
-        $archivedProjects = Project::factory()->forOrganization($data->organization)->archived()->createMany(2);
+        $archivedProjects    = Project::factory()->forOrganization($data->organization)->archived()->createMany(2);
         $nonArchivedProjects = Project::factory()->forOrganization($data->organization)->createMany(2);
         Passport::actingAs($data->user);
 
@@ -174,8 +174,8 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:view',
         ]);
-        $privateProjects = Project::factory()->forOrganization($data->organization)->isPrivate()->createMany(2);
-        $publicProjects = Project::factory()->forOrganization($data->organization)->isPublic()->createMany(2);
+        $privateProjects               = Project::factory()->forOrganization($data->organization)->isPrivate()->createMany(2);
+        $publicProjects                = Project::factory()->forOrganization($data->organization)->isPublic()->createMany(2);
         $privateProjectsWithMembership = Project::factory()->forOrganization($data->organization)->addMember($data->member)->isPrivate()->createMany(2);
         Passport::actingAs($data->user);
 
@@ -190,12 +190,12 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
     public function test_index_endpoint_sets_billable_rate_to_null_if_member_is_employee_and_organization_does_not_allow_employees_to_see_billable_rates(): void
     {
         // Arrange
-        $data = $this->createUserWithRole(Role::Employee);
-        $organization = $data->organization;
+        $data                                           = $this->createUserWithRole(Role::Employee);
+        $organization                                   = $data->organization;
         $organization->employees_can_see_billable_rates = false;
         $organization->save();
-        $privateProjects = Project::factory()->forOrganization($data->organization)->isPrivate()->billable(111)->createMany(2);
-        $publicProjects = Project::factory()->forOrganization($data->organization)->isPublic()->billable(112)->createMany(2);
+        $privateProjects               = Project::factory()->forOrganization($data->organization)->isPrivate()->billable(111)->createMany(2);
+        $publicProjects                = Project::factory()->forOrganization($data->organization)->isPublic()->billable(112)->createMany(2);
         $privateProjectsWithMembership = Project::factory()->forOrganization($data->organization)->addMember($data->member)->billable(113)->isPrivate()->createMany(2);
         Passport::actingAs($data->user);
 
@@ -205,26 +205,27 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         // Assert
         $response->assertStatus(200);
         $response->assertJsonCount(4, 'data');
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->has('links')
-            ->has('meta')
-            ->where('data.0.billable_rate', null)
-            ->where('data.1.billable_rate', null)
-            ->where('data.2.billable_rate', null)
-            ->where('data.3.billable_rate', null)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->has('links')
+                ->has('meta')
+                ->where('data.0.billable_rate', null)
+                ->where('data.1.billable_rate', null)
+                ->where('data.2.billable_rate', null)
+                ->where('data.3.billable_rate', null)
         );
     }
 
     public function test_index_endpoint_does_not_set_billable_rate_to_null_if_member_is_employee_and_organization_allows_employees_to_see_billable_rates(): void
     {
         // Arrange
-        $data = $this->createUserWithRole(Role::Employee);
-        $organization = $data->organization;
+        $data                                           = $this->createUserWithRole(Role::Employee);
+        $organization                                   = $data->organization;
         $organization->employees_can_see_billable_rates = true;
         $organization->save();
-        $privateProjects = Project::factory()->forOrganization($data->organization)->isPrivate()->billable(111)->createdAt(now()->subMinutes(4))->createMany(2);
-        $publicProjects = Project::factory()->forOrganization($data->organization)->isPublic()->billable(112)->createdAt(now()->subMinutes(3))->createMany(2);
+        $privateProjects               = Project::factory()->forOrganization($data->organization)->isPrivate()->billable(111)->createdAt(now()->subMinutes(4))->createMany(2);
+        $publicProjects                = Project::factory()->forOrganization($data->organization)->isPublic()->billable(112)->createdAt(now()->subMinutes(3))->createMany(2);
         $privateProjectsWithMembership = Project::factory()->forOrganization($data->organization)->addMember($data->member)->billable(113)->isPrivate()->createdAt(now()->subMinutes(2))->createMany(2);
         Passport::actingAs($data->user);
 
@@ -234,14 +235,15 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         // Assert
         $response->assertStatus(200);
         $response->assertJsonCount(4, 'data');
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->has('links')
-            ->has('meta')
-            ->where('data.0.billable_rate', 113)
-            ->where('data.1.billable_rate', 113)
-            ->where('data.2.billable_rate', 112)
-            ->where('data.3.billable_rate', 112)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->has('links')
+                ->has('meta')
+                ->where('data.0.billable_rate', 113)
+                ->where('data.1.billable_rate', 113)
+                ->where('data.2.billable_rate', 112)
+                ->where('data.3.billable_rate', 112)
         );
     }
 
@@ -252,7 +254,7 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
             'projects:view',
         ]);
         $otherOrganization = Organization::factory()->create();
-        $project = Project::factory()->forOrganization($otherOrganization)->create();
+        $project           = Project::factory()->forOrganization($otherOrganization)->create();
         Passport::actingAs($data->user);
 
         // Act
@@ -265,7 +267,7 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
     public function test_show_endpoint_fails_if_user_has_no_permission_to_view_projects(): void
     {
         // Arrange
-        $data = $this->createUserWithPermission();
+        $data    = $this->createUserWithPermission();
         $project = Project::factory()->forOrganization($data->organization)->create();
         Passport::actingAs($data->user);
 
@@ -296,15 +298,15 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
     public function test_store_endpoint_fails_if_user_has_no_permission_to_create_projects(): void
     {
         // Arrange
-        $data = $this->createUserWithPermission();
+        $data        = $this->createUserWithPermission();
         $projectFake = Project::factory()->forOrganization($data->organization)->make();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->postJson(route('api.v1.projects.store', [$data->organization->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
-            'client_id' => null,
+            'name'        => $projectFake->name,
+            'color'       => $projectFake->color,
+            'client_id'   => null,
             'is_billable' => $projectFake->is_billable,
         ]);
 
@@ -316,7 +318,7 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
     {
         // Arrange
         $billableRate = 2147483647;
-        $data = $this->createUserWithPermission([
+        $data         = $this->createUserWithPermission([
             'projects:create',
         ]);
         $projectFake = Project::factory()->forOrganization($data->organization)->make();
@@ -324,22 +326,22 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->postJson(route('api.v1.projects.store', [$data->organization->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
-            'is_billable' => $projectFake->is_billable,
-            'client_id' => null,
+            'name'          => $projectFake->name,
+            'color'         => $projectFake->color,
+            'is_billable'   => $projectFake->is_billable,
+            'client_id'     => null,
             'billable_rate' => $billableRate,
         ]);
 
         // Assert
         $response->assertStatus(201);
         $this->assertDatabaseHas(Project::class, [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
+            'name'            => $projectFake->name,
+            'color'           => $projectFake->color,
             'organization_id' => $projectFake->organization_id,
-            'is_billable' => $projectFake->is_billable,
-            'client_id' => null,
-            'billable_rate' => $billableRate,
+            'is_billable'     => $projectFake->is_billable,
+            'client_id'       => null,
+            'billable_rate'   => $billableRate,
         ]);
     }
 
@@ -347,7 +349,7 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
     {
         // Arrange
         $billableRate = 2147483647 + 1;
-        $data = $this->createUserWithPermission([
+        $data         = $this->createUserWithPermission([
             'projects:create',
         ]);
         $projectFake = Project::factory()->forOrganization($data->organization)->make();
@@ -355,10 +357,10 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->postJson(route('api.v1.projects.store', [$data->organization->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
-            'is_billable' => $projectFake->is_billable,
-            'client_id' => null,
+            'name'          => $projectFake->name,
+            'color'         => $projectFake->color,
+            'is_billable'   => $projectFake->is_billable,
+            'client_id'     => null,
             'billable_rate' => $billableRate,
         ]);
 
@@ -380,20 +382,20 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->postJson(route('api.v1.projects.store', [$data->organization->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
-            'client_id' => null,
+            'name'        => $projectFake->name,
+            'color'       => $projectFake->color,
+            'client_id'   => null,
             'is_billable' => $projectFake->is_billable,
         ]);
 
         // Assert
         $response->assertStatus(201);
         $this->assertDatabaseHas(Project::class, [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
+            'name'            => $projectFake->name,
+            'color'           => $projectFake->color,
             'organization_id' => $projectFake->organization_id,
-            'client_id' => null,
-            'is_billable' => $projectFake->is_billable,
+            'client_id'       => null,
+            'is_billable'     => $projectFake->is_billable,
         ]);
     }
 
@@ -408,28 +410,29 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->postJson(route('api.v1.projects.store', [$data->organization->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
-            'is_billable' => $projectFake->is_billable,
-            'client_id' => null,
+            'name'           => $projectFake->name,
+            'color'          => $projectFake->color,
+            'is_billable'    => $projectFake->is_billable,
+            'client_id'      => null,
             'estimated_time' => 10000,
         ]);
 
         // Assert
         $response->assertStatus(201);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.name', $projectFake->name)
-            ->where('data.color', $projectFake->color)
-            ->where('data.estimated_time', null)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.name', $projectFake->name)
+                ->where('data.color', $projectFake->color)
+                ->where('data.estimated_time', null)
         );
         $this->assertDatabaseHas(Project::class, [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
+            'name'            => $projectFake->name,
+            'color'           => $projectFake->color,
             'organization_id' => $projectFake->organization_id,
-            'is_billable' => $projectFake->is_billable,
-            'client_id' => null,
-            'estimated_time' => null,
+            'is_billable'     => $projectFake->is_billable,
+            'client_id'       => null,
+            'estimated_time'  => null,
         ]);
     }
 
@@ -445,28 +448,29 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->postJson(route('api.v1.projects.store', [$data->organization->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
-            'is_billable' => $projectFake->is_billable,
-            'client_id' => null,
+            'name'           => $projectFake->name,
+            'color'          => $projectFake->color,
+            'is_billable'    => $projectFake->is_billable,
+            'client_id'      => null,
             'estimated_time' => 10000,
         ]);
 
         // Assert
         $response->assertStatus(201);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.name', $projectFake->name)
-            ->where('data.color', $projectFake->color)
-            ->where('data.estimated_time', 10000)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.name', $projectFake->name)
+                ->where('data.color', $projectFake->color)
+                ->where('data.estimated_time', 10000)
         );
         $this->assertDatabaseHas(Project::class, [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
+            'name'            => $projectFake->name,
+            'color'           => $projectFake->color,
             'organization_id' => $projectFake->organization_id,
-            'is_billable' => $projectFake->is_billable,
-            'client_id' => null,
-            'estimated_time' => 10000,
+            'is_billable'     => $projectFake->is_billable,
+            'client_id'       => null,
+            'estimated_time'  => 10000,
         ]);
     }
 
@@ -476,9 +480,9 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:create',
         ]);
-        $name = 'Project Name';
-        $clientA = Client::factory()->forOrganization($data->organization)->create();
-        $clientB = Client::factory()->forOrganization($data->organization)->create();
+        $name     = 'Project Name';
+        $clientA  = Client::factory()->forOrganization($data->organization)->create();
+        $clientB  = Client::factory()->forOrganization($data->organization)->create();
         $projectA = Project::factory()->forOrganization($data->organization)->forClient($clientA)->create([
             'name' => $name,
         ]);
@@ -487,20 +491,20 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->postJson(route('api.v1.projects.store', [$data->organization->getKey()]), [
-            'name' => $name,
-            'color' => $projectFake->color,
-            'client_id' => $clientB->getKey(),
+            'name'        => $name,
+            'color'       => $projectFake->color,
+            'client_id'   => $clientB->getKey(),
             'is_billable' => $projectFake->is_billable,
         ]);
 
         // Assert
         $response->assertStatus(201);
         $this->assertDatabaseHas(Project::class, [
-            'name' => $name,
+            'name'      => $name,
             'client_id' => $clientB->getKey(),
         ]);
         $this->assertDatabaseHas(Project::class, [
-            'name' => $name,
+            'name'      => $name,
             'client_id' => $clientA->getKey(),
         ]);
     }
@@ -511,7 +515,7 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:create',
         ]);
-        $name = 'Project Name';
+        $name    = 'Project Name';
         $project = Project::factory()->forOrganization($data->organization)->create([
             'name' => $name,
         ]);
@@ -520,9 +524,9 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->postJson(route('api.v1.projects.store', [$data->organization->getKey()]), [
-            'name' => $name,
-            'color' => $projectFake->color,
-            'client_id' => null,
+            'name'        => $name,
+            'color'       => $projectFake->color,
+            'client_id'   => null,
             'is_billable' => $projectFake->is_billable,
         ]);
 
@@ -539,8 +543,8 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:create',
         ]);
-        $name = 'Project Name';
-        $client = Client::factory()->forOrganization($data->organization)->create();
+        $name    = 'Project Name';
+        $client  = Client::factory()->forOrganization($data->organization)->create();
         $project = Project::factory()->forOrganization($data->organization)->forClient($client)->create([
             'name' => $name,
         ]);
@@ -549,9 +553,9 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->postJson(route('api.v1.projects.store', [$data->organization->getKey()]), [
-            'name' => $name,
-            'color' => $projectFake->color,
-            'client_id' => $client->getKey(),
+            'name'        => $name,
+            'color'       => $projectFake->color,
+            'client_id'   => $client->getKey(),
             'is_billable' => $projectFake->is_billable,
         ]);
 
@@ -568,9 +572,9 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:create',
         ]);
-        $name = 'Project Name';
+        $name              = 'Project Name';
         $otherOrganization = Organization::factory()->create();
-        $project = Project::factory()->forOrganization($otherOrganization)->create([
+        $project           = Project::factory()->forOrganization($otherOrganization)->create([
             'name' => $name,
         ]);
         $projectFake = Project::factory()->forOrganization($data->organization)->make();
@@ -578,19 +582,19 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->postJson(route('api.v1.projects.store', [$data->organization->getKey()]), [
-            'name' => $name,
-            'color' => $projectFake->color,
-            'client_id' => null,
+            'name'        => $name,
+            'color'       => $projectFake->color,
+            'client_id'   => null,
             'is_billable' => $projectFake->is_billable,
         ]);
 
         // Assert
         $response->assertStatus(201);
         $this->assertDatabaseHas(Project::class, [
-            'name' => $name,
-            'color' => $projectFake->color,
+            'name'            => $name,
+            'color'           => $projectFake->color,
             'organization_id' => $data->organization->getKey(),
-            'is_billable' => $projectFake->is_billable,
+            'is_billable'     => $projectFake->is_billable,
         ]);
     }
 
@@ -600,26 +604,26 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:create',
         ]);
-        $client = Client::factory()->forOrganization($data->organization)->create();
+        $client      = Client::factory()->forOrganization($data->organization)->create();
         $projectFake = Project::factory()->forOrganization($data->organization)->make();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->postJson(route('api.v1.projects.store', [$data->organization->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
+            'name'        => $projectFake->name,
+            'color'       => $projectFake->color,
             'is_billable' => $projectFake->is_billable,
-            'client_id' => $client->getKey(),
+            'client_id'   => $client->getKey(),
         ]);
 
         // Assert
         $response->assertStatus(201);
         $this->assertDatabaseHas(Project::class, [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
-            'is_billable' => $projectFake->is_billable,
+            'name'            => $projectFake->name,
+            'color'           => $projectFake->color,
+            'is_billable'     => $projectFake->is_billable,
             'organization_id' => $projectFake->organization_id,
-            'client_id' => $client->getKey(),
+            'client_id'       => $client->getKey(),
         ]);
     }
 
@@ -635,20 +639,20 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->postJson(route('api.v1.projects.store', [$data->organization->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
-            'client_id' => null,
-            'is_billable' => true,
+            'name'          => $projectFake->name,
+            'color'         => $projectFake->color,
+            'client_id'     => null,
+            'is_billable'   => true,
             'billable_rate' => 10001,
         ]);
 
         // Assert
         $response->assertStatus(201);
         $this->assertDatabaseHas(Project::class, [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
-            'is_billable' => true,
-            'billable_rate' => 10001,
+            'name'            => $projectFake->name,
+            'color'           => $projectFake->color,
+            'is_billable'     => true,
+            'billable_rate'   => 10001,
             'organization_id' => $projectFake->organization_id,
         ]);
     }
@@ -660,16 +664,16 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
             'projects:update',
         ]);
         $otherOrganization = Organization::factory()->create();
-        $project = Project::factory()->forOrganization($otherOrganization)->create();
-        $projectFake = Project::factory()->make();
+        $project           = Project::factory()->forOrganization($otherOrganization)->create();
+        $projectFake       = Project::factory()->make();
         $this->assertBillableRateServiceIsUnused();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->putJson(route('api.v1.projects.update', [$data->organization->getKey(), $project->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
-            'client_id' => null,
+            'name'        => $projectFake->name,
+            'color'       => $projectFake->color,
+            'client_id'   => null,
             'is_billable' => $projectFake->is_billable,
         ]);
 
@@ -680,17 +684,17 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
     public function test_update_endpoint_fails_if_user_has_no_permission_to_update_projects(): void
     {
         // Arrange
-        $data = $this->createUserWithPermission();
-        $project = Project::factory()->forOrganization($data->organization)->create();
+        $data        = $this->createUserWithPermission();
+        $project     = Project::factory()->forOrganization($data->organization)->create();
         $projectFake = Project::factory()->make();
         $this->assertBillableRateServiceIsUnused();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->putJson(route('api.v1.projects.update', [$data->organization->getKey(), $project->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
-            'client_id' => null,
+            'name'        => $projectFake->name,
+            'color'       => $projectFake->color,
+            'client_id'   => null,
             'is_billable' => $projectFake->is_billable,
         ]);
 
@@ -704,32 +708,32 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:update',
         ]);
-        $name = 'Project Name';
-        $clientA = Client::factory()->forOrganization($data->organization)->create();
-        $clientB = Client::factory()->forOrganization($data->organization)->create();
+        $name               = 'Project Name';
+        $clientA            = Client::factory()->forOrganization($data->organization)->create();
+        $clientB            = Client::factory()->forOrganization($data->organization)->create();
         $projectWithTheName = Project::factory()->forOrganization($data->organization)->forClient($clientA)->create([
             'name' => $name,
         ]);
-        $project = Project::factory()->forOrganization($data->organization)->create();
+        $project     = Project::factory()->forOrganization($data->organization)->create();
         $projectFake = Project::factory()->forOrganization($data->organization)->create();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->putJson(route('api.v1.projects.update', [$data->organization->getKey(), $project->getKey()]), [
-            'name' => $name,
-            'color' => $projectFake->color,
-            'client_id' => $clientB->getKey(),
+            'name'        => $name,
+            'color'       => $projectFake->color,
+            'client_id'   => $clientB->getKey(),
             'is_billable' => $projectFake->is_billable,
         ]);
 
         // Assert
         $response->assertStatus(200);
         $this->assertDatabaseHas(Project::class, [
-            'name' => $name,
+            'name'      => $name,
             'client_id' => $clientA->getKey(),
         ]);
         $this->assertDatabaseHas(Project::class, [
-            'name' => $name,
+            'name'      => $name,
             'client_id' => $clientB->getKey(),
         ]);
     }
@@ -740,19 +744,19 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:update',
         ]);
-        $name = 'Project Name';
+        $name               = 'Project Name';
         $projectWithTheName = Project::factory()->forOrganization($data->organization)->create([
             'name' => $name,
         ]);
-        $project = Project::factory()->forOrganization($data->organization)->create();
+        $project     = Project::factory()->forOrganization($data->organization)->create();
         $projectFake = Project::factory()->forOrganization($data->organization)->create();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->putJson(route('api.v1.projects.update', [$data->organization->getKey(), $project->getKey()]), [
-            'name' => $name,
-            'color' => $projectFake->color,
-            'client_id' => null,
+            'name'        => $name,
+            'color'       => $projectFake->color,
+            'client_id'   => null,
             'is_billable' => $projectFake->is_billable,
         ]);
 
@@ -769,20 +773,20 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:update',
         ]);
-        $name = 'Project Name';
-        $client = Client::factory()->forOrganization($data->organization)->create();
+        $name               = 'Project Name';
+        $client             = Client::factory()->forOrganization($data->organization)->create();
         $projectWithTheName = Project::factory()->forOrganization($data->organization)->forClient($client)->create([
             'name' => $name,
         ]);
-        $project = Project::factory()->forOrganization($data->organization)->create();
+        $project     = Project::factory()->forOrganization($data->organization)->create();
         $projectFake = Project::factory()->forOrganization($data->organization)->create();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->putJson(route('api.v1.projects.update', [$data->organization->getKey(), $project->getKey()]), [
-            'name' => $name,
-            'color' => $projectFake->color,
-            'client_id' => $client->getKey(),
+            'name'        => $name,
+            'color'       => $projectFake->color,
+            'client_id'   => $client->getKey(),
             'is_billable' => $projectFake->is_billable,
         ]);
 
@@ -799,19 +803,19 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:update',
         ]);
-        $clientOld = Client::factory()->forOrganization($data->organization)->create();
-        $clientNew = Client::factory()->forOrganization($data->organization)->create();
-        $project = Project::factory()->forOrganization($data->organization)->forClient($clientOld)->create();
+        $clientOld   = Client::factory()->forOrganization($data->organization)->create();
+        $clientNew   = Client::factory()->forOrganization($data->organization)->create();
+        $project     = Project::factory()->forOrganization($data->organization)->forClient($clientOld)->create();
         $projectFake = Project::factory()->make();
-        $timeEntry = TimeEntry::factory()->forOrganization($data->organization)->forProject($project)->create();
+        $timeEntry   = TimeEntry::factory()->forOrganization($data->organization)->forProject($project)->create();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->putJson(route('api.v1.projects.update', [$data->organization->getKey(), $project->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
+            'name'        => $projectFake->name,
+            'color'       => $projectFake->color,
             'is_billable' => $projectFake->is_billable,
-            'client_id' => $clientNew->getKey(),
+            'client_id'   => $clientNew->getKey(),
         ]);
 
         // Assert
@@ -826,18 +830,18 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:update',
         ]);
-        $client = Client::factory()->forOrganization($data->organization)->create();
-        $project = Project::factory()->forOrganization($data->organization)->forClient($client)->create();
+        $client      = Client::factory()->forOrganization($data->organization)->create();
+        $project     = Project::factory()->forOrganization($data->organization)->forClient($client)->create();
         $projectFake = Project::factory()->make();
-        $timeEntry = TimeEntry::factory()->forOrganization($data->organization)->forProject($project)->create();
+        $timeEntry   = TimeEntry::factory()->forOrganization($data->organization)->forProject($project)->create();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->putJson(route('api.v1.projects.update', [$data->organization->getKey(), $project->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
+            'name'        => $projectFake->name,
+            'color'       => $projectFake->color,
             'is_billable' => $projectFake->is_billable,
-            'client_id' => null,
+            'client_id'   => null,
         ]);
 
         // Assert
@@ -852,18 +856,18 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:update',
         ]);
-        $clientNew = Client::factory()->forOrganization($data->organization)->create();
-        $project = Project::factory()->forOrganization($data->organization)->forClient(null)->create();
+        $clientNew   = Client::factory()->forOrganization($data->organization)->create();
+        $project     = Project::factory()->forOrganization($data->organization)->forClient(null)->create();
         $projectFake = Project::factory()->make();
-        $timeEntry = TimeEntry::factory()->forOrganization($data->organization)->forProject($project)->create();
+        $timeEntry   = TimeEntry::factory()->forOrganization($data->organization)->forProject($project)->create();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->putJson(route('api.v1.projects.update', [$data->organization->getKey(), $project->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
+            'name'        => $projectFake->name,
+            'color'       => $projectFake->color,
             'is_billable' => $projectFake->is_billable,
-            'client_id' => $clientNew->getKey(),
+            'client_id'   => $clientNew->getKey(),
         ]);
 
         // Assert
@@ -878,9 +882,9 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:update',
         ]);
-        $name = 'Project Name';
+        $name              = 'Project Name';
         $otherOrganization = Organization::factory()->create();
-        $otherProject = Project::factory()->forOrganization($otherOrganization)->create([
+        $otherProject      = Project::factory()->forOrganization($otherOrganization)->create([
             'name' => $name,
         ]);
         $project = Project::factory()->forOrganization($data->organization)->create([
@@ -891,19 +895,19 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->putJson(route('api.v1.projects.update', [$data->organization->getKey(), $project->getKey()]), [
-            'name' => $name,
-            'color' => $projectFake->color,
-            'client_id' => null,
+            'name'        => $name,
+            'color'       => $projectFake->color,
+            'client_id'   => null,
             'is_billable' => $projectFake->is_billable,
         ]);
 
         // Assert
         $response->assertStatus(200);
         $this->assertDatabaseHas(Project::class, [
-            'name' => $name,
-            'color' => $projectFake->color,
+            'name'            => $name,
+            'color'           => $projectFake->color,
             'organization_id' => $data->organization->getKey(),
-            'is_billable' => $projectFake->is_billable,
+            'is_billable'     => $projectFake->is_billable,
         ]);
     }
 
@@ -913,28 +917,29 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:update',
         ]);
-        $project = Project::factory()->forOrganization($data->organization)->create();
+        $project     = Project::factory()->forOrganization($data->organization)->create();
         $projectFake = Project::factory()->make();
-        $client = Client::factory()->forOrganization($data->organization)->create();
+        $client      = Client::factory()->forOrganization($data->organization)->create();
         $this->assertBillableRateServiceIsUnused();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->putJson(route('api.v1.projects.update', [$data->organization->getKey(), $project->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
+            'name'        => $projectFake->name,
+            'color'       => $projectFake->color,
             'is_billable' => $projectFake->is_billable,
-            'client_id' => $client->getKey(),
+            'client_id'   => $client->getKey(),
         ]);
 
         // Assert
         $response->assertStatus(200);
         $project->refresh();
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.name', $projectFake->name)
-            ->where('data.color', $projectFake->color)
-            ->where('data.client_id', $client->getKey())
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.name', $projectFake->name)
+                ->where('data.color', $projectFake->color)
+                ->where('data.client_id', $client->getKey())
         );
         $this->assertSame($projectFake->name, $project->name);
         $this->assertSame($projectFake->color, $project->color);
@@ -948,27 +953,28 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:update',
         ]);
-        $project = Project::factory()->forOrganization($data->organization)->create();
+        $project     = Project::factory()->forOrganization($data->organization)->create();
         $projectFake = Project::factory()->make();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->putJson(route('api.v1.projects.update', [$data->organization->getKey(), $project->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
-            'client_id' => null,
-            'is_billable' => $projectFake->is_billable,
+            'name'           => $projectFake->name,
+            'color'          => $projectFake->color,
+            'client_id'      => null,
+            'is_billable'    => $projectFake->is_billable,
             'estimated_time' => 10000,
         ]);
 
         // Assert
         $response->assertStatus(200);
         $project->refresh();
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.name', $projectFake->name)
-            ->where('data.color', $projectFake->color)
-            ->where('data.estimated_time', null)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.name', $projectFake->name)
+                ->where('data.color', $projectFake->color)
+                ->where('data.estimated_time', null)
         );
         $this->assertSame($projectFake->name, $project->name);
         $this->assertSame($projectFake->color, $project->color);
@@ -981,28 +987,29 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:update',
         ]);
-        $project = Project::factory()->forOrganization($data->organization)->create();
+        $project     = Project::factory()->forOrganization($data->organization)->create();
         $projectFake = Project::factory()->make();
         Passport::actingAs($data->user);
         $this->actAsOrganizationWithSubscription();
 
         // Act
         $response = $this->putJson(route('api.v1.projects.update', [$data->organization->getKey(), $project->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
-            'client_id' => null,
-            'is_billable' => $projectFake->is_billable,
+            'name'           => $projectFake->name,
+            'color'          => $projectFake->color,
+            'client_id'      => null,
+            'is_billable'    => $projectFake->is_billable,
             'estimated_time' => 10000,
         ]);
 
         // Assert
         $response->assertStatus(200);
         $project->refresh();
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.name', $projectFake->name)
-            ->where('data.color', $projectFake->color)
-            ->where('data.estimated_time', 10000)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.name', $projectFake->name)
+                ->where('data.color', $projectFake->color)
+                ->where('data.estimated_time', 10000)
         );
         $this->assertSame($projectFake->name, $project->name);
         $this->assertSame($projectFake->color, $project->color);
@@ -1015,25 +1022,25 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:update',
         ]);
-        $project = Project::factory()->forOrganization($data->organization)->create();
+        $project     = Project::factory()->forOrganization($data->organization)->create();
         $projectFake = Project::factory()->make();
         $this->assertBillableRateServiceIsUnused();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->putJson(route('api.v1.projects.update', [$data->organization->getKey(), $project->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
-            'client_id' => null,
-            'is_billable' => $projectFake->is_billable,
+            'name'          => $projectFake->name,
+            'color'         => $projectFake->color,
+            'client_id'     => null,
+            'is_billable'   => $projectFake->is_billable,
             'billable_rate' => $project->billable_rate,
         ]);
 
         // Assert
         $response->assertStatus(200);
         $this->assertDatabaseHas(Project::class, [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
+            'name'          => $projectFake->name,
+            'color'         => $projectFake->color,
             'billable_rate' => $project->billable_rate,
         ]);
     }
@@ -1044,9 +1051,9 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:update',
         ]);
-        $project = Project::factory()->forOrganization($data->organization)->create();
+        $project     = Project::factory()->forOrganization($data->organization)->create();
         $projectFake = Project::factory()->make();
-        $this->mock(BillableRateService::class, function (MockInterface $mock) use ($project): void {
+        $this->mock(BillableRateService::class, static function (MockInterface $mock) use ($project): void {
             $mock->shouldReceive('updateTimeEntriesBillableRateForProject')
                 ->once()
                 ->withArgs(fn (Project $projectArg) => $projectArg->is($project) && $projectArg->billable_rate === 10003);
@@ -1055,18 +1062,18 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->putJson(route('api.v1.projects.update', [$data->organization->getKey(), $project->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
-            'client_id' => null,
-            'is_billable' => $projectFake->is_billable,
+            'name'          => $projectFake->name,
+            'color'         => $projectFake->color,
+            'client_id'     => null,
+            'is_billable'   => $projectFake->is_billable,
             'billable_rate' => 10003,
         ]);
 
         // Assert
         $response->assertStatus(200);
         $this->assertDatabaseHas(Project::class, [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
+            'name'          => $projectFake->name,
+            'color'         => $projectFake->color,
             'billable_rate' => 10003,
         ]);
     }
@@ -1077,24 +1084,25 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:update',
         ]);
-        $project = Project::factory()->forOrganization($data->organization)->create();
+        $project     = Project::factory()->forOrganization($data->organization)->create();
         $projectFake = Project::factory()->make();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->putJson(route('api.v1.projects.update', [$data->organization->getKey(), $project->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
-            'client_id' => null,
+            'name'        => $projectFake->name,
+            'color'       => $projectFake->color,
+            'client_id'   => null,
             'is_billable' => $projectFake->is_billable,
             'is_archived' => true,
         ]);
 
         // Assert
         $response->assertStatus(200);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.is_archived', true)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.is_archived', true)
         );
         $project->refresh();
         $this->assertTrue($project->is_archived);
@@ -1106,24 +1114,25 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:update',
         ]);
-        $project = Project::factory()->forOrganization($data->organization)->archived()->create();
+        $project     = Project::factory()->forOrganization($data->organization)->archived()->create();
         $projectFake = Project::factory()->make();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->putJson(route('api.v1.projects.update', [$data->organization->getKey(), $project->getKey()]), [
-            'name' => $projectFake->name,
-            'color' => $projectFake->color,
-            'client_id' => null,
+            'name'        => $projectFake->name,
+            'color'       => $projectFake->color,
+            'client_id'   => null,
             'is_billable' => $projectFake->is_billable,
             'is_archived' => false,
         ]);
 
         // Assert
         $response->assertStatus(200);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.is_archived', false)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.is_archived', false)
         );
         $project->refresh();
         $this->assertFalse($project->is_archived);
@@ -1136,7 +1145,7 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
             'projects:delete',
         ]);
         $otherOrganization = Organization::factory()->create();
-        $project = Project::factory()->forOrganization($otherOrganization)->create();
+        $project           = Project::factory()->forOrganization($otherOrganization)->create();
         Passport::actingAs($data->user);
 
         // Act
@@ -1149,7 +1158,7 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
     public function test_destroy_endpoint_fails_if_user_has_no_permission_to_delete_projects(): void
     {
         // Arrange
-        $data = $this->createUserWithPermission();
+        $data    = $this->createUserWithPermission();
         $project = Project::factory()->forOrganization($data->organization)->create();
         Passport::actingAs($data->user);
 
@@ -1167,7 +1176,7 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
             'projects:delete',
         ]);
         $project = Project::factory()->forOrganization($data->organization)->create();
-        $task = Task::factory()->forProject($project)->forOrganization($data->organization)->create();
+        $task    = Task::factory()->forProject($project)->forOrganization($data->organization)->create();
         Passport::actingAs($data->user);
 
         // Act
@@ -1187,7 +1196,7 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:delete',
         ]);
-        $project = Project::factory()->forOrganization($data->organization)->create();
+        $project   = Project::factory()->forOrganization($data->organization)->create();
         $timeEntry = TimeEntry::factory()->forProject($project)->forOrganization($data->organization)->create();
         Passport::actingAs($data->user);
 
@@ -1208,7 +1217,7 @@ class ProjectEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'projects:delete',
         ]);
-        $project = Project::factory()->forOrganization($data->organization)->create();
+        $project       = Project::factory()->forOrganization($data->organization)->create();
         $projectMember = ProjectMember::factory()->forMember($data->member)->forProject($project)->create();
         Passport::actingAs($data->user);
 

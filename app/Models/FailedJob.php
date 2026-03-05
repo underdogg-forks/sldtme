@@ -34,6 +34,6 @@ class FailedJob extends Model
      */
     protected $casts = [
         'failed_at' => 'datetime',
-        'payload' => 'json',
+        'payload'   => 'json',
     ];
 }

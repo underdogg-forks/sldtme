@@ -52,15 +52,16 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
         $response->assertStatus(200);
         $response->assertJsonCount(4, 'data');
         $reports = Report::query()->orderBy('created_at', 'desc')->get();
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->has('links')
-            ->has('meta')
-            ->count('data', 4)
-            ->where('data.0.id', $reports->get(0)->getKey())
-            ->where('data.1.id', $reports->get(1)->getKey())
-            ->where('data.2.id', $reports->get(2)->getKey())
-            ->where('data.3.id', $reports->get(3)->getKey())
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->has('links')
+                ->has('meta')
+                ->count('data', 4)
+                ->where('data.0.id', $reports->get(0)->getKey())
+                ->where('data.1.id', $reports->get(1)->getKey())
+                ->where('data.2.id', $reports->get(2)->getKey())
+                ->where('data.3.id', $reports->get(3)->getKey())
         );
     }
 
@@ -72,14 +73,14 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->postJson(route('api.v1.reports.store', [$data->organization->getKey()]), [
-            'name' => 'Test Report',
-            'is_public' => false,
+            'name'       => 'Test Report',
+            'is_public'  => false,
             'properties' => [
-                'group' => TimeEntryAggregationType::Project->value,
-                'sub_group' => TimeEntryAggregationType::Task->value,
+                'group'         => TimeEntryAggregationType::Project->value,
+                'sub_group'     => TimeEntryAggregationType::Task->value,
                 'history_group' => TimeEntryAggregationType::Day->value,
-                'start' => Carbon::now()->subDays(30)->toIso8601ZuluString(),
-                'end' => Carbon::now()->toIso8601ZuluString(),
+                'start'         => Carbon::now()->subDays(30)->toIso8601ZuluString(),
+                'end'           => Carbon::now()->toIso8601ZuluString(),
             ],
         ]);
 
@@ -97,27 +98,28 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->postJson(route('api.v1.reports.store', [$data->organization->getKey()]), [
-            'name' => 'Test Report',
-            'is_public' => false,
+            'name'       => 'Test Report',
+            'is_public'  => false,
             'properties' => [
-                'group' => TimeEntryAggregationType::Project->value,
-                'sub_group' => TimeEntryAggregationType::Task->value,
+                'group'         => TimeEntryAggregationType::Project->value,
+                'sub_group'     => TimeEntryAggregationType::Task->value,
                 'history_group' => TimeEntryAggregationType::Day->value,
-                'start' => Carbon::now()->subDays(30)->toIso8601ZuluString(),
-                'end' => Carbon::now()->toIso8601ZuluString(),
+                'start'         => Carbon::now()->subDays(30)->toIso8601ZuluString(),
+                'end'           => Carbon::now()->toIso8601ZuluString(),
             ],
         ]);
 
         // Assert
         $response->assertStatus(201);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.name', 'Test Report')
-            ->where('data.description', null)
-            ->where('data.is_public', false)
-            ->where('data.shareable_link', null)
-            ->where('data.properties.group', TimeEntryAggregationType::Project->value)
-            ->where('data.properties.sub_group', TimeEntryAggregationType::Task->value)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.name', 'Test Report')
+                ->where('data.description', null)
+                ->where('data.is_public', false)
+                ->where('data.shareable_link', null)
+                ->where('data.properties.group', TimeEntryAggregationType::Project->value)
+                ->where('data.properties.sub_group', TimeEntryAggregationType::Task->value)
         );
     }
 
@@ -131,25 +133,25 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->withoutExceptionHandling()->postJson(route('api.v1.reports.store', [$data->organization->getKey()]), [
-            'name' => 'Test Report',
-            'description' => 'Test description',
-            'is_public' => true,
+            'name'         => 'Test Report',
+            'description'  => 'Test description',
+            'is_public'    => true,
             'public_until' => Carbon::now()->addDays(30)->toIso8601ZuluString(),
-            'properties' => [
-                'start' => Carbon::now()->subDays(30)->toIso8601ZuluString(),
-                'end' => Carbon::now()->toIso8601ZuluString(),
-                'active' => true,
-                'member_ids' => [],
-                'billable' => true,
-                'client_ids' => [],
-                'project_ids' => [],
-                'tag_ids' => [],
-                'task_ids' => [],
-                'group' => TimeEntryAggregationType::Project->value,
-                'sub_group' => TimeEntryAggregationType::Task->value,
+            'properties'   => [
+                'start'         => Carbon::now()->subDays(30)->toIso8601ZuluString(),
+                'end'           => Carbon::now()->toIso8601ZuluString(),
+                'active'        => true,
+                'member_ids'    => [],
+                'billable'      => true,
+                'client_ids'    => [],
+                'project_ids'   => [],
+                'tag_ids'       => [],
+                'task_ids'      => [],
+                'group'         => TimeEntryAggregationType::Project->value,
+                'sub_group'     => TimeEntryAggregationType::Task->value,
                 'history_group' => TimeEntryAggregationType::Day->value,
-                'week_start' => Weekday::Monday->value,
-                'timezone' => 'Europe/Berlin',
+                'week_start'    => Weekday::Monday->value,
+                'timezone'      => 'Europe/Berlin',
             ],
         ]);
 
@@ -157,14 +159,15 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
         $response->assertStatus(201);
         /** @var Report $report */
         $report = Report::query()->findOrFail($response->json('data.id'));
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.name', 'Test Report')
-            ->where('data.description', 'Test description')
-            ->where('data.is_public', true)
-            ->where('data.shareable_link', $report->getShareableLink())
-            ->where('data.properties.group', TimeEntryAggregationType::Project->value)
-            ->where('data.properties.sub_group', TimeEntryAggregationType::Task->value)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.name', 'Test Report')
+                ->where('data.description', 'Test description')
+                ->where('data.is_public', true)
+                ->where('data.shareable_link', $report->getShareableLink())
+                ->where('data.properties.group', TimeEntryAggregationType::Project->value)
+                ->where('data.properties.sub_group', TimeEntryAggregationType::Task->value)
         );
     }
 
@@ -178,26 +181,26 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->withoutExceptionHandling()->postJson(route('api.v1.reports.store', [$data->organization->getKey()]), [
-            'name' => 'Test Report with Rounding',
-            'description' => 'Test description',
-            'is_public' => true,
+            'name'         => 'Test Report with Rounding',
+            'description'  => 'Test description',
+            'is_public'    => true,
             'public_until' => Carbon::now()->addDays(30)->toIso8601ZuluString(),
-            'properties' => [
-                'start' => Carbon::now()->subDays(30)->toIso8601ZuluString(),
-                'end' => Carbon::now()->toIso8601ZuluString(),
-                'active' => true,
-                'member_ids' => [],
-                'billable' => true,
-                'client_ids' => [],
-                'project_ids' => [],
-                'tag_ids' => [],
-                'task_ids' => [],
-                'group' => TimeEntryAggregationType::Project->value,
-                'sub_group' => TimeEntryAggregationType::Task->value,
-                'history_group' => TimeEntryAggregationType::Day->value,
-                'week_start' => Weekday::Monday->value,
-                'timezone' => 'Europe/Berlin',
-                'rounding_type' => 'nearest',
+            'properties'   => [
+                'start'            => Carbon::now()->subDays(30)->toIso8601ZuluString(),
+                'end'              => Carbon::now()->toIso8601ZuluString(),
+                'active'           => true,
+                'member_ids'       => [],
+                'billable'         => true,
+                'client_ids'       => [],
+                'project_ids'      => [],
+                'tag_ids'          => [],
+                'task_ids'         => [],
+                'group'            => TimeEntryAggregationType::Project->value,
+                'sub_group'        => TimeEntryAggregationType::Task->value,
+                'history_group'    => TimeEntryAggregationType::Day->value,
+                'week_start'       => Weekday::Monday->value,
+                'timezone'         => 'Europe/Berlin',
+                'rounding_type'    => 'nearest',
                 'rounding_minutes' => 15,
             ],
         ]);
@@ -206,16 +209,17 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
         $response->assertStatus(201);
         /** @var Report $report */
         $report = Report::query()->findOrFail($response->json('data.id'));
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.name', 'Test Report with Rounding')
-            ->where('data.description', 'Test description')
-            ->where('data.is_public', true)
-            ->where('data.shareable_link', $report->getShareableLink())
-            ->where('data.properties.group', TimeEntryAggregationType::Project->value)
-            ->where('data.properties.sub_group', TimeEntryAggregationType::Task->value)
-            ->where('data.properties.rounding_type', 'nearest')
-            ->where('data.properties.rounding_minutes', 15)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.name', 'Test Report with Rounding')
+                ->where('data.description', 'Test description')
+                ->where('data.is_public', true)
+                ->where('data.shareable_link', $report->getShareableLink())
+                ->where('data.properties.group', TimeEntryAggregationType::Project->value)
+                ->where('data.properties.sub_group', TimeEntryAggregationType::Task->value)
+                ->where('data.properties.rounding_type', 'nearest')
+                ->where('data.properties.rounding_minutes', 15)
         );
 
         // Also verify the properties are saved in the database
@@ -226,7 +230,7 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
     public function test_update_endpoint_fails_if_user_has_no_permission_to_update_report(): void
     {
         // Arrange
-        $data = $this->createUserWithPermission();
+        $data   = $this->createUserWithPermission();
         $report = Report::factory()->forOrganization($data->organization)->create();
         Passport::actingAs($data->user);
 
@@ -292,9 +296,10 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
         $report->refresh();
         $this->assertSame('Updated Report', $report->name);
         $response->assertStatus(200);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.name', 'Updated Report')
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.name', 'Updated Report')
         );
     }
 
@@ -316,9 +321,10 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
         $report->refresh();
         $this->assertSame('Updated description', $report->description);
         $response->assertStatus(200);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.description', 'Updated description')
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.description', 'Updated description')
         );
     }
 
@@ -341,10 +347,11 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
         $this->assertTrue($report->is_public);
         $this->assertNotNull($report->share_secret);
         $this->assertResponseCode($response, 200);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.is_public', true)
-            ->where('data.shareable_link', $report->getShareableLink())
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.is_public', true)
+                ->where('data.shareable_link', $report->getShareableLink())
         );
     }
 
@@ -367,10 +374,11 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
         $this->assertFalse($report->is_public);
         $this->assertNull($report->share_secret);
         $response->assertStatus(200);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.is_public', false)
-            ->where('data.shareable_link', null)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.is_public', false)
+                ->where('data.shareable_link', null)
         );
     }
 
@@ -394,10 +402,11 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
         $this->assertTrue($report->is_public);
         $this->assertSame($secret, $report->share_secret);
         $response->assertStatus(200);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.is_public', true)
-            ->where('data.shareable_link', $report->getShareableLink())
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.is_public', true)
+                ->where('data.shareable_link', $report->getShareableLink())
         );
     }
 
@@ -412,22 +421,23 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->putJson(route('api.v1.reports.update', [$data->organization->getKey(), $report->getKey()]), [
-            'name' => 'Updated Report',
-            'description' => 'Updated description',
-            'is_public' => true,
+            'name'         => 'Updated Report',
+            'description'  => 'Updated description',
+            'is_public'    => true,
             'public_until' => Carbon::now()->addDays(30)->toIso8601ZuluString(),
         ]);
 
         // Assert
         $response->assertStatus(200);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.name', 'Updated Report')
-            ->where('data.description', 'Updated description')
-            ->where('data.is_public', true)
-            ->whereType('data.public_until', 'string')
-            ->where('data.properties.group', TimeEntryAggregationType::Project->value)
-            ->where('data.properties.sub_group', TimeEntryAggregationType::Task->value)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.name', 'Updated Report')
+                ->where('data.description', 'Updated description')
+                ->where('data.is_public', true)
+                ->whereType('data.public_until', 'string')
+                ->where('data.properties.group', TimeEntryAggregationType::Project->value)
+                ->where('data.properties.sub_group', TimeEntryAggregationType::Task->value)
         );
     }
 
@@ -482,7 +492,7 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
     public function test_show_endpoint_fails_if_user_has_no_permission_to_view_report(): void
     {
         // Arrange
-        $data = $this->createUserWithPermission();
+        $data   = $this->createUserWithPermission();
         $report = Report::factory()->forOrganization($data->organization)->create();
         Passport::actingAs($data->user);
 
@@ -538,9 +548,10 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
 
         // Assert
         $response->assertStatus(200);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.id', $report->getKey())
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.id', $report->getKey())
         );
     }
 
@@ -554,18 +565,18 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
 
         // Act
         $response = $this->withoutExceptionHandling()->postJson(route('api.v1.reports.store', [$data->organization->getKey()]), [
-            'name' => 'Test Report with None Filters',
-            'is_public' => false,
+            'name'       => 'Test Report with None Filters',
+            'is_public'  => false,
             'properties' => [
-                'start' => Carbon::now()->subDays(30)->toIso8601ZuluString(),
-                'end' => Carbon::now()->toIso8601ZuluString(),
-                'group' => TimeEntryAggregationType::Project->value,
-                'sub_group' => TimeEntryAggregationType::Task->value,
+                'start'         => Carbon::now()->subDays(30)->toIso8601ZuluString(),
+                'end'           => Carbon::now()->toIso8601ZuluString(),
+                'group'         => TimeEntryAggregationType::Project->value,
+                'sub_group'     => TimeEntryAggregationType::Task->value,
                 'history_group' => TimeEntryAggregationType::Day->value,
-                'project_ids' => [TimeEntryFilter::NONE_VALUE],
-                'client_ids' => [TimeEntryFilter::NONE_VALUE],
-                'tag_ids' => [TimeEntryFilter::NONE_VALUE],
-                'task_ids' => [TimeEntryFilter::NONE_VALUE],
+                'project_ids'   => [TimeEntryFilter::NONE_VALUE],
+                'client_ids'    => [TimeEntryFilter::NONE_VALUE],
+                'tag_ids'       => [TimeEntryFilter::NONE_VALUE],
+                'task_ids'      => [TimeEntryFilter::NONE_VALUE],
             ],
         ]);
 
@@ -586,25 +597,25 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
             'reports:create',
         ]);
         $project = Project::factory()->forOrganization($data->organization)->create();
-        $client = Client::factory()->forOrganization($data->organization)->create();
-        $task = Task::factory()->forOrganization($data->organization)->forProject($project)->create();
-        $tag = Tag::factory()->forOrganization($data->organization)->create();
+        $client  = Client::factory()->forOrganization($data->organization)->create();
+        $task    = Task::factory()->forOrganization($data->organization)->forProject($project)->create();
+        $tag     = Tag::factory()->forOrganization($data->organization)->create();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->withoutExceptionHandling()->postJson(route('api.v1.reports.store', [$data->organization->getKey()]), [
-            'name' => 'Test Report with Combined Filters',
-            'is_public' => false,
+            'name'       => 'Test Report with Combined Filters',
+            'is_public'  => false,
             'properties' => [
-                'start' => Carbon::now()->subDays(30)->toIso8601ZuluString(),
-                'end' => Carbon::now()->toIso8601ZuluString(),
-                'group' => TimeEntryAggregationType::Project->value,
-                'sub_group' => TimeEntryAggregationType::Task->value,
+                'start'         => Carbon::now()->subDays(30)->toIso8601ZuluString(),
+                'end'           => Carbon::now()->toIso8601ZuluString(),
+                'group'         => TimeEntryAggregationType::Project->value,
+                'sub_group'     => TimeEntryAggregationType::Task->value,
                 'history_group' => TimeEntryAggregationType::Day->value,
-                'project_ids' => [$project->getKey(), TimeEntryFilter::NONE_VALUE],
-                'client_ids' => [$client->getKey(), TimeEntryFilter::NONE_VALUE],
-                'tag_ids' => [$tag->getKey(), TimeEntryFilter::NONE_VALUE],
-                'task_ids' => [$task->getKey(), TimeEntryFilter::NONE_VALUE],
+                'project_ids'   => [$project->getKey(), TimeEntryFilter::NONE_VALUE],
+                'client_ids'    => [$client->getKey(), TimeEntryFilter::NONE_VALUE],
+                'tag_ids'       => [$tag->getKey(), TimeEntryFilter::NONE_VALUE],
+                'task_ids'      => [$task->getKey(), TimeEntryFilter::NONE_VALUE],
             ],
         ]);
 
@@ -625,7 +636,7 @@ class ReportEndpointTest extends ApiEndpointTestAbstract
     public function test_destroy_endpoint_fails_if_user_has_no_permission_to_delete_report(): void
     {
         // Arrange
-        $data = $this->createUserWithPermission();
+        $data   = $this->createUserWithPermission();
         $report = Report::factory()->forOrganization($data->organization)->create();
         Passport::actingAs($data->user);
 

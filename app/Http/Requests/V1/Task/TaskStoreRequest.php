@@ -31,15 +31,15 @@ class TaskStoreRequest extends BaseFormRequest
                 'string',
                 'min:1',
                 'max:255',
-                UniqueEloquent::make(Task::class, 'name', function (Builder $builder): Builder {
-                    /** @var Builder<Task> $builder */
+                UniqueEloquent::make(Task::class, 'name', static function (Builder $builder): Builder {
+                    /* @var Builder<Task> $builder */
                     return $builder->where('project_id', '=', $this->input('project_id'));
                 })->withCustomTranslation('validation.task_name_already_exists'),
             ],
             'project_id' => [
                 'required',
-                ExistsEloquent::make(Project::class, null, function (Builder $builder): Builder {
-                    /** @var Builder<Project> $builder */
+                ExistsEloquent::make(Project::class, null, static function (Builder $builder): Builder {
+                    /* @var Builder<Project> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization');
                 })->uuid(),
             ],

@@ -12,7 +12,6 @@ use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\LaravelModulesServiceProvider;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -145,11 +144,11 @@ return [
     'cipher' => 'AES-256-CBC',
 
     'localization' => [
-        'default_currency' => env('LOCALIZATION_DEFAULT_CURRENCY', 'EUR'),
-        'default_number_format' => env('LOCALIZATION_DEFAULT_NUMBER_FORMAT', NumberFormat::ThousandsPointDecimalComma->value),
+        'default_currency'        => env('LOCALIZATION_DEFAULT_CURRENCY', 'EUR'),
+        'default_number_format'   => env('LOCALIZATION_DEFAULT_NUMBER_FORMAT', NumberFormat::ThousandsPointDecimalComma->value),
         'default_currency_format' => env('LOCALIZATION_DEFAULT_CURRENCY_FORMAT', CurrencyFormat::ISOCodeAfterWithSpace->value),
-        'default_date_format' => env('LOCALIZATION_DEFAULT_DATE_FORMAT', DateFormat::HyphenSeparatedYYYYMMDD->value),
-        'default_time_format' => env('LOCALIZATION_DEFAULT_TIME_FORMAT', TimeFormat::TwentyFourHours->value),
+        'default_date_format'     => env('LOCALIZATION_DEFAULT_DATE_FORMAT', DateFormat::HyphenSeparatedYYYYMMDD->value),
+        'default_time_format'     => env('LOCALIZATION_DEFAULT_TIME_FORMAT', TimeFormat::TwentyFourHours->value),
         'default_interval_format' => env('LOCALIZATION_DEFAULT_INTERVAL_FORMAT', IntervalFormat::HoursMinutes->value),
     ],
 

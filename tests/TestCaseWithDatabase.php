@@ -12,27 +12,60 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Jetstream;
+use LogicException;
 
 abstract class TestCaseWithDatabase extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * @param  array<string>  $permissions
+     * @return object{user: User, organization: Organization, member: Member, owner: User, ownerMember: Member}
+     */
+    public function createUserWithRole(Role $role, bool $employeesCanSeeBillableRates = false): object
+    {
+        $owner        = User::factory()->create();
+        $organization = Organization::factory()->withOwner($owner)->create([
+            'employees_can_see_billable_rates' => $employeesCanSeeBillableRates,
+        ]);
+        $ownerMember = Member::factory()->forUser($owner)->forOrganization($organization)->role(Role::Owner)->create();
+        $owner->currentOrganization()->associate($organization);
+        $owner->save();
+
+        if ($role === Role::Owner) {
+            $user   = $owner;
+            $member = $ownerMember;
+        } else {
+            $user   = User::factory()->create();
+            $member = Member::factory()->forUser($user)->forOrganization($organization)->role($role)->create();
+            $user->currentOrganization()->associate($organization);
+        }
+
+        return (object) [
+            'user'         => $user,
+            'organization' => $organization,
+            'member'       => $member,
+            'owner'        => $owner,
+            'ownerMember'  => $ownerMember,
+        ];
+    }
+
+    /**
+     * @param array<string> $permissions
+     *
      * @return object{user: User, organization: Organization, member: Member, owner: User, ownerMember: Member}
      */
     protected function createUserWithPermission(array $permissions = [], bool $isOwner = false): object
     {
-        $roleName = 'custom-test-'.Str::uuid();
+        $roleName = 'custom-test-' . Str::uuid();
         Jetstream::role($roleName, 'Custom Test', $permissions)
             ->description('Role custom for testing');
         $user = User::factory()->create();
         if ($isOwner) {
             $organization = Organization::factory()->withOwner($user)->create();
         } else {
-            $owner = User::factory()->create();
+            $owner        = User::factory()->create();
             $organization = Organization::factory()->withOwner($owner)->create();
-            $ownerMember = Member::factory()->forUser($owner)->forOrganization($organization)->create([
+            $ownerMember  = Member::factory()->forUser($owner)->forOrganization($organization)->create([
                 'role' => Role::Owner->value,
             ]);
             $owner->currentOrganization()->associate($organization);
@@ -45,42 +78,11 @@ abstract class TestCaseWithDatabase extends TestCase
         $user->save();
 
         return (object) [
-            'user' => $user,
+            'user'         => $user,
             'organization' => $organization,
-            'member' => $member,
-            'owner' => $isOwner ? $user : $owner,
-            'ownerMember' => $isOwner ? $member : $ownerMember,
-        ];
-    }
-
-    /**
-     * @return object{user: User, organization: Organization, member: Member, owner: User, ownerMember: Member}
-     */
-    public function createUserWithRole(Role $role, bool $employeesCanSeeBillableRates = false): object
-    {
-        $owner = User::factory()->create();
-        $organization = Organization::factory()->withOwner($owner)->create([
-            'employees_can_see_billable_rates' => $employeesCanSeeBillableRates,
-        ]);
-        $ownerMember = Member::factory()->forUser($owner)->forOrganization($organization)->role(Role::Owner)->create();
-        $owner->currentOrganization()->associate($organization);
-        $owner->save();
-
-        if ($role === Role::Owner) {
-            $user = $owner;
-            $member = $ownerMember;
-        } else {
-            $user = User::factory()->create();
-            $member = Member::factory()->forUser($user)->forOrganization($organization)->role($role)->create();
-            $user->currentOrganization()->associate($organization);
-        }
-
-        return (object) [
-            'user' => $user,
-            'organization' => $organization,
-            'member' => $member,
-            'owner' => $owner,
-            'ownerMember' => $ownerMember,
+            'member'       => $member,
+            'owner'        => $isOwner ? $user : $owner,
+            'ownerMember'  => $isOwner ? $member : $ownerMember,
         ];
     }
 
@@ -92,8 +94,8 @@ abstract class TestCaseWithDatabase extends TestCase
 
     protected function getQueryLog(): array
     {
-        if (! DB::logging()) {
-            throw new \LogicException('Query log is not enabled. Call enableQueryLog() before calling getQueryLog()');
+        if ( ! DB::logging()) {
+            throw new LogicException('Query log is not enabled. Call enableQueryLog() before calling getQueryLog()');
         }
 
         return DB::getQueryLog();

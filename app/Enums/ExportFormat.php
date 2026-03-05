@@ -8,28 +8,28 @@ use Maatwebsite\Excel\Excel;
 
 enum ExportFormat: string
 {
-    case CSV = 'csv';
-    case PDF = 'pdf';
+    case CSV  = 'csv';
+    case PDF  = 'pdf';
     case XLSX = 'xlsx';
-    case ODS = 'ods';
+    case ODS  = 'ods';
 
     public function getFileExtension(): string
     {
         return match ($this) {
-            self::CSV => 'csv',
-            self::PDF => 'pdf',
+            self::CSV  => 'csv',
+            self::PDF  => 'pdf',
             self::XLSX => 'xlsx',
-            self::ODS => 'ods',
+            self::ODS  => 'ods',
         };
     }
 
     public function getExportPackageType(): string
     {
         return match ($this) {
-            self::CSV => Excel::CSV,
-            self::PDF => Excel::MPDF,
+            self::CSV  => Excel::CSV,
+            self::PDF  => Excel::MPDF,
             self::XLSX => Excel::XLSX,
-            self::ODS => Excel::ODS,
+            self::ODS  => Excel::ODS,
         };
     }
 }

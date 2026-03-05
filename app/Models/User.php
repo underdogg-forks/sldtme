@@ -33,32 +33,32 @@ use Laravel\Passport\HasApiTokens;
 use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
 /**
- * @property string $id
- * @property string $name
- * @property string $email
- * @property Carbon|null $email_verified_at
- * @property string|null $password
- * @property string|null $two_factor_secret
- * @property string $timezone
- * @property bool $is_placeholder
- * @property Weekday $week_start
- * @property string|null $profile_photo_path
- * @property-read Organization|null $currentOrganization
- * @property-read Organization|null $currentTeam
- * @property-read string $profile_photo_url
- * @property-read Collection<int, Token> $tokens
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property string|null $current_team_id
+ * @property string                        $id
+ * @property string                        $name
+ * @property string                        $email
+ * @property Carbon|null                   $email_verified_at
+ * @property string|null                   $password
+ * @property string|null                   $two_factor_secret
+ * @property string                        $timezone
+ * @property bool                          $is_placeholder
+ * @property Weekday                       $week_start
+ * @property string|null                   $profile_photo_path
+ * @property Organization|null             $currentOrganization
+ * @property Organization|null             $currentTeam
+ * @property string                        $profile_photo_url
+ * @property Collection<int, Token>        $tokens
+ * @property Carbon|null                   $created_at
+ * @property Carbon|null                   $updated_at
+ * @property string|null                   $current_team_id
  * @property Collection<int, Organization> $organizations
- * @property Collection<int, TimeEntry> $timeEntries
- * @property Member $membership
+ * @property Collection<int, TimeEntry>    $timeEntries
+ * @property Member                        $membership
  *
- * @method HasMany<Organization, $this> ownedTeams()
- * @method static UserFactory factory()
- * @method static Builder<User> query()
- * @method Builder<User> belongsToOrganization(Organization $organization)
- * @method Builder<User> active()
+ * @method        HasMany<Organization, $this> ownedTeams()
+ * @method static UserFactory                  factory()
+ * @method static Builder<User>                query()
+ * @method        Builder<User>                belongsToOrganization(Organization $organization)
+ * @method        Builder<User>                active()
  */
 class User extends Authenticatable implements AuditableContract, FilamentUser, MustVerifyEmail, OAuthenticatable
 {
@@ -103,12 +103,12 @@ class User extends Authenticatable implements AuditableContract, FilamentUser, M
      * @var array<string, string>
      */
     protected $casts = [
-        'name' => 'string',
-        'email' => 'string',
+        'name'              => 'string',
+        'email'             => 'string',
         'email_verified_at' => 'datetime',
-        'is_admin' => 'boolean',
-        'is_placeholder' => 'boolean',
-        'week_start' => Weekday::class,
+        'is_admin'          => 'boolean',
+        'is_placeholder'    => 'boolean',
+        'week_start'        => Weekday::class,
     ];
 
     /**
@@ -119,20 +119,6 @@ class User extends Authenticatable implements AuditableContract, FilamentUser, M
     protected $attributes = [
         'week_start' => Weekday::Monday,
     ];
-
-    /**
-     * Get the URL to the user's profile photo.
-     *
-     * @return Attribute<string, never>
-     */
-    protected function profilePhotoUrl(): Attribute
-    {
-        return Attribute::get(function (): string {
-            return $this->profile_photo_path
-                ? Storage::disk($this->profilePhotoDisk())->url($this->profile_photo_path)
-                : $this->defaultProfilePhotoUrl();
-        });
-    }
 
     public function canAccessPanel(Panel $panel): bool
     {
@@ -200,7 +186,7 @@ class User extends Authenticatable implements AuditableContract, FilamentUser, M
     }
 
     /**
-     * @param  Builder<User>  $builder
+     * @param Builder<User> $builder
      */
     public function scopeActive(Builder $builder): void
     {
@@ -208,17 +194,32 @@ class User extends Authenticatable implements AuditableContract, FilamentUser, M
     }
 
     /**
-     * @param  Builder<User>  $builder
+     * @param Builder<User> $builder
+     *
      * @return Builder<User>
      */
     public function scopeBelongsToOrganization(Builder $builder, Organization $organization): Builder
     {
         return $builder->where(function (Builder $builder) use ($organization): Builder {
-            return $builder->whereHas('organizations', function (Builder $query) use ($organization): void {
+            return $builder->whereHas('organizations', static function (Builder $query) use ($organization): void {
                 $query->whereKey($organization->getKey());
-            })->orWhereHas('ownedTeams', function (Builder $query) use ($organization): void {
+            })->orWhereHas('ownedTeams', static function (Builder $query) use ($organization): void {
                 $query->whereKey($organization->getKey());
             });
+        });
+    }
+
+    /**
+     * Get the URL to the user's profile photo.
+     *
+     * @return Attribute<string, never>
+     */
+    protected function profilePhotoUrl(): Attribute
+    {
+        return Attribute::get(function (): string {
+            return $this->profile_photo_path
+                ? Storage::disk($this->profilePhotoDisk())->url($this->profile_photo_path)
+                : $this->defaultProfilePhotoUrl();
         });
     }
 }

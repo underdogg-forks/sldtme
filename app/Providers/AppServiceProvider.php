@@ -37,10 +37,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
-    {
-        //
-    }
+    public function register(): void {}
 
     /**
      * Bootstrap any application services.
@@ -53,21 +50,21 @@ class AppServiceProvider extends ServiceProvider
         }
 
         // Eloquent
-        Model::preventLazyLoading(! $this->app->isProduction());
-        Model::preventSilentlyDiscardingAttributes(! $this->app->isProduction());
-        Model::preventAccessingMissingAttributes(! $this->app->isProduction());
+        Model::preventLazyLoading( ! $this->app->isProduction());
+        Model::preventSilentlyDiscardingAttributes( ! $this->app->isProduction());
+        Model::preventAccessingMissingAttributes( ! $this->app->isProduction());
         Relation::enforceMorphMap([
-            'client' => Client::class,
-            'failed-job' => FailedJob::class,
-            'membership' => Member::class,
-            'organization' => Organization::class,
+            'client'                  => Client::class,
+            'failed-job'              => FailedJob::class,
+            'membership'              => Member::class,
+            'organization'            => Organization::class,
             'organization-invitation' => OrganizationInvitation::class,
-            'project' => Project::class,
-            'project-member' => ProjectMember::class,
-            'tag' => Tag::class,
-            'task' => Task::class,
-            'time-entry' => TimeEntry::class,
-            'user' => User::class,
+            'project'                 => Project::class,
+            'project-member'          => ProjectMember::class,
+            'tag'                     => Tag::class,
+            'task'                    => Task::class,
+            'time-entry'              => TimeEntry::class,
+            'user'                    => User::class,
         ]);
         Model::unguard();
 
@@ -83,15 +80,15 @@ class AppServiceProvider extends ServiceProvider
         Scramble::extendOpenApi(function (OpenApi $openApi): void {
             $openApi->secure(
                 SecurityScheme::oauth2()
-                    ->flow('authorizationCode', function (OAuthFlow $flow): void {
+                    ->flow('authorizationCode', static function (OAuthFlow $flow): void {
                         $flow
                             ->authorizationUrl('https://solidtime.test/oauth/authorize');
                     })
             );
         });
 
-        $this->app->scoped(PermissionStore::class, function (Application $app): PermissionStore {
-            return new PermissionStore;
+        $this->app->scoped(PermissionStore::class, static function (Application $app): PermissionStore {
+            return new PermissionStore();
         });
 
         // Extensions

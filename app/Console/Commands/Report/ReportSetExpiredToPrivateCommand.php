@@ -17,8 +17,8 @@ class ReportSetExpiredToPrivateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'report:set-expired-to-private '.
-        ' { --dry-run : Do not actually save anything to the database, just output what would happen }';
+    protected $signature = 'report:set-expired-to-private '
+        . ' { --dry-run : Do not actually save anything to the database, just output what would happen }';
 
     /**
      * The console command description.
@@ -42,25 +42,25 @@ class ReportSetExpiredToPrivateCommand extends Command
         Report::query()
             ->where('public_until', '<', Carbon::now())
             ->orderBy('created_at', 'asc')
-            ->chunk(500, function (Collection $reports) use ($dryRun, &$resetReports): void {
+            ->chunk(500, static function (Collection $reports) use ($dryRun, &$resetReports): void {
                 /** @var Collection<int, Report> $reports */
                 foreach ($reports as $report) {
                     $publicUntil = $report->public_until;
                     if ($publicUntil === null) {
                         throw new LogicException('public_until should not be null');
                     }
-                    $this->info('Make report "'.$report->name.'" ('.$report->getKey().') private, expired: '.
-                        $publicUntil->toIso8601ZuluString().' ('.$publicUntil->diffForHumans().')');
+                    $this->info('Make report "' . $report->name . '" (' . $report->getKey() . ') private, expired: '
+                        . $publicUntil->toIso8601ZuluString() . ' (' . $publicUntil->diffForHumans() . ')');
                     $resetReports++;
-                    if (! $dryRun) {
-                        $report->is_public = false;
+                    if ( ! $dryRun) {
+                        $report->is_public    = false;
                         $report->share_secret = null;
                         $report->save();
                     }
                 }
             });
 
-        $this->comment('Finished setting '.$resetReports.' expired reports to private...');
+        $this->comment('Finished setting ' . $resetReports . ' expired reports to private...');
 
         return self::SUCCESS;
     }

@@ -20,19 +20,19 @@ use Korridor\LaravelComputedAttributes\ComputedAttributes;
 use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
 /**
- * @property string $id
- * @property string $name
- * @property string $project_id
- * @property string $organization_id
- * @property Carbon|null $done_at
- * @property int|null $estimated_time
- * @property int $spent_time
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property-read Project $project
- * @property-read Organization $organization
- * @property-read Collection<int, TimeEntry> $timeEntries
- * @property-read bool $is_done
+ * @property string                     $id
+ * @property string                     $name
+ * @property string                     $project_id
+ * @property string                     $organization_id
+ * @property Carbon|null                $done_at
+ * @property int|null                   $estimated_time
+ * @property int                        $spent_time
+ * @property Carbon|null                $created_at
+ * @property Carbon|null                $updated_at
+ * @property Project                    $project
+ * @property Organization               $organization
+ * @property Collection<int, TimeEntry> $timeEntries
+ * @property bool                       $is_done
  *
  * @method static TaskFactory factory()
  */
@@ -52,9 +52,9 @@ class Task extends Model implements AuditableContract
      * @var array<string, string>
      */
     protected $casts = [
-        'name' => 'string',
+        'name'           => 'string',
         'estimated_time' => 'integer',
-        'done_at' => 'datetime',
+        'done_at'        => 'datetime',
     ];
 
     /**
@@ -80,22 +80,22 @@ class Task extends Model implements AuditableContract
     {
         if ($this->hasAttribute('spent_time_computed')) {
             return $this->attributes['spent_time_computed'] === null ? 0 : (int) $this->attributes['spent_time_computed'];
-        } else {
-            /** @var object{ spent_time: string } $result */
-            $result = $this->timeEntries()
-                ->whereNotNull('end')
-                ->selectRaw('sum(extract(epoch from ("end" - start))) as spent_time')
-                ->first();
-
-            return (int) $result->spent_time;
         }
+        /** @var object{ spent_time: string } $result */
+        $result = $this->timeEntries()
+            ->whereNotNull('end')
+            ->selectRaw('sum(extract(epoch from ("end" - start))) as spent_time')
+            ->first();
+
+        return (int) $result->spent_time;
     }
 
     /**
      * This scope will be applied during the computed property generation with artisan computed-attributes:generate.
      *
-     * @param  Builder<Task>  $builder
-     * @param  array<string>  $attributes  Attributes that will be generated.
+     * @param Builder<Task> $builder
+     * @param array<string> $attributes attributes that will be generated
+     *
      * @return Builder<Task>
      */
     public function scopeComputedAttributesGenerate(Builder $builder, array $attributes): Builder
@@ -110,8 +110,9 @@ class Task extends Model implements AuditableContract
     /**
      * This scope will be applied during the computed property validation with artisan computed-attributes:validate.
      *
-     * @param  Builder<Task>  $builder
-     * @param  array<string>  $attributes  Attributes that will be validated.
+     * @param Builder<Task> $builder
+     * @param array<string> $attributes attributes that will be validated
+     *
      * @return Builder<Task>
      */
     public function scopeComputedAttributesValidate(Builder $builder, array $attributes): Builder
@@ -144,13 +145,14 @@ class Task extends Model implements AuditableContract
     }
 
     /**
-     * @param  Builder<Task>  $builder
+     * @param Builder<Task> $builder
+     *
      * @return Builder<Task>
      */
     public function scopeVisibleByEmployee(Builder $builder, User $user): Builder
     {
-        return $builder->whereHas('project', function (Builder $builder) use ($user): Builder {
-            /** @var Builder<Project> $builder */
+        return $builder->whereHas('project', static function (Builder $builder) use ($user): Builder {
+            /* @var Builder<Project> $builder */
             return $builder->visibleByEmployee($user);
         });
     }

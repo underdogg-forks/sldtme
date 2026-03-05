@@ -19,6 +19,7 @@ use App\Models\TimeEntry;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
+use InvalidArgumentException;
 
 class UserService
 {
@@ -36,11 +37,11 @@ class UserService
         ?TimeFormat $timeFormat = null,
         bool $verifyEmail = false
     ): User {
-        $user = new User;
-        $user->name = $name;
-        $user->email = $email;
-        $user->password = Hash::make($password);
-        $user->timezone = $timezone;
+        $user             = new User();
+        $user->name       = $name;
+        $user->email      = $email;
+        $user->password   = Hash::make($password);
+        $user->timezone   = $timezone;
         $user->week_start = $weekStart;
         if ($verifyEmail) {
             $user->email_verified_at = Carbon::now();
@@ -109,7 +110,7 @@ class UserService
 
     public function getOrganizationNameForUserName(string $username): string
     {
-        return explode(' ', $username, 2)[0]."'s Organization";
+        return explode(' ', $username, 2)[0] . "'s Organization";
     }
 
     public function makeSureUserHasCurrentOrganization(User $user): void
@@ -140,7 +141,7 @@ class UserService
             ->whereBelongsTo($newOwner, 'user')
             ->first();
         if ($userMembership === null) {
-            throw new \InvalidArgumentException('User is not a member of the organization');
+            throw new InvalidArgumentException('User is not a member of the organization');
         }
         $userMembership->role = Role::Owner->value;
         $userMembership->save();

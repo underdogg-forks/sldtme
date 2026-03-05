@@ -19,7 +19,7 @@ class TaskModelTest extends ModelTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $task = Task::factory()->forOrganization($organization)->create();
+        $task         = Task::factory()->forOrganization($organization)->create();
 
         // Act
         $task->refresh();
@@ -34,7 +34,7 @@ class TaskModelTest extends ModelTestAbstract
     {
         // Arrange
         $project = Project::factory()->create();
-        $task = Task::factory()->forProject($project)->create();
+        $task    = Task::factory()->forProject($project)->create();
 
         // Act
         $task->refresh();
@@ -48,9 +48,9 @@ class TaskModelTest extends ModelTestAbstract
     public function test_it_has_many_time_entries(): void
     {
         // Arrange
-        $otherTask = Task::factory()->create();
-        $task = Task::factory()->create();
-        $timeEntries = TimeEntry::factory()->forTask($task)->count(3)->create();
+        $otherTask        = Task::factory()->create();
+        $task             = Task::factory()->create();
+        $timeEntries      = TimeEntry::factory()->forTask($task)->count(3)->create();
         $otherTimeEntries = TimeEntry::factory()->forTask($otherTask)->count(2)->create();
 
         // Act
@@ -64,18 +64,18 @@ class TaskModelTest extends ModelTestAbstract
     public function test_scope_visible_by_user_filters_so_that_only_tasks_of_public_projects_or_projects_where_the_user_is_member_are_shown(): void
     {
         // Arrange
-        $member = Member::factory()->create();
-        $projectPrivate = Project::factory()->isPrivate()->create();
-        $projectPublic = Project::factory()->isPublic()->create();
+        $member                  = Member::factory()->create();
+        $projectPrivate          = Project::factory()->isPrivate()->create();
+        $projectPublic           = Project::factory()->isPublic()->create();
         $projectPrivateButMember = Project::factory()->isPrivate()->create();
         ProjectMember::factory()->forProject($projectPrivateButMember)->forMember($member)->create();
-        $taskPrivate = Task::factory()->forProject($projectPrivate)->create();
-        $taskPublic = Task::factory()->forProject($projectPublic)->create();
+        $taskPrivate          = Task::factory()->forProject($projectPrivate)->create();
+        $taskPublic           = Task::factory()->forProject($projectPublic)->create();
         $taskPrivateButMember = Task::factory()->forProject($projectPrivateButMember)->create();
 
         // Act
         $tasksVisible = Task::query()->visibleByEmployee($member->user)->get();
-        $allTasks = Task::query()->get();
+        $allTasks     = Task::query()->get();
 
         // Assert
         $this->assertEqualsIdsOfEloquentCollection([
@@ -116,7 +116,7 @@ class TaskModelTest extends ModelTestAbstract
     public function test_task_can_store_big_amounts_of_spent_time(): void
     {
         // Arrange
-        $task = Task::factory()->create();
+        $task      = Task::factory()->create();
         $spentTime = 100 * 365 * 24 * 60 * 60; // 100 years in seconds
 
         // Act

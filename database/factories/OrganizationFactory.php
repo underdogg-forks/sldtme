@@ -27,17 +27,17 @@ class OrganizationFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->company(),
-            'currency' => app(CurrencyService::class)->getRandomCurrencyCode(),
-            'billable_rate' => null,
-            'user_id' => User::factory(),
-            'personal_team' => true,
+            'name'                             => $this->faker->unique()->company(),
+            'currency'                         => app(CurrencyService::class)->getRandomCurrencyCode(),
+            'billable_rate'                    => null,
+            'user_id'                          => User::factory(),
+            'personal_team'                    => true,
             'employees_can_see_billable_rates' => false,
-            'number_format' => $this->faker->randomElement(NumberFormat::values()),
-            'currency_format' => $this->faker->randomElement(CurrencyFormat::values()),
-            'date_format' => $this->faker->randomElement(DateFormat::values()),
-            'interval_format' => $this->faker->randomElement(IntervalFormat::values()),
-            'time_format' => $this->faker->randomElement(TimeFormat::values()),
+            'number_format'                    => $this->faker->randomElement(NumberFormat::values()),
+            'currency_format'                  => $this->faker->randomElement(CurrencyFormat::values()),
+            'date_format'                      => $this->faker->randomElement(DateFormat::values()),
+            'interval_format'                  => $this->faker->randomElement(IntervalFormat::values()),
+            'time_format'                      => $this->faker->randomElement(TimeFormat::values()),
         ];
     }
 

@@ -59,57 +59,57 @@ class DatabaseSeeder extends Seeder
         );
         */
 
-        $personalAccessClient = new PassportClient;
-        $personalAccessClient->id = config('passport.personal_access_client.id');
-        $personalAccessClient->secret = config('passport.personal_access_client.secret');
-        $personalAccessClient->name = 'API';
+        $personalAccessClient                = new PassportClient();
+        $personalAccessClient->id            = config('passport.personal_access_client.id');
+        $personalAccessClient->secret        = config('passport.personal_access_client.secret');
+        $personalAccessClient->name          = 'API';
         $personalAccessClient->redirect_uris = ['http://localhost'];
-        $personalAccessClient->revoked = false;
-        $personalAccessClient->provider = 'users';
-        $personalAccessClient->grant_types = ['personal_access'];
+        $personalAccessClient->revoked       = false;
+        $personalAccessClient->provider      = 'users';
+        $personalAccessClient->grant_types   = ['personal_access'];
         $personalAccessClient->save();
 
         $userWithMultipleOrganizations = User::factory()->withPersonalOrganization()->create([
-            'name' => 'Mister Overemployed',
+            'name'  => 'Mister Overemployed',
             'email' => 'overemployed@acme.test',
         ]);
 
         $userAcmeOwner = User::factory()->withPersonalOrganization()->create([
-            'name' => 'Acme Owner',
+            'name'  => 'Acme Owner',
             'email' => 'owner@acme.test',
         ]);
         $organizationAcme = Organization::factory()->withOwner($userAcmeOwner)->create([
-            'name' => 'ACME Corp',
+            'name'          => 'ACME Corp',
             'personal_team' => false,
-            'currency' => 'EUR',
+            'currency'      => 'EUR',
         ]);
         OrganizationInvitation::factory()->forOrganization($organizationAcme)->create([
             'email' => 'new.employee@example.com',
         ]);
         $userAcmeManager = User::factory()->withPersonalOrganization()->create([
-            'name' => 'Acme Manager',
+            'name'  => 'Acme Manager',
             'email' => 'test@example.com',
         ]);
         $userAcmeManager->createToken('Testing Token 1')->accessToken;
         $userAcmeManager->createToken('Testing Token 2')->accessToken;
         $userAcmeAdmin = User::factory()->withPersonalOrganization()->create([
-            'name' => 'Acme Admin',
+            'name'  => 'Acme Admin',
             'email' => 'admin@acme.test',
         ]);
         $userAcmeEmployee = User::factory()->withPersonalOrganization()->create([
-            'name' => 'Acme Employee',
+            'name'  => 'Acme Employee',
             'email' => 'max.mustermann@acme.test',
         ]);
         $userAcmePlaceholder = User::factory()->placeholder()->create([
-            'name' => 'Acme Placeholder',
-            'email' => 'old.employee@acme.test',
+            'name'     => 'Acme Placeholder',
+            'email'    => 'old.employee@acme.test',
             'password' => null,
         ]);
-        $userAcmeOwnerMember = Member::factory()->forUser($userAcmeOwner)->forOrganization($organizationAcme)->role(Role::Owner)->create();
-        $userAcmeManagerMember = Member::factory()->forUser($userAcmeManager)->forOrganization($organizationAcme)->role(Role::Manager)->create();
-        $userAcmeAdminMember = Member::factory()->forUser($userAcmeAdmin)->forOrganization($organizationAcme)->role(Role::Admin)->create();
-        $userAcmeEmployeeMember = Member::factory()->forUser($userAcmeEmployee)->forOrganization($organizationAcme)->role(Role::Employee)->create();
-        $userAcmePlaceholderMember = Member::factory()->forUser($userAcmePlaceholder)->forOrganization($organizationAcme)->role(Role::Placeholder)->create();
+        $userAcmeOwnerMember                     = Member::factory()->forUser($userAcmeOwner)->forOrganization($organizationAcme)->role(Role::Owner)->create();
+        $userAcmeManagerMember                   = Member::factory()->forUser($userAcmeManager)->forOrganization($organizationAcme)->role(Role::Manager)->create();
+        $userAcmeAdminMember                     = Member::factory()->forUser($userAcmeAdmin)->forOrganization($organizationAcme)->role(Role::Admin)->create();
+        $userAcmeEmployeeMember                  = Member::factory()->forUser($userAcmeEmployee)->forOrganization($organizationAcme)->role(Role::Employee)->create();
+        $userAcmePlaceholderMember               = Member::factory()->forUser($userAcmePlaceholder)->forOrganization($organizationAcme)->role(Role::Placeholder)->create();
         $userWithMultipleOrganizationsAcmeMember = Member::factory()->forUser($userWithMultipleOrganizations)->forOrganization($organizationAcme)->role(Role::Employee)->create();
         Tag::factory()->forOrganization($organizationAcme)->create([
             'name' => 'Code Review',
@@ -164,22 +164,22 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $rivalOwner = User::factory()->create([
-            'name' => 'Other Owner',
+            'name'  => 'Other Owner',
             'email' => 'owner@rival-company.test',
         ]);
         $organizationRival = Organization::factory()->withOwner($rivalOwner)->create([
-            'name' => 'Rival Corp',
+            'name'          => 'Rival Corp',
             'personal_team' => true,
-            'currency' => 'USD',
+            'currency'      => 'USD',
         ]);
         Member::factory()->forUser($rivalOwner)->forOrganization($organizationRival)->role(Role::Owner)->create();
         $userRivalManager = User::factory()->withPersonalOrganization()->create([
-            'name' => 'Other User',
+            'name'  => 'Other User',
             'email' => 'test@rival-company.test',
         ]);
-        $userRivalManagerMember = Member::factory()->forUser($userRivalManager)->forOrganization($organizationRival)->role(Role::Admin)->create();
+        $userRivalManagerMember                   = Member::factory()->forUser($userRivalManager)->forOrganization($organizationRival)->role(Role::Admin)->create();
         $userWithMultipleOrganizationsRivalMember = Member::factory()->forUser($userWithMultipleOrganizations)->forOrganization($organizationRival)->role(Role::Employee)->create();
-        $rivalClient = Client::factory()->forOrganization($organizationRival)->create([
+        $rivalClient                              = Client::factory()->forOrganization($organizationRival)->create([
             'name' => 'Scale Company',
         ]);
         $otherCompanyProject = Project::factory()->forOrganization($organizationRival)->forClient($rivalClient)->create([
@@ -204,10 +204,10 @@ class DatabaseSeeder extends Seeder
         DatabaseSeederBeforeDelete::dispatch();
 
         // Laravel Passport tables
-        DB::table((new RefreshToken)->getTable())->delete();
-        DB::table((new Token)->getTable())->delete();
-        DB::table((new AuthCode)->getTable())->delete();
-        DB::table((new PassportClient)->getTable())->delete();
+        DB::table((new RefreshToken())->getTable())->delete();
+        DB::table((new Token())->getTable())->delete();
+        DB::table((new AuthCode())->getTable())->delete();
+        DB::table((new PassportClient())->getTable())->delete();
 
         // Internal tables
         DB::table('cache')->delete();
@@ -217,20 +217,20 @@ class DatabaseSeeder extends Seeder
         DB::table('sessions')->delete();
 
         // Application tables
-        DB::table((new Audit)->getTable())->delete();
-        DB::table((new Report)->getTable())->delete();
-        DB::table((new TimeEntry)->getTable())->delete();
-        DB::table((new Task)->getTable())->delete();
-        DB::table((new Tag)->getTable())->delete();
-        DB::table((new ProjectMember)->getTable())->delete();
-        DB::table((new Project)->getTable())->delete();
-        DB::table((new Client)->getTable())->delete();
-        DB::table((new Member)->getTable())->delete();
-        DB::table((new OrganizationInvitation)->getTable())->delete();
-        DB::table((new User)->getTable())->update([
+        DB::table((new Audit())->getTable())->delete();
+        DB::table((new Report())->getTable())->delete();
+        DB::table((new TimeEntry())->getTable())->delete();
+        DB::table((new Task())->getTable())->delete();
+        DB::table((new Tag())->getTable())->delete();
+        DB::table((new ProjectMember())->getTable())->delete();
+        DB::table((new Project())->getTable())->delete();
+        DB::table((new Client())->getTable())->delete();
+        DB::table((new Member())->getTable())->delete();
+        DB::table((new OrganizationInvitation())->getTable())->delete();
+        DB::table((new User())->getTable())->update([
             'current_team_id' => null,
         ]);
-        DB::table((new Organization)->getTable())->delete();
-        DB::table((new User)->getTable())->delete();
+        DB::table((new Organization())->getTable())->delete();
+        DB::table((new User())->getTable())->delete();
     }
 }

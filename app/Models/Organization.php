@@ -28,29 +28,29 @@ use Laravel\Jetstream\Team as JetstreamTeam;
 use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
 /**
- * @property string $id
- * @property string $name
- * @property bool $personal_team
- * @property string $currency
- * @property int|null $billable_rate
- * @property string $user_id
- * @property bool $employees_can_see_billable_rates
- * @property bool $employees_can_manage_tasks
- * @property User $owner
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Collection<int, User> $users
- * @property Collection<int, User> $realUsers
- * @property-read Collection<int, OrganizationInvitation> $teamInvitations
- * @property Member $membership
- * @property NumberFormat $number_format
- * @property CurrencyFormat $currency_format
- * @property DateFormat $date_format
- * @property IntervalFormat $interval_format
- * @property TimeFormat $time_format
+ * @property string                                  $id
+ * @property string                                  $name
+ * @property bool                                    $personal_team
+ * @property string                                  $currency
+ * @property int|null                                $billable_rate
+ * @property string                                  $user_id
+ * @property bool                                    $employees_can_see_billable_rates
+ * @property bool                                    $employees_can_manage_tasks
+ * @property User                                    $owner
+ * @property Carbon|null                             $created_at
+ * @property Carbon|null                             $updated_at
+ * @property Collection<int, User>                   $users
+ * @property Collection<int, User>                   $realUsers
+ * @property Collection<int, OrganizationInvitation> $teamInvitations
+ * @property Member                                  $membership
+ * @property NumberFormat                            $number_format
+ * @property CurrencyFormat                          $currency_format
+ * @property DateFormat                              $date_format
+ * @property IntervalFormat                          $interval_format
+ * @property TimeFormat                              $time_format
  *
- * @method HasMany<OrganizationInvitation, $this> teamInvitations()
- * @method static OrganizationFactory factory()
+ * @method        HasMany<OrganizationInvitation, $this> teamInvitations()
+ * @method static OrganizationFactory                    factory()
  */
 class Organization extends JetstreamTeam implements AuditableContract
 {
@@ -67,17 +67,17 @@ class Organization extends JetstreamTeam implements AuditableContract
      * @var array<string, string>
      */
     protected $casts = [
-        'name' => 'string',
-        'personal_team' => 'boolean',
-        'currency' => 'string',
+        'name'                             => 'string',
+        'personal_team'                    => 'boolean',
+        'currency'                         => 'string',
         'employees_can_see_billable_rates' => 'boolean',
-        'employees_can_manage_tasks' => 'boolean',
+        'employees_can_manage_tasks'       => 'boolean',
         'prevent_overlapping_time_entries' => 'boolean',
-        'number_format' => NumberFormat::class,
-        'currency_format' => CurrencyFormat::class,
-        'date_format' => DateFormat::class,
-        'interval_format' => IntervalFormat::class,
-        'time_format' => TimeFormat::class,
+        'number_format'                    => NumberFormat::class,
+        'currency_format'                  => CurrencyFormat::class,
+        'date_format'                      => DateFormat::class,
+        'interval_format'                  => IntervalFormat::class,
+        'time_format'                      => TimeFormat::class,
     ];
 
     /**
@@ -174,13 +174,14 @@ class Organization extends JetstreamTeam implements AuditableContract
      * This method prevents an unhandled exception when the ID is not a UUID.
      * Normally this can be fixed with a route pattern, but Jetstream does not use route model binding.
      *
-     * @param  array<string>  $columns
+     * @param array<string> $columns
      */
     public function findOrFail(string $id, array $columns = ['*']): \Laravel\Jetstream\Team
     {
-        if (! Str::isUuid($id)) {
-            throw (new ModelNotFoundException)->setModel(
-                self::class, $id
+        if ( ! Str::isUuid($id)) {
+            throw (new ModelNotFoundException())->setModel(
+                self::class,
+                $id
             );
         }
 

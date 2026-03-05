@@ -23,10 +23,10 @@ class MemberFactory extends Factory
     public function definition(): array
     {
         return [
-            'billable_rate' => null,
-            'role' => Role::Employee,
+            'billable_rate'   => null,
+            'role'            => Role::Employee,
             'organization_id' => Organization::factory(),
-            'user_id' => User::factory(),
+            'user_id'         => User::factory(),
         ];
     }
 

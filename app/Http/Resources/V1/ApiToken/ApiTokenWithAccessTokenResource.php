@@ -9,7 +9,7 @@ use App\Models\Passport\Token;
 use Illuminate\Http\Request;
 
 /**
- * @property-read Token $resource
+ * @property Token $resource
  */
 class ApiTokenWithAccessTokenResource extends BaseResource
 {
@@ -29,20 +29,20 @@ class ApiTokenWithAccessTokenResource extends BaseResource
     public function toArray(Request $request): array
     {
         return [
-            /** @var string $id ID of the API token, this ID is NOT a UUID */
+            /* @var string $id ID of the API token, this ID is NOT a UUID */
             'id' => $this->resource->id,
-            /** @var string $name Name of the API token */
+            /* @var string $name Name of the API token */
             'name' => $this->resource->name,
-            /** @var bool $revoked Whether the API token is revoked */
+            /* @var bool $revoked Whether the API token is revoked */
             'revoked' => $this->resource->revoked,
-            /** @var array<string> $scopes List of scopes that the API token has */
+            /* @var array<string> $scopes List of scopes that the API token has */
             'scopes' => $this->resource->scopes,
-            /** @var string $created_at When the API token was created (ISO 8601 format, UTC timezone, example: 2024-02-26T17:17:17Z) */
+            /* @var string $created_at When the API token was created (ISO 8601 format, UTC timezone, example: 2024-02-26T17:17:17Z) */
             'created_at' => $this->formatDateTime($this->resource->created_at),
-            /** @var string|null $expires_at At what time the API token expires (ISO 8601 format, UTC timezone, example: 2024-02-26T17:17:17Z) */
+            /* @var string|null $expires_at At what time the API token expires (ISO 8601 format, UTC timezone, example: 2024-02-26T17:17:17Z) */
             'expires_at' => $this->formatDateTime($this->resource->expires_at),
             // Additional fields
-            /** @var string $access_token Access token that can be used to authenticate requests */
+            /* @var string $access_token Access token that can be used to authenticate requests */
             'access_token' => $this->accessToken,
         ];
     }

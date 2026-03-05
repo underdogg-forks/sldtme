@@ -19,11 +19,7 @@ class OrganizationPolicy
      */
     public function viewAny(User $user): bool
     {
-        if (Filament::isServing()) {
-            return true;
-        }
-
-        return false;
+        return (bool) (Filament::isServing());
     }
 
     /**
@@ -79,12 +75,9 @@ class OrganizationPolicy
      */
     public function updateTeamMember(User $user, Organization $organization): bool
     {
-        if (Filament::isServing()) {
-            return true;
-        }
+        return (bool) (Filament::isServing());
 
         // Note: since this policy is only used for jetstream endpoints, we can return false here
-        return false;
     }
 
     /**
@@ -92,12 +85,9 @@ class OrganizationPolicy
      */
     public function removeTeamMember(User $user, Organization $organization): bool
     {
-        if (Filament::isServing()) {
-            return true;
-        }
+        return (bool) (Filament::isServing());
 
         // Note: since this policy is only used for jetstream endpoints that are no longer in use, we can return false here
-        return false;
     }
 
     /**

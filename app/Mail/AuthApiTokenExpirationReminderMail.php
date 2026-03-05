@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\URL;
 
 class AuthApiTokenExpirationReminderMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public Token $token;
 
@@ -27,7 +28,7 @@ class AuthApiTokenExpirationReminderMail extends Mailable
     public function __construct(Token $token, User $user)
     {
         $this->token = $token;
-        $this->user = $user;
+        $this->user  = $user;
     }
 
     /**
@@ -37,7 +38,7 @@ class AuthApiTokenExpirationReminderMail extends Mailable
     {
         return $this->markdown('emails.auth-api-expiration-reminder', [
             'profileUrl' => URL::to('user/profile'),
-            'tokenName' => $this->token->name,
+            'tokenName'  => $this->token->name,
         ])
             ->subject(__('Your API token will expire in 7 days!'));
     }

@@ -15,6 +15,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Log;
+use Throwable;
 
 class ApiService
 {
@@ -26,23 +27,22 @@ class ApiService
             $response = Http::asJson()
                 ->timeout(3)
                 ->connectTimeout(2)
-                ->post(self::API_URL.'/ping/version', [
+                ->post(self::API_URL . '/ping/version', [
                     'version' => config('app.version'),
-                    'build' => config('app.build'),
-                    'url' => config('app.url'),
+                    'build'   => config('app.build'),
+                    'url'     => config('app.url'),
                 ]);
 
             if ($response->status() === 200 && isset($response->json()['version']) && is_string($response->json()['version'])) {
                 return $response->json()['version'];
-            } else {
-                Log::warning('Failed to check for update', [
-                    'status' => $response->status(),
-                    'body' => $response->body(),
-                ]);
-
-                return null;
             }
-        } catch (\Throwable $e) {
+            Log::warning('Failed to check for update', [
+                'status' => $response->status(),
+                'body'   => $response->body(),
+            ]);
+
+            return null;
+        } catch (Throwable $e) {
             Log::warning('Failed to check for update', [
                 'message' => $e->getMessage(),
             ]);
@@ -57,31 +57,30 @@ class ApiService
             $response = Http::asJson()
                 ->timeout(3)
                 ->connectTimeout(2)
-                ->post(self::API_URL.'/ping/telemetry', [
+                ->post(self::API_URL . '/ping/telemetry', [
                     'version' => config('app.version'),
-                    'build' => config('app.build'),
-                    'url' => config('app.url'),
+                    'build'   => config('app.build'),
+                    'url'     => config('app.url'),
                     // telemetry data
-                    'user_count' => User::count(),
-                    'organization_count' => Organization::count(),
-                    'audit_count' => Audit::count(),
-                    'project_count' => Project::count(),
+                    'user_count'           => User::count(),
+                    'organization_count'   => Organization::count(),
+                    'audit_count'          => Audit::count(),
+                    'project_count'        => Project::count(),
                     'project_member_count' => ProjectMember::count(),
-                    'client_count' => Client::count(),
-                    'task_count' => Task::count(),
-                    'time_entry_count' => TimeEntry::count(),
+                    'client_count'         => Client::count(),
+                    'task_count'           => Task::count(),
+                    'time_entry_count'     => TimeEntry::count(),
                 ]);
 
             if ($response->status() === 200) {
                 return true;
-            } else {
-                Log::warning('Failed send telemetry data', [
-                    'status' => $response->status(),
-                    'body' => $response->body(),
-                ]);
-
-                return false;
             }
+            Log::warning('Failed send telemetry data', [
+                'status' => $response->status(),
+                'body'   => $response->body(),
+            ]);
+
+            return false;
         } catch (Exception $e) {
             Log::warning('Failed send telemetry data', [
                 'message' => $e->getMessage(),

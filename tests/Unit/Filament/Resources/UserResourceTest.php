@@ -85,12 +85,12 @@ class UserResourceTest extends FilamentTestCase
         // Act
         $response = Livewire::test(UserResource\Pages\CreateUser::class)
             ->fillForm([
-                'name' => $userFake->name,
-                'email' => $userFake->email,
+                'name'            => $userFake->name,
+                'email'           => $userFake->email,
                 'password_create' => 'password',
-                'timezone' => $userFake->timezone,
-                'week_start' => $userFake->week_start->value,
-                'currency' => 'EUR',
+                'timezone'        => $userFake->timezone,
+                'week_start'      => $userFake->week_start->value,
+                'currency'        => 'EUR',
             ])
             ->call('create')
             ->assertHasNoFormErrors();
@@ -113,7 +113,7 @@ class UserResourceTest extends FilamentTestCase
     {
         // Arrange
         $user = $this->createUserWithPermission();
-        $this->mock(DeletionService::class, function (MockInterface $mock) use ($user): void {
+        $this->mock(DeletionService::class, static function (MockInterface $mock) use ($user): void {
             $mock->shouldReceive('deleteUser')
                 ->withArgs(fn (User $userArg) => $userArg->is($user->user))
                 ->once();
@@ -132,10 +132,10 @@ class UserResourceTest extends FilamentTestCase
     {
         // Arrange
         $user = $this->createUserWithPermission();
-        $this->mock(DeletionService::class, function (MockInterface $mock) use ($user): void {
+        $this->mock(DeletionService::class, static function (MockInterface $mock) use ($user): void {
             $mock->shouldReceive('deleteUser')
                 ->withArgs(fn (User $userArg) => $userArg->is($user->user))
-                ->andThrow(new CanNotDeleteUserWhoIsOwnerOfOrganizationWithMultipleMembers);
+                ->andThrow(new CanNotDeleteUserWhoIsOwnerOfOrganizationWithMultipleMembers());
         });
 
         // Act
@@ -150,14 +150,14 @@ class UserResourceTest extends FilamentTestCase
     public function test_can_list_related_organizations(): void
     {
         // Arrange
-        $user = User::factory()->create();
+        $user              = User::factory()->create();
         $ownedOrganization = Organization::factory()->withOwner($user)->create();
-        $organization = Organization::factory()->create();
+        $organization      = Organization::factory()->create();
 
         // Act
         $response = Livewire::test(UserResource\RelationManagers\OrganizationsRelationManager::class, [
             'ownerRecord' => $user,
-            'pageClass' => UserResource\Pages\EditUser::class,
+            'pageClass'   => UserResource\Pages\EditUser::class,
         ]);
 
         // Assert
@@ -169,14 +169,14 @@ class UserResourceTest extends FilamentTestCase
     public function test_can_list_related_owned_organizations(): void
     {
         // Arrange
-        $user = User::factory()->create();
+        $user              = User::factory()->create();
         $ownedOrganization = Organization::factory()->withOwner($user)->create();
-        $organization = Organization::factory()->create();
+        $organization      = Organization::factory()->create();
 
         // Act
         $response = Livewire::test(UserResource\RelationManagers\OwnedOrganizationsRelationManager::class, [
             'ownerRecord' => $user,
-            'pageClass' => UserResource\Pages\EditUser::class,
+            'pageClass'   => UserResource\Pages\EditUser::class,
         ]);
 
         // Assert

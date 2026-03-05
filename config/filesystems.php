@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Filesystem Disk
@@ -35,41 +34,39 @@ return [
     */
 
     'disks' => [
-
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app'),
-            'serve' => true,
-            'throw' => true,
+            'root'   => storage_path('app'),
+            'serve'  => true,
+            'throw'  => true,
         ],
 
         'public' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'driver'     => 'local',
+            'root'       => storage_path('app/public'),
+            'url'        => env('APP_URL') . '/storage',
             'visibility' => 'public',
-            'throw' => true,
+            'throw'      => true,
         ],
 
         's3' => [
-            'driver' => 's3',
-            'key' => env('S3_ACCESS_KEY_ID'),
-            'secret' => env('S3_SECRET_ACCESS_KEY'),
-            'region' => env('S3_REGION'),
-            'bucket' => env('S3_BUCKET'),
-            'url' => env('S3_URL'),
-            'temporary_url' => env('S3_URL'),
-            'endpoint' => env('S3_ENDPOINT'),
+            'driver'                  => 's3',
+            'key'                     => env('S3_ACCESS_KEY_ID'),
+            'secret'                  => env('S3_SECRET_ACCESS_KEY'),
+            'region'                  => env('S3_REGION'),
+            'bucket'                  => env('S3_BUCKET'),
+            'url'                     => env('S3_URL'),
+            'temporary_url'           => env('S3_URL'),
+            'endpoint'                => env('S3_ENDPOINT'),
             'use_path_style_endpoint' => env('S3_USE_PATH_STYLE_ENDPOINT', false),
-            'throw' => true,
+            'throw'                   => true,
         ],
 
         'testfiles' => [
             'driver' => 'local',
-            'root' => resource_path('testfiles'),
-            'throw' => true,
+            'root'   => resource_path('testfiles'),
+            'throw'  => true,
         ],
-
     ],
 
     /*
@@ -86,5 +83,4 @@ return [
     'links' => [
         public_path('storage') => storage_path('app/public'),
     ],
-
 ];

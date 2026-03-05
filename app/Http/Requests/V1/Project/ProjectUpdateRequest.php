@@ -17,7 +17,7 @@ use Korridor\LaravelModelValidationRules\Rules\UniqueEloquent;
 
 /**
  * @property Organization $organization Organization from model binding
- * @property Project|null $project Project from model binding
+ * @property Project|null $project      Project from model binding
  */
 class ProjectUpdateRequest extends BaseFormRequest
 {
@@ -33,10 +33,10 @@ class ProjectUpdateRequest extends BaseFormRequest
                 'required',
                 'string',
                 'max:255',
-                UniqueEloquent::make(Project::class, 'name', function (Builder $builder): Builder {
+                UniqueEloquent::make(Project::class, 'name', static function (Builder $builder): Builder {
                     /** @var Builder<Project> $builder */
                     $clientId = $this->input('client_id');
-                    if (! is_string($clientId) || ! Str::isUuid($clientId)) {
+                    if ( ! is_string($clientId) || ! Str::isUuid($clientId)) {
                         $clientId = null;
                     }
 
@@ -48,7 +48,7 @@ class ProjectUpdateRequest extends BaseFormRequest
                 'required',
                 'string',
                 'max:255',
-                new ColorRule,
+                new ColorRule(),
             ],
             'is_billable' => [
                 'required',
@@ -63,14 +63,15 @@ class ProjectUpdateRequest extends BaseFormRequest
             'client_id' => [
                 'present',
                 'nullable',
-                ExistsEloquent::make(Client::class, null, function (Builder $builder): Builder {
-                    /** @var Builder<Client> $builder */
+                ExistsEloquent::make(Client::class, null, static function (Builder $builder): Builder {
+                    /* @var Builder<Client> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization');
                 })->uuid(),
             ],
-            'billable_rate' => array_merge([
-                'nullable',
-            ],
+            'billable_rate' => array_merge(
+                [
+                    'nullable',
+                ],
                 $this->moneyRules()
             ),
             // Estimated time in seconds

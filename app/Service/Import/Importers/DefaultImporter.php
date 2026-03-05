@@ -18,6 +18,7 @@ use App\Service\ColorService;
 use App\Service\Import\ImportDatabaseHelper;
 use App\Service\TimezoneService;
 use Illuminate\Database\Eloquent\Builder;
+use Override;
 
 abstract class DefaultImporter implements ImporterContract
 {
@@ -73,9 +74,9 @@ abstract class DefaultImporter implements ImporterContract
 
     public function init(Organization $organization): void
     {
-        $this->organization = $organization;
-        $this->userImportHelper = new ImportDatabaseHelper(User::class, ['email'], true, function (Builder $builder) {
-            /** @var Builder<User> $builder */
+        $this->organization     = $organization;
+        $this->userImportHelper = new ImportDatabaseHelper(User::class, ['email'], true, static function (Builder $builder) {
+            /* @var Builder<User> $builder */
             return $builder->belongsToOrganization($this->organization);
         }, null, validate: [
             'name' => [
@@ -87,8 +88,8 @@ abstract class DefaultImporter implements ImporterContract
                 'timezone:all',
             ],
         ]);
-        $this->memberImportHelper = new ImportDatabaseHelper(Member::class, ['user_id', 'organization_id'], true, function (Builder $builder) {
-            /** @var Builder<Member> $builder */
+        $this->memberImportHelper = new ImportDatabaseHelper(Member::class, ['user_id', 'organization_id'], true, static function (Builder $builder) {
+            /* @var Builder<Member> $builder */
             return $builder->whereBelongsTo($this->organization, 'organization');
         }, null, validate: [
             'role' => [
@@ -97,8 +98,8 @@ abstract class DefaultImporter implements ImporterContract
                 'in:placeholder',
             ],
         ]);
-        $this->projectImportHelper = new ImportDatabaseHelper(Project::class, ['name', 'client_id', 'organization_id'], true, function (Builder $builder) {
-            /** @var Builder<Project> $builder */
+        $this->projectImportHelper = new ImportDatabaseHelper(Project::class, ['name', 'client_id', 'organization_id'], true, static function (Builder $builder) {
+            /* @var Builder<Project> $builder */
             return $builder->where('organization_id', $this->organization->id);
         }, validate: [
             'name' => [
@@ -124,8 +125,8 @@ abstract class DefaultImporter implements ImporterContract
                 $project->billable_rate = null;
             }
         });
-        $this->projectMemberImportHelper = new ImportDatabaseHelper(ProjectMember::class, ['project_id', 'member_id'], true, function (Builder $builder): Builder {
-            /** @var Builder<ProjectMember> $builder */
+        $this->projectMemberImportHelper = new ImportDatabaseHelper(ProjectMember::class, ['project_id', 'member_id'], true, static function (Builder $builder): Builder {
+            /* @var Builder<ProjectMember> $builder */
             return $builder->whereBelongsToOrganization($this->organization);
         }, validate: [
             'billable_rate' => [
@@ -138,8 +139,8 @@ abstract class DefaultImporter implements ImporterContract
                 $projectMember->billable_rate = null;
             }
         });
-        $this->tagImportHelper = new ImportDatabaseHelper(Tag::class, ['name', 'organization_id'], true, function (Builder $builder): Builder {
-            /** @var Builder<Tag> $builder */
+        $this->tagImportHelper = new ImportDatabaseHelper(Tag::class, ['name', 'organization_id'], true, static function (Builder $builder): Builder {
+            /* @var Builder<Tag> $builder */
             return $builder->where('organization_id', $this->organization->id);
         }, validate: [
             'name' => [
@@ -147,8 +148,8 @@ abstract class DefaultImporter implements ImporterContract
                 'max:255',
             ],
         ]);
-        $this->clientImportHelper = new ImportDatabaseHelper(Client::class, ['name', 'organization_id'], true, function (Builder $builder): Builder {
-            /** @var Builder<Client> $builder */
+        $this->clientImportHelper = new ImportDatabaseHelper(Client::class, ['name', 'organization_id'], true, static function (Builder $builder): Builder {
+            /* @var Builder<Client> $builder */
             return $builder->where('organization_id', $this->organization->id);
         }, validate: [
             'name' => [
@@ -156,8 +157,8 @@ abstract class DefaultImporter implements ImporterContract
                 'max:255',
             ],
         ]);
-        $this->taskImportHelper = new ImportDatabaseHelper(Task::class, ['name', 'project_id', 'organization_id'], true, function (Builder $builder): Builder {
-            /** @var Builder<Task> $builder */
+        $this->taskImportHelper = new ImportDatabaseHelper(Task::class, ['name', 'project_id', 'organization_id'], true, static function (Builder $builder): Builder {
+            /* @var Builder<Task> $builder */
             return $builder->where('organization_id', $this->organization->id);
         }, validate: [
             'name' => [
@@ -165,8 +166,8 @@ abstract class DefaultImporter implements ImporterContract
                 'max:500',
             ],
         ]);
-        $this->organizationInvitationsImportHelper = new ImportDatabaseHelper(OrganizationInvitation::class, ['email', 'organization_id'], true, function (Builder $builder) {
-            /** @var Builder<OrganizationInvitation> $builder */
+        $this->organizationInvitationsImportHelper = new ImportDatabaseHelper(OrganizationInvitation::class, ['email', 'organization_id'], true, static function (Builder $builder) {
+            /* @var Builder<OrganizationInvitation> $builder */
             return $builder->where('organization_id', $this->organization->id);
         }, validate: [
             'email' => [
@@ -175,13 +176,13 @@ abstract class DefaultImporter implements ImporterContract
                 'max:255',
             ],
         ]);
-        $this->timeEntriesCreated = 0;
-        $this->colorService = app(ColorService::class);
-        $this->timezoneService = app(TimezoneService::class);
+        $this->timeEntriesCreated  = 0;
+        $this->colorService        = app(ColorService::class);
+        $this->timezoneService     = app(TimezoneService::class);
         $this->billableRateService = app(BillableRateService::class);
     }
 
-    #[\Override]
+    #[Override]
     public function getReport(): ReportDto
     {
         return new ReportDto(

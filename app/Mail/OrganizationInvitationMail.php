@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\URL;
 
 class OrganizationInvitationMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public OrganizationInvitation $invitation;
 

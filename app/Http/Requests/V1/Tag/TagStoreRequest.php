@@ -29,8 +29,8 @@ class TagStoreRequest extends BaseFormRequest
                 'string',
                 'min:1',
                 'max:255',
-                UniqueEloquent::make(Tag::class, 'name', function (Builder $builder): Builder {
-                    /** @var Builder<Tag> $builder */
+                UniqueEloquent::make(Tag::class, 'name', static function (Builder $builder): Builder {
+                    /* @var Builder<Tag> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization');
                 })->withCustomTranslation('validation.tag_name_already_exists'),
             ],

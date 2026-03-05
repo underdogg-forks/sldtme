@@ -22,17 +22,17 @@ class UserResource extends BaseResource
     public function toArray(Request $request): array
     {
         return [
-            /** @var string $id ID of user */
+            /* @var string $id ID of user */
             'id' => $this->resource->id,
-            /** @var string $name Name of user */
+            /* @var string $name Name of user */
             'name' => $this->resource->name,
-            /** @var string $email Email of user */
+            /* @var string $email Email of user */
             'email' => $this->resource->email,
-            /** @var string $profile_photo_url Profile photo URL */
+            /* @var string $profile_photo_url Profile photo URL */
             'profile_photo_url' => $this->resource->profile_photo_url,
-            /** @var string $timezone Timezone (f.e. Europe/Berlin or America/New_York) */
+            /* @var string $timezone Timezone (f.e. Europe/Berlin or America/New_York) */
             'timezone' => $this->resource->timezone,
-            /** @var Weekday $week_start Starting day of the week */
+            /* @var Weekday $week_start Starting day of the week */
             'week_start' => $this->resource->week_start->value,
         ];
     }

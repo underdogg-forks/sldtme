@@ -16,7 +16,7 @@ class ClientModelTest extends ModelTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $client = Client::factory()->forOrganization($organization)->create();
+        $client       = Client::factory()->forOrganization($organization)->create();
 
         // Act
         $client->refresh();
@@ -30,9 +30,9 @@ class ClientModelTest extends ModelTestAbstract
     public function test_it_has_many_projects(): void
     {
         // Arrange
-        $client = Client::factory()->create();
-        $otherClient = Client::factory()->create();
-        $projects = Project::factory()->forClient($client)->createMany(4);
+        $client              = Client::factory()->create();
+        $otherClient         = Client::factory()->create();
+        $projects            = Project::factory()->forClient($client)->createMany(4);
         $projectsOtherClient = Project::factory()->forClient($otherClient)->createMany(4);
 
         // Act

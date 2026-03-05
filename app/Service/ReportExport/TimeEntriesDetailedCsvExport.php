@@ -40,7 +40,7 @@ class TimeEntriesDetailedCsvExport extends CsvExport
     }
 
     /**
-     * @param  TimeEntry  $model
+     * @param TimeEntry $model
      */
     public function mapRow(Model $model): array
     {
@@ -48,17 +48,17 @@ class TimeEntriesDetailedCsvExport extends CsvExport
         $duration = $model->getDuration();
 
         return [
-            'Description' => $model->description,
-            'Task' => $model->task?->name,
-            'Project' => $model->project?->name,
-            'Client' => $model->client?->name,
-            'User' => $model->user->name,
-            'Start' => $model->start->timezone($this->timezone),
-            'End' => $model->end->timezone($this->timezone),
-            'Duration' => $duration !== null ? $interval->format($model->getDuration()) : null,
+            'Description'        => $model->description,
+            'Task'               => $model->task?->name,
+            'Project'            => $model->project?->name,
+            'Client'             => $model->client?->name,
+            'User'               => $model->user->name,
+            'Start'              => $model->start->timezone($this->timezone),
+            'End'                => $model->end->timezone($this->timezone),
+            'Duration'           => $duration !== null ? $interval->format($model->getDuration()) : null,
             'Duration (decimal)' => $duration?->totalHours,
-            'Billable' => $model->billable ? 'Yes' : 'No',
-            'Tags' => $model->tagsRelation->pluck('name')->implode(', '),
+            'Billable'           => $model->billable ? 'Yes' : 'No',
+            'Tags'               => $model->tagsRelation->pluck('name')->implode(', '),
         ];
     }
 }

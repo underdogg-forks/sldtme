@@ -61,7 +61,6 @@ class ProjectMemberResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -76,17 +75,16 @@ class ProjectMemberResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProjectMembers::route('/'),
+            'index'  => Pages\ListProjectMembers::route('/'),
             'create' => Pages\CreateProjectMember::route('/create'),
-            'edit' => Pages\EditProjectMember::route('/{record}/edit'),
-            'view' => Pages\ViewProjectMembers::route('/{record}'),
+            'edit'   => Pages\EditProjectMember::route('/{record}/edit'),
+            'view'   => Pages\ViewProjectMembers::route('/{record}'),
         ];
     }
 }

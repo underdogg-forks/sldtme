@@ -32,7 +32,7 @@ class OrganizationResourceTest extends FilamentTestCase
     public function test_can_list_organizations(): void
     {
         // Arrange
-        $user = User::factory()->create();
+        $user          = User::factory()->create();
         $organizations = Organization::factory()->state([
             'user_id' => $user->getKey(),
         ])->createMany(5);
@@ -61,7 +61,7 @@ class OrganizationResourceTest extends FilamentTestCase
     {
         // Arrange
         $user = $this->createUserWithPermission();
-        $this->mock(DeletionService::class, function (MockInterface $mock) use ($user): void {
+        $this->mock(DeletionService::class, static function (MockInterface $mock) use ($user): void {
             $mock->shouldReceive('deleteOrganization')
                 ->withArgs(fn (Organization $organizationArg) => $organizationArg->is($user->organization))
                 ->once();
@@ -80,15 +80,15 @@ class OrganizationResourceTest extends FilamentTestCase
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $user1 = User::factory()->create();
-        $user2 = User::factory()->create();
+        $user1        = User::factory()->create();
+        $user2        = User::factory()->create();
         $organization->users()->attach($user1);
         $organization->users()->attach($user2);
 
         // Act
         $response = Livewire::test(OrganizationResource\RelationManagers\UsersRelationManager::class, [
             'ownerRecord' => $organization,
-            'pageClass' => OrganizationResource\Pages\EditOrganization::class,
+            'pageClass'   => OrganizationResource\Pages\EditOrganization::class,
         ]);
 
         // Assert
@@ -99,13 +99,13 @@ class OrganizationResourceTest extends FilamentTestCase
     public function test_can_list_related_invitations(): void
     {
         // Arrange
-        $organization = Organization::factory()->create();
+        $organization            = Organization::factory()->create();
         $organizationInvitations = OrganizationInvitation::factory()->forOrganization($organization)->createMany(5);
 
         // Act
         $response = Livewire::test(OrganizationResource\RelationManagers\InvitationsRelationManager::class, [
             'ownerRecord' => $organization,
-            'pageClass' => OrganizationResource\Pages\EditOrganization::class,
+            'pageClass'   => OrganizationResource\Pages\EditOrganization::class,
         ]);
 
         // Assert

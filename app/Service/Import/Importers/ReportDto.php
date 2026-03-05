@@ -20,12 +20,12 @@ class ReportDto
 
     public function __construct(int $clientsCreated, int $projectsCreated, int $tasksCreated, int $timeEntriesCreated, int $tagsCreated, int $usersCreated)
     {
-        $this->clientsCreated = $clientsCreated;
-        $this->projectsCreated = $projectsCreated;
-        $this->tasksCreated = $tasksCreated;
+        $this->clientsCreated     = $clientsCreated;
+        $this->projectsCreated    = $projectsCreated;
+        $this->tasksCreated       = $tasksCreated;
         $this->timeEntriesCreated = $timeEntriesCreated;
-        $this->tagsCreated = $tagsCreated;
-        $this->usersCreated = $usersCreated;
+        $this->tagsCreated        = $tagsCreated;
+        $this->usersCreated       = $usersCreated;
     }
 
     /**

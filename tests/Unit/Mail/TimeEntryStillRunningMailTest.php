@@ -15,7 +15,7 @@ class TimeEntryStillRunningMailTest extends TestCaseWithDatabase
     public function test_mail_renders_content_correctly(): void
     {
         // Arrange
-        $user = $this->createUserWithPermission();
+        $user      = $this->createUserWithPermission();
         $timeEntry = TimeEntry::factory()->create([
             'description' => 'TEST 123',
         ]);

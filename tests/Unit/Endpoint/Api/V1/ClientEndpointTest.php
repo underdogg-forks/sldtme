@@ -18,7 +18,7 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
     public function test_index_endpoint_fails_if_user_has_no_permission_to_view_clients(): void
     {
         // Arrange
-        $data = $this->createUserWithPermission();
+        $data    = $this->createUserWithPermission();
         $clients = Client::factory()->forOrganization($data->organization)->createMany(4);
         Passport::actingAs($data->user);
 
@@ -46,15 +46,16 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
         $response->assertStatus(200);
         $response->assertJsonCount(4, 'data');
         $clients = Client::query()->orderBy('created_at', 'desc')->get();
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->has('links')
-            ->has('meta')
-            ->count('data', 4)
-            ->where('data.0.id', $clients->get(0)->getKey())
-            ->where('data.1.id', $clients->get(1)->getKey())
-            ->where('data.2.id', $clients->get(2)->getKey())
-            ->where('data.3.id', $clients->get(3)->getKey())
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->has('links')
+                ->has('meta')
+                ->count('data', 4)
+                ->where('data.0.id', $clients->get(0)->getKey())
+                ->where('data.1.id', $clients->get(1)->getKey())
+                ->where('data.2.id', $clients->get(2)->getKey())
+                ->where('data.3.id', $clients->get(3)->getKey())
         );
     }
 
@@ -65,11 +66,11 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
             'clients:view',
         ]);
 
-        $clients = Client::factory()->forOrganization($data->organization)->createMany(2);
+        $clients                = Client::factory()->forOrganization($data->organization)->createMany(2);
         $projectWithMembership1 = Project::factory()->forOrganization($data->organization)->forClient($clients->get(0))->addMember($data->member)->isPrivate()->create();
         $projectWithMembership2 = Project::factory()->forOrganization($data->organization)->forClient($clients->get(1))->addMember($data->member)->isPrivate()->create();
 
-        $otherClients = Client::factory()->forOrganization($data->organization)->createMany(2);
+        $otherClients             = Client::factory()->forOrganization($data->organization)->createMany(2);
         $projectWithoutMembership = Project::factory()->forOrganization($data->organization)->forClient($otherClients->get(0))->isPrivate()->create();
         Passport::actingAs($data->user);
 
@@ -79,13 +80,14 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
         // Assert
         $response->assertStatus(200);
         $response->assertJsonCount(2, 'data');
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->has('links')
-            ->has('meta')
-            ->count('data', 2)
-            ->where('data.0.id', $clients->get(0)->getKey())
-            ->where('data.1.id', $clients->get(1)->getKey())
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->has('links')
+                ->has('meta')
+                ->count('data', 2)
+                ->where('data.0.id', $clients->get(0)->getKey())
+                ->where('data.1.id', $clients->get(1)->getKey())
         );
     }
 
@@ -96,7 +98,7 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
             'clients:view',
             'clients:view:all',
         ]);
-        $archivedClients = Client::factory()->forOrganization($data->organization)->archived()->createMany(2);
+        $archivedClients    = Client::factory()->forOrganization($data->organization)->archived()->createMany(2);
         $nonArchivedClients = Client::factory()->forOrganization($data->organization)->createMany(2);
         Passport::actingAs($data->user);
 
@@ -116,7 +118,7 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
             'clients:view',
             'clients:view:all',
         ]);
-        $archivedClients = Client::factory()->forOrganization($data->organization)->archived()->createMany(2);
+        $archivedClients    = Client::factory()->forOrganization($data->organization)->archived()->createMany(2);
         $nonArchivedClients = Client::factory()->forOrganization($data->organization)->createMany(2);
         Passport::actingAs($data->user);
 
@@ -139,7 +141,7 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
             'clients:view',
             'clients:view:all',
         ]);
-        $archivedClients = Client::factory()->forOrganization($data->organization)->archived()->createMany(2);
+        $archivedClients    = Client::factory()->forOrganization($data->organization)->archived()->createMany(2);
         $nonArchivedClients = Client::factory()->forOrganization($data->organization)->createMany(2);
         Passport::actingAs($data->user);
 
@@ -162,7 +164,7 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
             'clients:view',
             'clients:view:all',
         ]);
-        $archivedClients = Client::factory()->forOrganization($data->organization)->archived()->createMany(2);
+        $archivedClients    = Client::factory()->forOrganization($data->organization)->archived()->createMany(2);
         $nonArchivedClients = Client::factory()->forOrganization($data->organization)->createMany(2);
         Passport::actingAs($data->user);
 
@@ -222,7 +224,7 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
             'clients:create',
         ]);
         $otherOrganization = Organization::factory()->create();
-        $client = Client::factory()->forOrganization($otherOrganization)->create();
+        $client            = Client::factory()->forOrganization($otherOrganization)->create();
         Passport::actingAs($data->user);
 
         // Act
@@ -251,17 +253,18 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
 
         // Assert
         $response->assertStatus(201);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.name', $clientFake->name)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.name', $clientFake->name)
         );
     }
 
     public function test_update_endpoint_fails_if_user_has_no_permission_to_update_clients(): void
     {
         // Arrange
-        $data = $this->createUserWithPermission();
-        $client = Client::factory()->forOrganization($data->organization)->create();
+        $data       = $this->createUserWithPermission();
+        $client     = Client::factory()->forOrganization($data->organization)->create();
         $clientFake = Client::factory()->make();
         Passport::actingAs($data->user);
 
@@ -281,8 +284,8 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
             'clients:update',
         ]);
         $otherOrganization = Organization::factory()->create();
-        $client = Client::factory()->forOrganization($otherOrganization)->create();
-        $clientFake = Client::factory()->make();
+        $client            = Client::factory()->forOrganization($otherOrganization)->create();
+        $clientFake        = Client::factory()->make();
         Passport::actingAs($data->user);
 
         // Act
@@ -293,8 +296,8 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
         // Assert
         $response->assertForbidden();
         $this->assertDatabaseHas(Client::class, [
-            'id' => $client->getKey(),
-            'name' => $client->name,
+            'id'              => $client->getKey(),
+            'name'            => $client->name,
             'organization_id' => $otherOrganization->getKey(),
         ]);
     }
@@ -305,7 +308,7 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'clients:update',
         ]);
-        $client = Client::factory()->forOrganization($data->organization)->create();
+        $client     = Client::factory()->forOrganization($data->organization)->create();
         $clientFake = Client::factory()->forOrganization($data->organization)->create();
         Passport::actingAs($data->user);
 
@@ -320,8 +323,8 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
             'name' => 'A client with the same name already exists in the organization.',
         ]);
         $this->assertDatabaseHas(Client::class, [
-            'id' => $client->getKey(),
-            'name' => $client->name,
+            'id'              => $client->getKey(),
+            'name'            => $client->name,
             'organization_id' => $data->organization->getKey(),
         ]);
     }
@@ -332,9 +335,9 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'clients:update',
         ]);
-        $client = Client::factory()->forOrganization($data->organization)->create();
+        $client            = Client::factory()->forOrganization($data->organization)->create();
         $otherOrganization = Organization::factory()->create();
-        $clientSameName = Client::factory()->forOrganization($otherOrganization)->create();
+        $clientSameName    = Client::factory()->forOrganization($otherOrganization)->create();
         Passport::actingAs($data->user);
 
         // Act
@@ -345,8 +348,8 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
         // Assert
         $response->assertStatus(200);
         $this->assertDatabaseHas(Client::class, [
-            'id' => $client->getKey(),
-            'name' => $clientSameName->name,
+            'id'              => $client->getKey(),
+            'name'            => $clientSameName->name,
             'organization_id' => $data->organization->getKey(),
         ]);
     }
@@ -357,7 +360,7 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'clients:update',
         ]);
-        $client = Client::factory()->forOrganization($data->organization)->create();
+        $client     = Client::factory()->forOrganization($data->organization)->create();
         $clientFake = Client::factory()->make();
         Passport::actingAs($data->user);
 
@@ -368,12 +371,13 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
 
         // Assert
         $response->assertStatus(200);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.name', $clientFake->name)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.name', $clientFake->name)
         );
         $this->assertDatabaseHas(Client::class, [
-            'name' => $clientFake->name,
+            'name'            => $clientFake->name,
             'organization_id' => $data->organization->getKey(),
         ]);
     }
@@ -384,21 +388,22 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'clients:update',
         ]);
-        $client = Client::factory()->forOrganization($data->organization)->create();
+        $client     = Client::factory()->forOrganization($data->organization)->create();
         $clientFake = Client::factory()->make();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->putJson(route('api.v1.clients.update', [$data->organization->getKey(), $client->getKey()]), [
-            'name' => $clientFake->name,
+            'name'        => $clientFake->name,
             'is_archived' => true,
         ]);
 
         // Assert
         $response->assertStatus(200);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.is_archived', true)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.is_archived', true)
         );
         $client->refresh();
         $this->assertTrue($client->is_archived);
@@ -410,21 +415,22 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'clients:update',
         ]);
-        $client = Client::factory()->forOrganization($data->organization)->archived()->create();
+        $client     = Client::factory()->forOrganization($data->organization)->archived()->create();
         $clientFake = Client::factory()->make();
         Passport::actingAs($data->user);
 
         // Act
         $response = $this->putJson(route('api.v1.clients.update', [$data->organization->getKey(), $client->getKey()]), [
-            'name' => $clientFake->name,
+            'name'        => $clientFake->name,
             'is_archived' => false,
         ]);
 
         // Assert
         $response->assertStatus(200);
-        $response->assertJson(fn (AssertableJson $json) => $json
-            ->has('data')
-            ->where('data.is_archived', false)
+        $response->assertJson(
+            fn (AssertableJson $json) => $json
+                ->has('data')
+                ->where('data.is_archived', false)
         );
         $client->refresh();
         $this->assertFalse($client->is_archived);
@@ -433,7 +439,7 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
     public function test_destroy_endpoint_fails_if_user_has_no_permission_to_delete_clients(): void
     {
         // Arrange
-        $data = $this->createUserWithPermission();
+        $data   = $this->createUserWithPermission();
         $client = Client::factory()->forOrganization($data->organization)->create();
         Passport::actingAs($data->user);
 
@@ -451,7 +457,7 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
             'clients:delete',
         ]);
         $otherOrganization = Organization::factory()->create();
-        $client = Client::factory()->forOrganization($otherOrganization)->create();
+        $client            = Client::factory()->forOrganization($otherOrganization)->create();
         Passport::actingAs($data->user);
 
         // Act
@@ -460,8 +466,8 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
         // Assert
         $response->assertForbidden();
         $this->assertDatabaseHas(Client::class, [
-            'id' => $client->getKey(),
-            'name' => $client->name,
+            'id'              => $client->getKey(),
+            'name'            => $client->name,
             'organization_id' => $otherOrganization->getKey(),
         ]);
     }
@@ -472,7 +478,7 @@ class ClientEndpointTest extends ApiEndpointTestAbstract
         $data = $this->createUserWithPermission([
             'clients:delete',
         ]);
-        $client = Client::factory()->forOrganization($data->organization)->create();
+        $client  = Client::factory()->forOrganization($data->organization)->create();
         $project = Project::factory()->forOrganization($data->organization)->forClient($client)->create();
         Passport::actingAs($data->user);
 

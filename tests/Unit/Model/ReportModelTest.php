@@ -16,7 +16,7 @@ class ReportModelTest extends ModelTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $report = Report::factory()->forOrganization($organization)->create();
+        $report       = Report::factory()->forOrganization($organization)->create();
 
         // Act
         $report->refresh();
@@ -76,6 +76,6 @@ class ReportModelTest extends ModelTestAbstract
         $report->refresh();
 
         // Assert
-        $this->assertSame(url('/shared-report#'.$report->share_secret), $report->getShareableLink());
+        $this->assertSame(url('/shared-report#' . $report->share_secret), $report->getShareableLink());
     }
 }

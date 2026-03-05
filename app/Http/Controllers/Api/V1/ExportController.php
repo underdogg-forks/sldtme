@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Storage;
 class ExportController extends Controller
 {
     /**
-     * Export data of an organization
+     * Export data of an organization.
      *
      * @throws AuthorizationException
      * @throws ExportException
@@ -26,12 +26,12 @@ class ExportController extends Controller
     {
         $this->checkPermission($organization, 'export');
 
-        $filepath = $exportService->export($organization);
+        $filepath    = $exportService->export($organization);
         $downloadUrl = Storage::disk(config('filesystems.private'))
             ->temporaryUrl($filepath, Carbon::now()->addMinutes(10));
 
         return new JsonResponse([
-            'success' => true,
+            'success'      => true,
             'download_url' => $downloadUrl,
         ], 200);
     }

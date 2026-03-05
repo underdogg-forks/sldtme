@@ -22,33 +22,33 @@ use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 use Staudenmeir\EloquentJsonRelations\Relations\BelongsToJson;
 
 /**
- * @property string $id
- * @property string $description
- * @property Carbon $start
- * @property Carbon|null $end
- * @property int|null $billable_rate Billable rate per hour in cents
- * @property bool $billable
- * @property array<string> $tags
- * @property string $user_id
- * @property string $member_id
- * @property bool $is_imported
- * @property Carbon|null $still_active_email_sent_at
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property-read User $user
- * @property-read Member $member
- * @property string $organization_id
- * @property-read Organization $organization
- * @property string|null $project_id
- * @property-read Project|null $project
- * @property string|null $client_id
- * @property-read Client|null $client
- * @property string|null $task_id
- * @property-read Task|null $task
- * @property-read Collection<int, Tag> $tagsRelation
+ * @property string               $id
+ * @property string               $description
+ * @property Carbon               $start
+ * @property Carbon|null          $end
+ * @property int|null             $billable_rate              Billable rate per hour in cents
+ * @property bool                 $billable
+ * @property array<string>        $tags
+ * @property string               $user_id
+ * @property string               $member_id
+ * @property bool                 $is_imported
+ * @property Carbon|null          $still_active_email_sent_at
+ * @property Carbon|null          $created_at
+ * @property Carbon|null          $updated_at
+ * @property User                 $user
+ * @property Member               $member
+ * @property string               $organization_id
+ * @property Organization         $organization
+ * @property string|null          $project_id
+ * @property Project|null         $project
+ * @property string|null          $client_id
+ * @property Client|null          $client
+ * @property string|null          $task_id
+ * @property Task|null            $task
+ * @property Collection<int, Tag> $tagsRelation
  *
- * @method Builder<TimeEntry> hasTag(Tag $tag)
- * @method static TimeEntryFactory factory()
+ * @method        Builder<TimeEntry> hasTag(Tag $tag)
+ * @method static TimeEntryFactory   factory()
  */
 class TimeEntry extends Model implements AuditableContract
 {
@@ -60,22 +60,6 @@ class TimeEntry extends Model implements AuditableContract
 
     use HasJsonRelationships;
     use HasUuids;
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'description' => 'string',
-        'start' => 'datetime',
-        'end' => 'datetime',
-        'billable' => 'bool',
-        'tags' => 'array',
-        'billable_rate' => 'int',
-        'is_imported' => 'bool',
-        'still_active_email_sent_at' => 'datetime',
-    ];
 
     public const array SELECT_COLUMNS = [
         'id',
@@ -95,6 +79,22 @@ class TimeEntry extends Model implements AuditableContract
         'client_id',
         'is_imported',
         'still_active_email_sent_at',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'description'                => 'string',
+        'start'                      => 'datetime',
+        'end'                        => 'datetime',
+        'billable'                   => 'bool',
+        'tags'                       => 'array',
+        'billable_rate'              => 'int',
+        'is_imported'                => 'bool',
+        'still_active_email_sent_at' => 'datetime',
     ];
 
     /**
@@ -130,8 +130,9 @@ class TimeEntry extends Model implements AuditableContract
     /**
      * This scope will be applied during the computed property generation with artisan computed-attributes:generate.
      *
-     * @param  Builder<TimeEntry>  $builder
-     * @param  array<string>  $attributes  Attributes that will be generated.
+     * @param Builder<TimeEntry> $builder
+     * @param array<string>      $attributes attributes that will be generated
+     *
      * @return Builder<TimeEntry>
      */
     public function scopeComputedAttributesGenerate(Builder $builder, array $attributes): Builder
@@ -139,7 +140,7 @@ class TimeEntry extends Model implements AuditableContract
         if (in_array('client_id', $attributes, true)) {
             $builder->with([
                 'project' => function (Relation $builder): void {
-                    /** @var Builder<Project> $builder */
+                    /* @var Builder<Project> $builder */
                     $builder->select('id', 'client_id');
                 },
             ]);
@@ -151,8 +152,9 @@ class TimeEntry extends Model implements AuditableContract
     /**
      * This scope will be applied during the computed property validation with artisan computed-attributes:validate.
      *
-     * @param  Builder<TimeEntry>  $builder
-     * @param  array<string>  $attributes  Attributes that will be validated.
+     * @param Builder<TimeEntry> $builder
+     * @param array<string>      $attributes attributes that will be validated
+     *
      * @return Builder<TimeEntry>
      */
     public function scopeComputedAttributesValidate(Builder $builder, array $attributes): Builder
@@ -166,7 +168,7 @@ class TimeEntry extends Model implements AuditableContract
     }
 
     /**
-     * @param  Builder<TimeEntry>  $builder
+     * @param Builder<TimeEntry> $builder
      */
     public function scopeHasTag(Builder $builder, Tag $tag): void
     {

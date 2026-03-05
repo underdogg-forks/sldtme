@@ -29,18 +29,18 @@ class TimeEntryFactory extends Factory
         $start = $this->faker->dateTimeBetween('-1 year', '-1 hour');
 
         return [
-            'description' => $this->faker->sentence(),
-            'start' => $start,
-            'end' => $this->faker->dateTimeBetween($start, 'now'),
-            'billable' => $this->faker->boolean(),
-            'is_imported' => false,
-            'tags' => [],
-            'user_id' => User::factory(),
-            'member_id' => Member::factory(),
-            'task_id' => null,
-            'project_id' => null,
+            'description'     => $this->faker->sentence(),
+            'start'           => $start,
+            'end'             => $this->faker->dateTimeBetween($start, 'now'),
+            'billable'        => $this->faker->boolean(),
+            'is_imported'     => false,
+            'tags'            => [],
+            'user_id'         => User::factory(),
+            'member_id'       => Member::factory(),
+            'task_id'         => null,
+            'project_id'      => null,
             'organization_id' => Organization::factory(),
-            'billable_rate' => null,
+            'billable_rate'   => null,
         ];
     }
 
@@ -57,7 +57,7 @@ class TimeEntryFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($billableRate): array {
             return [
-                'billable' => true,
+                'billable'      => true,
                 'billable_rate' => $billableRate,
             ];
         });
@@ -67,10 +67,10 @@ class TimeEntryFactory extends Factory
     {
         return $this->state(function (array $attributes) use (&$organization): array {
             $project = Project::factory()->forOrganization($organization)->create();
-            $task = Task::factory()->forProject($project)->forOrganization($organization)->create();
+            $task    = Task::factory()->forProject($project)->forOrganization($organization)->create();
 
             return [
-                'task_id' => $task->getKey(),
+                'task_id'    => $task->getKey(),
                 'project_id' => $task->project->getKey(),
             ];
         });
@@ -97,7 +97,7 @@ class TimeEntryFactory extends Factory
 
             return [
                 'start' => $start->utc(),
-                'end' => $this->faker->dateTimeBetween($start, 'now'),
+                'end'   => $this->faker->dateTimeBetween($start, 'now'),
             ];
         });
     }
@@ -127,8 +127,8 @@ class TimeEntryFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($member): array {
             return [
-                'member_id' => $member->getKey(),
-                'user_id' => $member->user_id,
+                'member_id'       => $member->getKey(),
+                'user_id'         => $member->user_id,
                 'organization_id' => $member->organization_id,
             ];
         });
@@ -148,7 +148,7 @@ class TimeEntryFactory extends Factory
         return $this->state(function (array $attributes) use ($start, $durationInSeconds): array {
             return [
                 'start' => $start->copy()->utc(),
-                'end' => $start->copy()->utc()->addSeconds($durationInSeconds),
+                'end'   => $start->copy()->utc()->addSeconds($durationInSeconds),
             ];
         });
     }
@@ -158,7 +158,7 @@ class TimeEntryFactory extends Factory
         return $this->state(function (array $attributes) use ($end, $durationInSeconds): array {
             return [
                 'start' => $end->copy()->utc()->subSeconds($durationInSeconds),
-                'end' => $end->copy()->utc(),
+                'end'   => $end->copy()->utc(),
             ];
         });
     }
@@ -185,16 +185,16 @@ class TimeEntryFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'project_id' => $project?->getKey(),
-            'client_id' => $project?->client_id,
+            'client_id'  => $project?->client_id,
         ]);
     }
 
     public function forTask(?Task $task): self
     {
         return $this->state(fn (array $attributes) => [
-            'task_id' => $task?->getKey(),
+            'task_id'    => $task?->getKey(),
             'project_id' => $task?->project?->getKey(),
-            'client_id' => $task?->project?->client?->getKey(),
+            'client_id'  => $task?->project?->client?->getKey(),
         ]);
     }
 }

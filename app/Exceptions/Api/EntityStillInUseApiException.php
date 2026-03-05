@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Exceptions\Api;
 
+use Override;
+
 class EntityStillInUseApiException extends ApiException
 {
+    public const string KEY = 'entity_still_in_use';
+
     private string $modelToDelete;
 
     private string $modelInUse;
@@ -14,20 +18,18 @@ class EntityStillInUseApiException extends ApiException
     {
         parent::__construct();
         $this->modelToDelete = $modelToDelete;
-        $this->modelInUse = $modelInUse;
+        $this->modelInUse    = $modelInUse;
     }
-
-    public const string KEY = 'entity_still_in_use';
 
     /**
      * Get the translated message for the exception.
      */
-    #[\Override]
+    #[Override]
     public function getTranslatedMessage(): string
     {
-        return __('exceptions.api.'.$this->getKey(), [
-            'modelToDelete' => __('validation.entities.'.$this->modelToDelete),
-            'modelInUse' => __('validation.entities.'.$this->modelInUse),
+        return __('exceptions.api.' . $this->getKey(), [
+            'modelToDelete' => __('validation.entities.' . $this->modelToDelete),
+            'modelInUse'    => __('validation.entities.' . $this->modelInUse),
         ]);
     }
 }

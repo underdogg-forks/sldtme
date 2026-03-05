@@ -32,24 +32,24 @@ class ShareInertiaData
                 $user = $request->user();
 
                 return [
-                    'canCreateTeams' => $user !== null &&
-                        Jetstream::userHasTeamFeatures($user) &&
-                        Gate::forUser($user)->check('create', Jetstream::newTeamModel()),
+                    'canCreateTeams' => $user !== null
+                        && Jetstream::userHasTeamFeatures($user)
+                        && Gate::forUser($user)->check('create', Jetstream::newTeamModel()),
                     'canManageTwoFactorAuthentication' => Features::canManageTwoFactorAuthentication(),
-                    'canUpdatePassword' => Features::enabled(Features::updatePasswords()),
-                    'canUpdateProfileInformation' => Features::canUpdateProfileInformation(),
-                    'hasEmailVerification' => Features::enabled(Features::emailVerification()),
-                    'flash' => $request->session()->get('flash', []),
-                    'hasAccountDeletionFeatures' => Jetstream::hasAccountDeletionFeatures(),
-                    'hasApiFeatures' => Jetstream::hasApiFeatures(),
-                    'hasTeamFeatures' => Jetstream::hasTeamFeatures(),
-                    'hasTermsAndPrivacyPolicyFeature' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
-                    'managesProfilePhotos' => Jetstream::managesProfilePhotos(),
+                    'canUpdatePassword'                => Features::enabled(Features::updatePasswords()),
+                    'canUpdateProfileInformation'      => Features::canUpdateProfileInformation(),
+                    'hasEmailVerification'             => Features::enabled(Features::emailVerification()),
+                    'flash'                            => $request->session()->get('flash', []),
+                    'hasAccountDeletionFeatures'       => Jetstream::hasAccountDeletionFeatures(),
+                    'hasApiFeatures'                   => Jetstream::hasApiFeatures(),
+                    'hasTeamFeatures'                  => Jetstream::hasTeamFeatures(),
+                    'hasTermsAndPrivacyPolicyFeature'  => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+                    'managesProfilePhotos'             => Jetstream::managesProfilePhotos(),
                 ];
             },
             'auth' => [
                 'permissions' => $request->user() !== null && $request->user()->currentTeam !== null ? $permissions->getPermissions($request->user()->currentTeam) : [],
-                'user' => function () use ($request): array {
+                'user'        => function () use ($request): array {
                     /** @var User|null $user */
                     $user = $request->user();
 
@@ -58,34 +58,34 @@ class ShareInertiaData
                     }
 
                     return array_merge([
-                        'id' => $user->id,
-                        'name' => $user->name,
-                        'email' => $user->email,
-                        'email_verified_at' => $user->email_verified_at,
-                        'current_team_id' => $user->current_team_id,
+                        'id'                 => $user->id,
+                        'name'               => $user->name,
+                        'email'              => $user->email,
+                        'email_verified_at'  => $user->email_verified_at,
+                        'current_team_id'    => $user->current_team_id,
                         'profile_photo_path' => $user->profile_photo_path,
-                        'timezone' => $user->timezone,
-                        'week_start' => $user->week_start,
-                        'profile_photo_url' => $user->profile_photo_url,
+                        'timezone'           => $user->timezone,
+                        'week_start'         => $user->week_start,
+                        'profile_photo_url'  => $user->profile_photo_url,
                         'two_factor_enabled' => Features::enabled(Features::twoFactorAuthentication())
-                            && ! is_null($user->two_factor_secret),
+                            && null !== $user->two_factor_secret,
                         'current_team' => $user->currentTeam !== null ? [
-                            'id' => $user->currentTeam->id,
-                            'user_id' => $user->currentTeam->user_id,
-                            'name' => $user->currentTeam->name,
+                            'id'            => $user->currentTeam->id,
+                            'user_id'       => $user->currentTeam->user_id,
+                            'name'          => $user->currentTeam->name,
                             'personal_team' => $user->currentTeam->personal_team,
-                            'currency' => $user->currentTeam->currency,
+                            'currency'      => $user->currentTeam->currency,
                         ] : null,
                     ], array_filter([
                         'all_teams' => $user->organizations->map(function (Organization $organization): array {
                             return [
-                                'id' => $organization->id,
-                                'name' => $organization->name,
+                                'id'            => $organization->id,
+                                'name'          => $organization->name,
                                 'personal_team' => $organization->personal_team,
-                                'currency' => $organization->currency,
-                                'membership' => [
+                                'currency'      => $organization->currency,
+                                'membership'    => [
                                     'role' => $organization->membership->role,
-                                    'id' => $organization->membership->id,
+                                    'id'   => $organization->membership->id,
                                 ],
                             ];
                         })->all(),
@@ -94,7 +94,7 @@ class ShareInertiaData
             ],
             'errorBags' => function () {
                 /** @var array<string, MessageBag>|null $bags */
-                $bags = Session::get('errors')?->getBags();
+                $bags           = Session::get('errors')?->getBags();
                 $bagsCollection = collect($bags ?: []);
 
                 return $bagsCollection->mapWithKeys(function (MessageBag $bag, string $key) {

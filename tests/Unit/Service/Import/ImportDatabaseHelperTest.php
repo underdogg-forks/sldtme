@@ -8,6 +8,7 @@ use App\Models\Organization;
 use App\Models\Project;
 use App\Models\User;
 use App\Service\Import\ImportDatabaseHelper;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -21,7 +22,7 @@ class ImportDatabaseHelperTest extends TestCase
     public function test_get_key_attach_to_existing_returns_key_for_identifier_without_creating_model(): void
     {
         // Arrange
-        $user = User::factory()->create();
+        $user   = User::factory()->create();
         $helper = new ImportDatabaseHelper(User::class, ['email'], true);
 
         // Act
@@ -44,7 +45,7 @@ class ImportDatabaseHelperTest extends TestCase
         $key = $helper->getKey([
             'email' => 'test@mail.test',
         ], [
-            'name' => 'Test',
+            'name'     => 'Test',
             'timezone' => 'UTC',
         ]);
 
@@ -52,7 +53,7 @@ class ImportDatabaseHelperTest extends TestCase
         $this->assertNotNull($key);
         $this->assertDatabaseHas(User::class, [
             'email' => 'test@mail.test',
-            'name' => 'Test',
+            'name'  => 'Test',
         ]);
     }
 
@@ -60,17 +61,17 @@ class ImportDatabaseHelperTest extends TestCase
     {
         // Arrange
         $project = Project::factory()->create();
-        $helper = new ImportDatabaseHelper(Project::class, ['name', 'organization_id'], false);
+        $helper  = new ImportDatabaseHelper(Project::class, ['name', 'organization_id'], false);
 
         // Act
         try {
             $key = $helper->getKey([
-                'name' => $project->name,
+                'name'            => $project->name,
                 'organization_id' => $project->organization_id,
             ], [
                 'color' => '#000000',
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertSame('Not implemented', $e->getMessage());
 
             return;
@@ -83,19 +84,19 @@ class ImportDatabaseHelperTest extends TestCase
     public function test_get_key_by_external_identifier_returns_key_for_external_identifier(): void
     {
         // Arrange
-        $organization = Organization::factory()->create();
-        $project = Project::factory()->forOrganization($organization)->create();
+        $organization        = Organization::factory()->create();
+        $project             = Project::factory()->forOrganization($organization)->create();
         $externalIdentifier1 = '12345';
         $externalIdentifier2 = '54321';
-        $helper = new ImportDatabaseHelper(Project::class, ['name', 'organization_id'], true);
+        $helper              = new ImportDatabaseHelper(Project::class, ['name', 'organization_id'], true);
         $helper->getKey([
-            'name' => $project->name,
+            'name'            => $project->name,
             'organization_id' => $organization->getKey(),
         ], [
             'color' => '#000000',
         ], $externalIdentifier1);
         $helper->getKey([
-            'name' => 'Not existing project',
+            'name'            => 'Not existing project',
             'organization_id' => $organization->getKey(),
         ], [
             'color' => '#000000',
@@ -113,19 +114,19 @@ class ImportDatabaseHelperTest extends TestCase
     public function test_get_external_ids_returns_all_external_ids_that_were_temporary_stored_via_get_key(): void
     {
         // Arrange
-        $organization = Organization::factory()->create();
-        $project = Project::factory()->forOrganization($organization)->create();
+        $organization        = Organization::factory()->create();
+        $project             = Project::factory()->forOrganization($organization)->create();
         $externalIdentifier1 = '12345';
         $externalIdentifier2 = '54321';
-        $helper = new ImportDatabaseHelper(Project::class, ['name', 'organization_id'], true);
+        $helper              = new ImportDatabaseHelper(Project::class, ['name', 'organization_id'], true);
         $helper->getKey([
-            'name' => $project->name,
+            'name'            => $project->name,
             'organization_id' => $organization->getKey(),
         ], [
             'color' => '#000000',
         ], $externalIdentifier1);
         $helper->getKey([
-            'name' => 'Not existing project',
+            'name'            => 'Not existing project',
             'organization_id' => $organization->getKey(),
         ], [
             'color' => '#000000',
@@ -143,7 +144,7 @@ class ImportDatabaseHelperTest extends TestCase
     public function test_get_model_by_identifier_returns_model_for_identifier(): void
     {
         // Arrange
-        $user = User::factory()->create();
+        $user   = User::factory()->create();
         $helper = new ImportDatabaseHelper(User::class, ['email'], true);
 
         // Act
@@ -172,7 +173,7 @@ class ImportDatabaseHelperTest extends TestCase
     public function test_get_model_by_identifier_caches_result(): void
     {
         // Arrange
-        $user = User::factory()->create();
+        $user   = User::factory()->create();
         $helper = new ImportDatabaseHelper(User::class, ['email'], true);
         $helper->getModel([
             'email' => $user->email,
@@ -191,7 +192,7 @@ class ImportDatabaseHelperTest extends TestCase
     public function test_get_model_by_id_returns_model_for_id(): void
     {
         // Arrange
-        $user = User::factory()->create();
+        $user   = User::factory()->create();
         $helper = new ImportDatabaseHelper(User::class, ['email'], true);
 
         // Act
@@ -216,7 +217,7 @@ class ImportDatabaseHelperTest extends TestCase
     public function test_get_model_by_id_caches_result(): void
     {
         // Arrange
-        $user = User::factory()->create();
+        $user   = User::factory()->create();
         $helper = new ImportDatabaseHelper(User::class, ['email'], true);
         $helper->getModelById($user->getKey());
         $user->delete();
@@ -231,8 +232,8 @@ class ImportDatabaseHelperTest extends TestCase
     public function test_get_cached_models_returns_all_models_where_the_helper_already_fetched_the_model(): void
     {
         // Arrange
-        $user1 = User::factory()->create();
-        $user2 = User::factory()->create();
+        $user1  = User::factory()->create();
+        $user2  = User::factory()->create();
         $helper = new ImportDatabaseHelper(User::class, ['email'], true);
         $helper->getModelById($user1->getKey());
         $helper->getModelById($user2->getKey());

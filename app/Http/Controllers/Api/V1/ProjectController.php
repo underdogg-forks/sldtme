@@ -24,16 +24,8 @@ use Illuminate\Support\Facades\DB;
 
 class ProjectController extends Controller
 {
-    protected function checkPermission(Organization $organization, string $permission, ?Project $project = null): void
-    {
-        parent::checkPermission($organization, $permission);
-        if ($project !== null && $project->organization_id !== $organization->id) {
-            throw new AuthorizationException('Project does not belong to organization');
-        }
-    }
-
     /**
-     * Get projects visible to the current user
+     * Get projects visible to the current user.
      *
      * @return ProjectCollection<ProjectResource>
      *
@@ -45,12 +37,12 @@ class ProjectController extends Controller
     {
         $this->checkPermission($organization, 'projects:view');
         $canViewAllProjects = $this->hasPermission($organization, 'projects:view:all');
-        $user = $this->user();
+        $user               = $this->user();
 
         $projectsQuery = Project::query()
             ->whereBelongsTo($organization, 'organization');
 
-        if (! $canViewAllProjects) {
+        if ( ! $canViewAllProjects) {
             $projectsQuery->visibleByEmployee($user);
         }
         $filterArchived = $request->getFilterArchived();
@@ -70,7 +62,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Get project
+     * Get project.
      *
      * @throws AuthorizationException
      *
@@ -89,7 +81,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Create project
+     * Create project.
      *
      * @throws AuthorizationException
      *
@@ -98,13 +90,13 @@ class ProjectController extends Controller
     public function store(Organization $organization, ProjectStoreRequest $request): JsonResource
     {
         $this->checkPermission($organization, 'projects:create');
-        $project = new Project;
-        $project->name = $request->input('name');
-        $project->color = $request->input('color');
-        $project->is_billable = (bool) $request->input('is_billable');
+        $project                = new Project();
+        $project->name          = $request->input('name');
+        $project->color         = $request->input('color');
+        $project->is_billable   = (bool) $request->input('is_billable');
         $project->billable_rate = $request->getBillableRate();
-        $project->client_id = $request->input('client_id');
-        $project->is_public = $request->getIsPublic();
+        $project->client_id     = $request->input('client_id');
+        $project->is_public     = $request->getIsPublic();
         if ($this->canAccessPremiumFeatures($organization) && $request->has('estimated_time')) {
             $project->estimated_time = $request->getEstimatedTime();
         }
@@ -115,7 +107,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Update project
+     * Update project.
      *
      * @throws AuthorizationException
      *
@@ -124,8 +116,8 @@ class ProjectController extends Controller
     public function update(Organization $organization, Project $project, ProjectUpdateRequest $request, BillableRateService $billableRateService): JsonResource
     {
         $this->checkPermission($organization, 'projects:update', $project);
-        $project->name = $request->input('name');
-        $project->color = $request->input('color');
+        $project->name        = $request->input('name');
+        $project->color       = $request->input('color');
         $project->is_billable = (bool) $request->input('is_billable');
         if ($request->has('is_archived')) {
             $project->archived_at = $request->getIsArchived() ? Carbon::now() : null;
@@ -136,12 +128,12 @@ class ProjectController extends Controller
         if ($this->canAccessPremiumFeatures($organization) && $request->has('estimated_time')) {
             $project->estimated_time = $request->getEstimatedTime();
         }
-        $oldBillableRate = $project->billable_rate;
-        $clientIdChanged = false;
+        $oldBillableRate        = $project->billable_rate;
+        $clientIdChanged        = false;
         $project->billable_rate = $request->getBillableRate();
         if ($project->client_id !== $request->input('client_id')) {
             $project->client_id = $request->input('client_id');
-            $clientIdChanged = true;
+            $clientIdChanged    = true;
         }
         $project->save();
 
@@ -159,7 +151,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Delete project
+     * Delete project.
      *
      * @throws AuthorizationException|EntityStillInUseApiException
      *
@@ -186,5 +178,13 @@ class ProjectController extends Controller
 
         return response()
             ->json(null, 204);
+    }
+
+    protected function checkPermission(Organization $organization, string $permission, ?Project $project = null): void
+    {
+        parent::checkPermission($organization, $permission);
+        if ($project !== null && $project->organization_id !== $organization->id) {
+            throw new AuthorizationException('Project does not belong to organization');
+        }
     }
 }

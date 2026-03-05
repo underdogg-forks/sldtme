@@ -28,11 +28,12 @@ class DeleteOrganizationTest extends TestCase
 
         $otherUser = User::factory()->create();
         $organization->users()->attach(
-            $otherUser, ['role' => 'test-role']
+            $otherUser,
+            ['role' => 'test-role']
         );
 
         // Act
-        $response = $this->delete('/teams/'.$organization->getKey());
+        $response = $this->delete('/teams/' . $organization->getKey());
 
         // Assert
         $this->assertNull($organization->fresh());
@@ -43,12 +44,12 @@ class DeleteOrganizationTest extends TestCase
     public function test_personal_organizations_can_be_deleted_but_user_gets_an_new_one_if_this_is_the_only_one_left(): void
     {
         // Arrange
-        $user = User::factory()->withPersonalOrganization()->create();
+        $user         = User::factory()->withPersonalOrganization()->create();
         $organization = $user->currentTeam;
         $this->actingAs($user);
 
         // Act
-        $response = $this->delete('/teams/'.$organization->getKey());
+        $response = $this->delete('/teams/' . $organization->getKey());
 
         // Assert
         $user->refresh();
@@ -61,7 +62,7 @@ class DeleteOrganizationTest extends TestCase
     public function test_organization_can_not_be_deleted_if_user_is_not_owner(): void
     {
         // Arrange
-        $user = User::factory()->withPersonalOrganization()->create();
+        $user         = User::factory()->withPersonalOrganization()->create();
         $organization = Organization::factory()->withOwner($user)->create([
             'personal_team' => false,
         ]);
@@ -69,11 +70,12 @@ class DeleteOrganizationTest extends TestCase
 
         $otherUser = User::factory()->create();
         $organization->users()->attach(
-            $otherUser, ['role' => Role::Admin->value]
+            $otherUser,
+            ['role' => Role::Admin->value]
         );
 
         // Act
-        $response = $this->delete('/teams/'.$organization->getKey());
+        $response = $this->delete('/teams/' . $organization->getKey());
 
         // Assert
         $response->assertForbidden();

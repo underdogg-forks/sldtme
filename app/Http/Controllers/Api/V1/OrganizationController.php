@@ -14,7 +14,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 class OrganizationController extends Controller
 {
     /**
-     * Get organization
+     * Get organization.
      *
      * @operationId getOrganization
      *
@@ -30,7 +30,7 @@ class OrganizationController extends Controller
     }
 
     /**
-     * Update organization
+     * Update organization.
      *
      * @operationId updateOrganization
      *
@@ -69,7 +69,7 @@ class OrganizationController extends Controller
         }
         $hasBillableRate = $request->has('billable_rate');
         if ($hasBillableRate) {
-            $oldBillableRate = $organization->billable_rate;
+            $oldBillableRate             = $organization->billable_rate;
             $organization->billable_rate = $request->getBillableRate();
         }
         $organization->save();

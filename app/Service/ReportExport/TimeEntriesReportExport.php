@@ -70,22 +70,22 @@ class TimeEntriesReportExport implements FromView, ShouldAutoSize, WithCustomCsv
      */
     public function __construct(array $data, ExportFormat $exportFormat, string $currency, TimeEntryAggregationType $group, TimeEntryAggregationType $subGroup, bool $showBillableRate)
     {
-        $this->data = $data;
-        $this->exportFormat = $exportFormat;
-        $this->currency = $currency;
-        $this->group = $group;
-        $this->subGroup = $subGroup;
+        $this->data             = $data;
+        $this->exportFormat     = $exportFormat;
+        $this->currency         = $currency;
+        $this->group            = $group;
+        $this->subGroup         = $subGroup;
         $this->showBillableRate = $showBillableRate;
     }
 
     public function view(): View
     {
         return view('reports.time-entry-aggregate.spreadsheet', [
-            'data' => $this->data,
-            'currency' => $this->currency,
-            'group' => $this->group,
-            'subGroup' => $this->subGroup,
-            'exportFormat' => $this->exportFormat,
+            'data'             => $this->data,
+            'currency'         => $this->currency,
+            'group'            => $this->group,
+            'subGroup'         => $this->subGroup,
+            'exportFormat'     => $this->exportFormat,
             'showBillableRate' => $this->showBillableRate,
         ]);
     }
@@ -96,8 +96,8 @@ class TimeEntriesReportExport implements FromView, ShouldAutoSize, WithCustomCsv
     public function getCsvSettings(): array
     {
         return [
-            'delimiter' => ',',
-            'enclosure' => '"',
+            'delimiter'        => ',',
+            'enclosure'        => '"',
             'escape_character' => '',
         ];
     }

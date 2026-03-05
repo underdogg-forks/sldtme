@@ -21,31 +21,31 @@ class TimeEntryResource extends BaseResource
     public function toArray(Request $request): array
     {
         return [
-            /** @var string $id ID of time entry */
+            /* @var string $id ID of time entry */
             'id' => $this->resource->id,
-            /**
+            /*
              * @var string $start Start of time entry (ISO 8601 format, UTC timezone, example: 2024-02-26T17:17:17Z)
              */
             'start' => $this->formatDateTime($this->resource->start),
-            /**
+            /*
              * @var string|null $end End of time entry (ISO 8601 format, UTC timezone, example: 2024-02-26T17:17:17Z)
              */
             'end' => $this->formatDateTime($this->resource->end),
-            /** @var int|null $duration Duration of time entry in seconds */
+            /* @var int|null $duration Duration of time entry in seconds */
             'duration' => (int) $this->resource->getDuration()?->totalSeconds,
-            /** @var string|null $description Description of time entry */
+            /* @var string|null $description Description of time entry */
             'description' => $this->resource->description,
-            /** @var string|null $task_id ID of task */
+            /* @var string|null $task_id ID of task */
             'task_id' => $this->resource->task_id,
-            /** @var string|null $project_id ID of project */
+            /* @var string|null $project_id ID of project */
             'project_id' => $this->resource->project_id,
-            /** @var string $organization_id ID of organization */
+            /* @var string $organization_id ID of organization */
             'organization_id' => $this->resource->organization_id,
-            /** @var string $user_id ID of user */
+            /* @var string $user_id ID of user */
             'user_id' => $this->resource->user_id,
-            /** @var array<string> $tags List of tag IDs */
+            /* @var array<string> $tags List of tag IDs */
             'tags' => $this->resource->tags ?? [],
-            /** @var bool $billable Whether time entry is billable */
+            /* @var bool $billable Whether time entry is billable */
             'billable' => $this->resource->billable,
         ];
     }

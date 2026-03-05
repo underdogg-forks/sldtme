@@ -10,7 +10,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 class UserController extends Controller
 {
     /**
-     * Get the current user
+     * Get the current user.
      *
      * This endpoint is independent of organization.
      *

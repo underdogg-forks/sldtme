@@ -19,7 +19,7 @@ class ServerOverview extends Widget
         /** @var string|null $currentVersion */
         $currentVersion = config('app.version');
         /** @var string|null $build */
-        $build = config('app.build');
+        $build         = config('app.build');
         $latestVersion = Cache::get('latest_version', null);
 
         $needsUpdate = false;
@@ -28,11 +28,11 @@ class ServerOverview extends Widget
         }
 
         return [
-            'version' => $currentVersion,
-            'build' => $build,
-            'environment' => config('app.env'),
+            'version'        => $currentVersion,
+            'build'          => $build,
+            'environment'    => config('app.env'),
             'currentVersion' => $latestVersion,
-            'needsUpdate' => $needsUpdate,
+            'needsUpdate'    => $needsUpdate,
         ];
     }
 }

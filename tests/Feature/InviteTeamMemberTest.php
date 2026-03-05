@@ -24,9 +24,9 @@ class InviteTeamMemberTest extends TestCase
         $this->actingAs($user = User::factory()->withPersonalOrganization()->create());
 
         // Act
-        $response = $this->post('/teams/'.$user->currentTeam->id.'/members', [
+        $response = $this->post('/teams/' . $user->currentTeam->id . '/members', [
             'email' => 'test@example.com',
-            'role' => 'admin',
+            'role'  => 'admin',
         ]);
 
         // Assert
@@ -44,11 +44,11 @@ class InviteTeamMemberTest extends TestCase
 
         $invitation = $user->currentTeam->teamInvitations()->create([
             'email' => 'test@example.com',
-            'role' => 'admin',
+            'role'  => 'admin',
         ]);
 
         // Act
-        $response = $this->delete('/team-invitations/'.$invitation->id);
+        $response = $this->delete('/team-invitations/' . $invitation->id);
 
         // Assert
         $response->assertStatus(403);
@@ -59,11 +59,11 @@ class InviteTeamMemberTest extends TestCase
     {
         // Arrange
         Mail::fake();
-        $owner = User::factory()->withPersonalOrganization()->create();
-        $user = User::factory()->withPersonalOrganization()->create();
+        $owner      = User::factory()->withPersonalOrganization()->create();
+        $user       = User::factory()->withPersonalOrganization()->create();
         $invitation = $owner->currentTeam->teamInvitations()->create([
             'email' => $user->email,
-            'role' => Role::Employee->value,
+            'role'  => Role::Employee->value,
         ]);
         $this->actingAs($user);
 
@@ -86,8 +86,8 @@ class InviteTeamMemberTest extends TestCase
     {
         // Arrange
         Mail::fake();
-        $placeholder = User::factory()->placeholder()->create();
-        $owner = User::factory()->withPersonalOrganization()->create();
+        $placeholder       = User::factory()->placeholder()->create();
+        $owner             = User::factory()->withPersonalOrganization()->create();
         $placeholderMember = Member::factory()->forOrganization($owner->currentTeam)->forUser($placeholder)->create();
 
         $timeEntries = TimeEntry::factory()->forOrganization($owner->currentTeam)->forMember($placeholderMember)->createMany(5);
@@ -98,7 +98,7 @@ class InviteTeamMemberTest extends TestCase
 
         $invitation = $owner->currentTeam->teamInvitations()->create([
             'email' => $user->email,
-            'role' => Role::Employee->value,
+            'role'  => Role::Employee->value,
         ]);
         $this->actingAs($user);
 
@@ -124,11 +124,11 @@ class InviteTeamMemberTest extends TestCase
     {
         // Arrange
         Mail::fake();
-        $owner = User::factory()->withPersonalOrganization()->create();
-        $user = User::factory()->withPersonalOrganization()->create();
+        $owner      = User::factory()->withPersonalOrganization()->create();
+        $user       = User::factory()->withPersonalOrganization()->create();
         $invitation = $owner->currentTeam->teamInvitations()->create([
             'email' => 'firstname.lastname@mail.test',
-            'role' => Role::Employee->value,
+            'role'  => Role::Employee->value,
         ]);
         $this->actingAs($user);
 

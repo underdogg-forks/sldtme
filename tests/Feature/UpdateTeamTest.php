@@ -32,8 +32,8 @@ class UpdateTeamTest extends TestCase
         $this->actingAs($user);
 
         // Act
-        $response = $this->put('/teams/'.$user->currentTeam->id, [
-            'name' => 'Test Organization',
+        $response = $this->put('/teams/' . $user->currentTeam->id, [
+            'name'     => 'Test Organization',
             'currency' => 'USD',
         ]);
 

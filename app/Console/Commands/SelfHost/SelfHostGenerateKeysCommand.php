@@ -33,27 +33,27 @@ class SelfHostGenerateKeysCommand extends Command
      */
     public function handle(): int
     {
-        $format = $this->option('format');
-        $key = RSA::createKey((int) $this->option('length'));
+        $format    = $this->option('format');
+        $key       = RSA::createKey((int) $this->option('length'));
         $multiLine = (bool) $this->option('multi-line');
 
-        $publicKey = (string) $key->getPublicKey();
+        $publicKey  = (string) $key->getPublicKey();
         $privateKey = (string) $key;
-        $appKey = 'base64:'.base64_encode(Encrypter::generateKey(config('app.cipher')));
+        $appKey     = 'base64:' . base64_encode(Encrypter::generateKey(config('app.cipher')));
 
         if ($format === 'env') {
-            $this->line('APP_KEY="'.$appKey.'"');
+            $this->line('APP_KEY="' . $appKey . '"');
             if ($multiLine) {
-                $this->line('PASSPORT_PRIVATE_KEY="'.Str::replace("\r\n", "\n", $privateKey).'"');
-                $this->line('PASSPORT_PUBLIC_KEY="'.Str::replace("\r\n", "\n", $publicKey).'"');
+                $this->line('PASSPORT_PRIVATE_KEY="' . Str::replace("\r\n", "\n", $privateKey) . '"');
+                $this->line('PASSPORT_PUBLIC_KEY="' . Str::replace("\r\n", "\n", $publicKey) . '"');
             } else {
-                $this->line('PASSPORT_PRIVATE_KEY="'.Str::replace("\r\n", '\n', $privateKey).'"');
-                $this->line('PASSPORT_PUBLIC_KEY="'.Str::replace("\r\n", '\n', $publicKey).'"');
+                $this->line('PASSPORT_PRIVATE_KEY="' . Str::replace("\r\n", '\n', $privateKey) . '"');
+                $this->line('PASSPORT_PUBLIC_KEY="' . Str::replace("\r\n", '\n', $publicKey) . '"');
             }
         } elseif ($format === 'yaml') {
-            $this->line('APP_KEY: "'.$appKey.'"');
-            $this->line("PASSPORT_PRIVATE_KEY: |\n  ".Str::replace("\r\n", "\n  ", $privateKey));
-            $this->line("PASSPORT_PUBLIC_KEY: |\n  ".Str::replace("\r\n", "\n  ", $publicKey));
+            $this->line('APP_KEY: "' . $appKey . '"');
+            $this->line("PASSPORT_PRIVATE_KEY: |\n  " . Str::replace("\r\n", "\n  ", $privateKey));
+            $this->line("PASSPORT_PUBLIC_KEY: |\n  " . Str::replace("\r\n", "\n  ", $publicKey));
         } else {
             $this->error('Invalid format');
 

@@ -22,16 +22,16 @@ class TokenFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => $this->faker->uuid,
-            'user_id' => null,
-            'client_id' => $this->faker->uuid,
-            'name' => null,
-            'scopes' => [],
-            'revoked' => false,
-            'created_at' => $this->faker->dateTime,
-            'updated_at' => $this->faker->dateTime,
-            'expires_at' => $this->faker->dateTime,
-            'reminder_sent_at' => null,
+            'id'                   => $this->faker->uuid,
+            'user_id'              => null,
+            'client_id'            => $this->faker->uuid,
+            'name'                 => null,
+            'scopes'               => [],
+            'revoked'              => false,
+            'created_at'           => $this->faker->dateTime,
+            'updated_at'           => $this->faker->dateTime,
+            'expires_at'           => $this->faker->dateTime,
+            'reminder_sent_at'     => null,
             'expired_info_sent_at' => null,
         ];
     }

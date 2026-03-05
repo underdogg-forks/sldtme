@@ -41,7 +41,7 @@ class CreateOrganizationTest extends TestCase
         /** @var Member $member */
         $member = Member::query()->whereBelongsTo($user, 'user')->whereBelongsTo($newOrganization, 'organization')->firstOrFail();
         $this->assertSame(Role::Owner->value, $member->role);
-        Event::assertDispatched(AfterCreateOrganization::class, function (AfterCreateOrganization $event) use ($newOrganization): bool {
+        Event::assertDispatched(AfterCreateOrganization::class, static function (AfterCreateOrganization $event) use ($newOrganization): bool {
             return $event->organization->is($newOrganization);
         });
     }

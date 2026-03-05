@@ -10,6 +10,7 @@ use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use stdClass;
 
 class SelfHostDatabaseConsistency extends Command
 {
@@ -69,7 +70,7 @@ class SelfHostDatabaseConsistency extends Command
         // Every organization needs at least an owner
         $problems = DB::table('organizations')
             ->select(['organizations.id as id'])
-            ->leftJoin('members', function (JoinClause $join): void {
+            ->leftJoin('members', static function (JoinClause $join): void {
                 $join->on('organizations.id', '=', 'members.organization_id')
                     ->where('members.role', '=', 'owner');
             })
@@ -90,7 +91,7 @@ class SelfHostDatabaseConsistency extends Command
         $problems = DB::table('users')
             ->select(['users.id as id'])
             ->whereNotNull('current_team_id')
-            ->whereNotIn('current_team_id', function (Builder $query): void {
+            ->whereNotIn('current_team_id', static function (Builder $query): void {
                 $query->select('organization_id')
                     ->from('members')
                     ->whereColumn('members.user_id', 'users.id');
@@ -101,13 +102,13 @@ class SelfHostDatabaseConsistency extends Command
     }
 
     /**
-     * @param  Collection<int, \stdClass>  $problems
+     * @param Collection<int, stdClass> $problems
      */
     private function logProblems(Collection $problems, string $message, bool &$hadAProblem): void
     {
-        $message = 'Consistency problem: '.$message;
+        $message = 'Consistency problem: ' . $message;
         if ($problems->isNotEmpty()) {
-            $ids = $problems->pluck('id');
+            $ids         = $problems->pluck('id');
             $hadAProblem = true;
             Log::error($message, [
                 'ids' => $ids,
@@ -115,7 +116,7 @@ class SelfHostDatabaseConsistency extends Command
 
             $error = $message;
             foreach ($ids as $id) {
-                $error .= "\n  - ".$id;
+                $error .= "\n  - " . $id;
             }
             $this->error($error);
         }

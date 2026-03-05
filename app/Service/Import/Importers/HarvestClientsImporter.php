@@ -7,6 +7,7 @@ namespace App\Service\Import\Importers;
 use Exception;
 use League\Csv\Exception as CsvException;
 use League\Csv\Reader;
+use Override;
 
 class HarvestClientsImporter extends DefaultImporter
 {
@@ -20,7 +21,7 @@ class HarvestClientsImporter extends DefaultImporter
     /**
      * @throws ImportException
      */
-    #[\Override]
+    #[Override]
     public function importData(string $data, string $timezone): void
     {
         try {
@@ -34,7 +35,7 @@ class HarvestClientsImporter extends DefaultImporter
             $records = $reader->getRecords();
             foreach ($records as $record) {
                 $this->clientImportHelper->getKey([
-                    'name' => $record['Client Name'],
+                    'name'            => $record['Client Name'],
                     'organization_id' => $this->organization->id,
                 ]);
             }
@@ -48,29 +49,29 @@ class HarvestClientsImporter extends DefaultImporter
         }
     }
 
+    #[Override]
+    public function getName(): string
+    {
+        return __('importer.harvest_clients.name');
+    }
+
+    #[Override]
+    public function getDescription(): string
+    {
+        return __('importer.harvest_clients.description');
+    }
+
     /**
-     * @param  array<string>  $header
+     * @param array<string> $header
      *
      * @throws ImportException
      */
     private function validateHeader(array $header): void
     {
         foreach (self::REQUIRED_FIELDS as $requiredField) {
-            if (! in_array($requiredField, $header, true)) {
-                throw new ImportException('Invalid CSV header, missing field: '.$requiredField);
+            if ( ! in_array($requiredField, $header, true)) {
+                throw new ImportException('Invalid CSV header, missing field: ' . $requiredField);
             }
         }
-    }
-
-    #[\Override]
-    public function getName(): string
-    {
-        return __('importer.harvest_clients.name');
-    }
-
-    #[\Override]
-    public function getDescription(): string
-    {
-        return __('importer.harvest_clients.description');
     }
 }

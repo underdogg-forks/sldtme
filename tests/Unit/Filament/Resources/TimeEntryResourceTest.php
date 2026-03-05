@@ -66,8 +66,8 @@ class TimeEntryResourceTest extends FilamentTestCase
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $user = User::factory()->create();
-        $member = Member::factory()
+        $user         = User::factory()->create();
+        $member       = Member::factory()
             ->forOrganization($organization)
             ->forUser($user)
             ->create();
@@ -76,10 +76,10 @@ class TimeEntryResourceTest extends FilamentTestCase
         $response = Livewire::test(TimeEntryResource\Pages\CreateTimeEntry::class)
             ->fillForm([
                 'description' => 'Test time entry',
-                'billable' => true,
-                'start' => '2024-01-01 08:00:00',
-                'end' => '2024-01-01 10:00:00',
-                'member_id' => $member->getKey(),
+                'billable'    => true,
+                'start'       => '2024-01-01 08:00:00',
+                'end'         => '2024-01-01 10:00:00',
+                'member_id'   => $member->getKey(),
             ])
             ->call('create')
             ->assertHasNoFormErrors();
@@ -98,23 +98,23 @@ class TimeEntryResourceTest extends FilamentTestCase
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $user = User::factory()->create();
-        $member = Member::factory()
+        $user         = User::factory()->create();
+        $member       = Member::factory()
             ->forOrganization($organization)
             ->forUser($user)
             ->create();
-        $otherUser = User::factory()->create();
+        $otherUser         = User::factory()->create();
         $otherOrganization = Organization::factory()->create();
 
         // Act
         $response = Livewire::test(TimeEntryResource\Pages\CreateTimeEntry::class)
             ->fillForm([
-                'description' => 'Derived fields test',
-                'billable' => false,
-                'start' => '2024-03-01 09:00:00',
-                'end' => '2024-03-01 11:00:00',
-                'member_id' => $member->getKey(),
-                'user_id' => $otherUser->getKey(),
+                'description'     => 'Derived fields test',
+                'billable'        => false,
+                'start'           => '2024-03-01 09:00:00',
+                'end'             => '2024-03-01 11:00:00',
+                'member_id'       => $member->getKey(),
+                'user_id'         => $otherUser->getKey(),
                 'organization_id' => $otherOrganization->getKey(),
             ])
             ->call('create')
@@ -132,8 +132,8 @@ class TimeEntryResourceTest extends FilamentTestCase
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $user = User::factory()->create();
-        $member = Member::factory()
+        $user         = User::factory()->create();
+        $member       = Member::factory()
             ->forOrganization($organization)
             ->forUser($user)
             ->create();
@@ -143,10 +143,10 @@ class TimeEntryResourceTest extends FilamentTestCase
         $response = Livewire::test(TimeEntryResource\Pages\EditTimeEntry::class, ['record' => $timeEntry->getKey()])
             ->fillForm([
                 'description' => 'Updated description',
-                'billable' => true,
-                'start' => '2024-02-01 08:00:00',
-                'end' => '2024-02-01 12:00:00',
-                'member_id' => $member->getKey(),
+                'billable'    => true,
+                'start'       => '2024-02-01 08:00:00',
+                'end'         => '2024-02-01 12:00:00',
+                'member_id'   => $member->getKey(),
             ])
             ->call('save')
             ->assertHasNoFormErrors();
@@ -164,16 +164,16 @@ class TimeEntryResourceTest extends FilamentTestCase
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $user = User::factory()->create();
-        $member = Member::factory()
+        $user         = User::factory()->create();
+        $member       = Member::factory()
             ->forOrganization($organization)
             ->forUser($user)
             ->create();
         $timeEntry = TimeEntry::factory()->create();
 
         $newOrganization = Organization::factory()->create();
-        $newUser = User::factory()->create();
-        $newMember = Member::factory()
+        $newUser         = User::factory()->create();
+        $newMember       = Member::factory()
             ->forOrganization($newOrganization)
             ->forUser($newUser)
             ->create();
@@ -182,10 +182,10 @@ class TimeEntryResourceTest extends FilamentTestCase
         $response = Livewire::test(TimeEntryResource\Pages\EditTimeEntry::class, ['record' => $timeEntry->getKey()])
             ->fillForm([
                 'description' => 'Reassigned entry',
-                'billable' => false,
-                'start' => '2024-02-01 08:00:00',
-                'end' => '2024-02-01 12:00:00',
-                'member_id' => $newMember->getKey(),
+                'billable'    => false,
+                'start'       => '2024-02-01 08:00:00',
+                'end'         => '2024-02-01 12:00:00',
+                'member_id'   => $newMember->getKey(),
             ])
             ->call('save')
             ->assertHasNoFormErrors();

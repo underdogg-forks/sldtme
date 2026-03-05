@@ -18,7 +18,7 @@ class UpdateOrganization implements UpdatesTeamNames
     /**
      * Validate and update the given team's name.
      *
-     * @param  array<string, string>  $input
+     * @param array<string, string> $input
      *
      * @throws AuthorizationException
      * @throws ValidationException
@@ -36,12 +36,12 @@ class UpdateOrganization implements UpdatesTeamNames
             'currency' => [
                 'required',
                 'string',
-                new CurrencyRule,
+                new CurrencyRule(),
             ],
         ])->validateWithBag('updateTeamName');
 
         $organization->forceFill([
-            'name' => $input['name'],
+            'name'     => $input['name'],
             'currency' => $input['currency'],
         ])->save();
     }

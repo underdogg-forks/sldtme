@@ -25,19 +25,19 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'two_factor_secret' => null,
-            'two_factor_confirmed_at' => null,
+            'name'                      => $this->faker->name(),
+            'email'                     => $this->faker->unique()->safeEmail(),
+            'email_verified_at'         => now(),
+            'password'                  => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'two_factor_secret'         => null,
+            'two_factor_confirmed_at'   => null,
             'two_factor_recovery_codes' => null,
-            'remember_token' => Str::random(10),
-            'profile_photo_path' => null,
-            'current_team_id' => null,
-            'is_placeholder' => false,
-            'timezone' => 'Europe/Vienna',
-            'week_start' => Weekday::Monday,
+            'remember_token'            => Str::random(10),
+            'profile_photo_path'        => null,
+            'current_team_id'           => null,
+            'is_placeholder'            => false,
+            'timezone'                  => 'Europe/Vienna',
+            'week_start'                => Weekday::Monday,
         ];
     }
 
@@ -91,7 +91,7 @@ class UserFactory extends Factory
     {
         $profilePhoto = $this->faker->image(null, 500, 500);
         /** @see \Illuminate\Http\FileHelpers::hashName */
-        $path = 'profile-photos/'.Str::random(40).'.png';
+        $path = 'profile-photos/' . Str::random(40) . '.png';
         Storage::disk(config('jetstream.profile_photo_disk', 'public'))->put($path, $profilePhoto);
 
         return $this->state(function (array $attributes) use ($path): array {
@@ -109,8 +109,8 @@ class UserFactory extends Factory
         return $this->afterCreating(function (User $user) use ($callback): void {
             $organization = Organization::factory()
                 ->state(fn (array $attributes) => [
-                    'name' => $user->name.'\'s Organization',
-                    'user_id' => $user->id,
+                    'name'          => $user->name . '\'s Organization',
+                    'user_id'       => $user->id,
                     'personal_team' => true,
                 ])
                 ->when(is_callable($callback), $callback)

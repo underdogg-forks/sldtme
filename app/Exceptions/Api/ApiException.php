@@ -25,8 +25,8 @@ abstract class ApiException extends Exception
     {
         return response()
             ->json([
-                'error' => true,
-                'key' => $this->getKey(),
+                'error'   => true,
+                'key'     => $this->getKey(),
                 'message' => $this->getTranslatedMessage(),
             ], 400);
     }
@@ -38,7 +38,7 @@ abstract class ApiException extends Exception
     {
         $key = static::KEY;
 
-        if ($key === ApiException::KEY) {
+        if ($key === self::KEY) {
             throw new LogicException('API exceptions need the KEY constant defined.');
         }
 
@@ -50,7 +50,7 @@ abstract class ApiException extends Exception
      */
     public function getTranslatedMessage(): string
     {
-        return __('exceptions.api.'.$this->getKey());
+        return __('exceptions.api.' . $this->getKey());
     }
 
     /**

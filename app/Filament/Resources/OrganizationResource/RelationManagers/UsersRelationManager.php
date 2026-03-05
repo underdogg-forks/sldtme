@@ -117,7 +117,7 @@ class UsersRelationManager extends RelationManager
                     ->using(function (User $record): void {
                         /** @var Organization $organization */
                         $organization = $this->getOwnerRecord();
-                        $member = Member::query()
+                        $member       = Member::query()
                             ->whereBelongsTo($record, 'user')
                             ->whereBelongsTo($organization, 'organization')
                             ->firstOrFail();

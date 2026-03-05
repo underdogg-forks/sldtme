@@ -25,9 +25,9 @@ class UserModelTest extends ModelTestAbstract
     {
         // Arrange
         Config::set('auth.super_admins', ['some@email.test', 'other@email.test']);
-        $user = User::factory()->create();
+        $user          = User::factory()->create();
         $panelProvider = new AdminPanelProvider(app());
-        $mainPanel = $panelProvider->panel(Panel::make());
+        $mainPanel     = $panelProvider->panel(Panel::make());
 
         // Act
         $canAccess = $user->canAccessPanel($mainPanel);
@@ -44,7 +44,7 @@ class UserModelTest extends ModelTestAbstract
             'email' => 'some@email.test',
         ]);
         $panelProvider = new AdminPanelProvider(app());
-        $mainPanel = $panelProvider->panel(Panel::make());
+        $mainPanel     = $panelProvider->panel(Panel::make());
 
         // Act
         $canAccess = $user->canAccessPanel($mainPanel);
@@ -56,14 +56,14 @@ class UserModelTest extends ModelTestAbstract
     public function test_scope_belongs_to_organization_returns_only_users_of_organization_including_owners(): void
     {
         // Arrange
-        $owner = User::factory()->create();
+        $owner        = User::factory()->create();
         $organization = Organization::factory()->withOwner($owner)->create();
-        $user = User::factory()->create();
+        $user         = User::factory()->create();
         $user->organizations()->attach($organization, [
             'role' => Role::Employee->value,
         ]);
         $otherOrganization = Organization::factory()->create();
-        $otherUser = User::factory()->create();
+        $otherUser         = User::factory()->create();
         $otherUser->organizations()->attach($otherOrganization, [
             'role' => Role::Employee->value,
         ]);
@@ -83,7 +83,7 @@ class UserModelTest extends ModelTestAbstract
     public function test_it_has_many_time_entries(): void
     {
         // Arrange
-        $user = User::factory()->create();
+        $user        = User::factory()->create();
         $timeEntries = TimeEntry::factory()->forUser($user)->createMany(3);
 
         // Act
@@ -102,11 +102,11 @@ class UserModelTest extends ModelTestAbstract
     public function test_it_has_many_project_members(): void
     {
         // Arrange
-        $user = User::factory()->create();
-        $otherUser = User::factory()->create();
-        $member = Member::factory()->forUser($user)->create();
-        $otherMember = Member::factory()->forUser($otherUser)->create();
-        $projectMembers = ProjectMember::factory()->forMember($member)->createMany(3);
+        $user                = User::factory()->create();
+        $otherUser           = User::factory()->create();
+        $member              = Member::factory()->forUser($user)->create();
+        $otherMember         = Member::factory()->forUser($otherUser)->create();
+        $projectMembers      = ProjectMember::factory()->forMember($member)->createMany(3);
         $otherProjectMembers = ProjectMember::factory()->forMember($otherMember)->createMany(3);
 
         // Act
@@ -143,18 +143,18 @@ class UserModelTest extends ModelTestAbstract
     public function test_it_has_many_access_tokens(): void
     {
         // Arrange
-        $user = User::factory()->create();
-        $client = new Client;
-        $client->name = 'desktop';
+        $user                  = User::factory()->create();
+        $client                = new Client();
+        $client->name          = 'desktop';
         $client->redirect_uris = ['solidtime://oauth/callback'];
-        $client->grant_types = [];
-        $client->revoked = false;
+        $client->grant_types   = [];
+        $client->revoked       = false;
         $client->save();
-        $token = new Token;
-        $token->id = 'some-id';
-        $token->user_id = $user->getKey();
+        $token            = new Token();
+        $token->id        = 'some-id';
+        $token->user_id   = $user->getKey();
         $token->client_id = $client->getKey();
-        $token->revoked = false;
+        $token->revoked   = false;
         $token->save();
 
         // Act
@@ -173,18 +173,18 @@ class UserModelTest extends ModelTestAbstract
     public function test_it_has_many_auth_codes(): void
     {
         // Arrange
-        $user = User::factory()->create();
-        $client = new Client;
-        $client->name = 'desktop';
+        $user                  = User::factory()->create();
+        $client                = new Client();
+        $client->name          = 'desktop';
         $client->redirect_uris = 'solidtime://oauth/callback';
-        $client->grant_types = [];
-        $client->revoked = false;
+        $client->grant_types   = [];
+        $client->revoked       = false;
         $client->save();
-        $authCode = new AuthCode;
-        $authCode->id = 'some-id';
-        $authCode->user_id = $user->getKey();
+        $authCode            = new AuthCode();
+        $authCode->id        = 'some-id';
+        $authCode->user_id   = $user->getKey();
         $authCode->client_id = $client->getKey();
-        $authCode->revoked = false;
+        $authCode->revoked   = false;
         $authCode->save();
 
         // Act

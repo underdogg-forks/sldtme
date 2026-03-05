@@ -25,25 +25,25 @@ class AuditFactory extends Factory
         $morphPrefix = Config::get('audit.user.morph_prefix', 'user');
 
         return [
-            $morphPrefix.'_id' => function () {
+            $morphPrefix . '_id' => function () {
                 return User::factory()->create()->id;
             },
-            $morphPrefix.'_type' => function () {
-                return (new User)->getMorphClass();
+            $morphPrefix . '_type' => function () {
+                return (new User())->getMorphClass();
             },
-            'event' => 'updated',
+            'event'        => 'updated',
             'auditable_id' => function () {
                 return User::factory()->create()->getKey();
             },
             'auditable_type' => function () {
-                return (new User)->getMorphClass();
+                return (new User())->getMorphClass();
             },
             'old_values' => [],
             'new_values' => [],
-            'url' => $this->faker->url,
+            'url'        => $this->faker->url,
             'ip_address' => $this->faker->ipv4,
             'user_agent' => $this->faker->userAgent,
-            'tags' => implode(',', $this->faker->words(4)),
+            'tags'       => implode(',', $this->faker->words(4)),
         ];
     }
 
@@ -53,8 +53,8 @@ class AuditFactory extends Factory
             $morphPrefix = Config::get('audit.user.morph_prefix', 'user');
 
             return [
-                $morphPrefix.'_id' => $user->getKey(),
-                $morphPrefix.'_type' => $user->getMorphClass(),
+                $morphPrefix . '_id'   => $user->getKey(),
+                $morphPrefix . '_type' => $user->getMorphClass(),
             ];
         });
     }
@@ -63,7 +63,7 @@ class AuditFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($model) {
             return [
-                'auditable_id' => $model->getKey(),
+                'auditable_id'   => $model->getKey(),
                 'auditable_type' => $model->getMorphClass(),
             ];
         });

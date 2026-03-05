@@ -44,9 +44,9 @@ class TokenResourceTest extends FilamentTestCase
     public function test_list_tokens_with_filter_is_personal_access_client_true(): void
     {
         // Arrange
-        $client = Client::factory()->create();
+        $client               = Client::factory()->create();
         $personalAccessClient = Client::factory()->personalAccessClient()->create();
-        $tokens = Token::factory()->forClient($client)->createMany(5);
+        $tokens               = Token::factory()->forClient($client)->createMany(5);
         $personalAccessTokens = Token::factory()->forClient($personalAccessClient)->createMany(5);
 
         // Act
@@ -63,9 +63,9 @@ class TokenResourceTest extends FilamentTestCase
     public function test_list_tokens_with_filter_is_personal_access_client_false(): void
     {
         // Arrange
-        $client = Client::factory()->create();
+        $client               = Client::factory()->create();
         $personalAccessClient = Client::factory()->personalAccessClient()->create();
-        $tokens = Token::factory()->forClient($client)->createMany(5);
+        $tokens               = Token::factory()->forClient($client)->createMany(5);
         $personalAccessTokens = Token::factory()->forClient($personalAccessClient)->createMany(5);
 
         // Act
@@ -83,7 +83,7 @@ class TokenResourceTest extends FilamentTestCase
     {
         // Arrange
         $client = Client::factory()->create();
-        $token = Token::factory()->forClient($client)->create();
+        $token  = Token::factory()->forClient($client)->create();
 
         // Act
         $response = Livewire::test(TokenResource\Pages\ViewToken::class, ['record' => $token->getKey()]);

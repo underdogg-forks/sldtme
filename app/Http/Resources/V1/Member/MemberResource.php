@@ -22,19 +22,19 @@ class MemberResource extends BaseResource
     public function toArray(Request $request): array
     {
         return [
-            /** @var string $id ID of membership */
+            /* @var string $id ID of membership */
             'id' => $this->resource->id,
-            /** @var string $id ID of user */
+            /* @var string $id ID of user */
             'user_id' => $this->resource->user->id,
-            /** @var string $name Name */
+            /* @var string $name Name */
             'name' => $this->resource->user->name,
-            /** @var string $email Email */
+            /* @var string $email Email */
             'email' => $this->resource->user->email,
-            /** @var string $role Role */
+            /* @var string $role Role */
             'role' => $this->resource->role,
-            /** @var bool $is_placeholder Placeholder user for imports, user might not really exist and does not know about this placeholder membership */
+            /* @var bool $is_placeholder Placeholder user for imports, user might not really exist and does not know about this placeholder membership */
             'is_placeholder' => $this->resource->user->is_placeholder,
-            /** @var int|null $billable_rate Billable rate in cents per hour */
+            /* @var int|null $billable_rate Billable rate in cents per hour */
             'billable_rate' => $this->resource->billable_rate,
         ];
     }

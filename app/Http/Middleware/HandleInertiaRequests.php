@@ -39,9 +39,9 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $hasBilling = Module::has('Billing') && Module::isEnabled('Billing');
+        $hasBilling   = Module::has('Billing') && Module::isEnabled('Billing');
         $hasInvoicing = Module::has('Invoicing') && Module::isEnabled('Invoicing');
-        $hasServices = Module::has('Services') && Module::isEnabled('Services');
+        $hasServices  = Module::has('Services') && Module::isEnabled('Services');
 
         /** @var BillingContract $billing */
         $billing = app(BillingContract::class);
@@ -49,14 +49,14 @@ class HandleInertiaRequests extends Middleware
         $currentOrganization = $request->user()?->currentTeam;
 
         return array_merge(parent::share($request), [
-            'has_billing_extension' => $hasBilling,
+            'has_billing_extension'   => $hasBilling,
             'has_invoicing_extension' => $hasInvoicing,
-            'has_services_extension' => $hasServices,
-            'billing' => $currentOrganization !== null ? [
+            'has_services_extension'  => $hasServices,
+            'billing'                 => $currentOrganization !== null ? [
                 'has_subscription' => $billing->hasSubscription($currentOrganization),
-                'has_trial' => $billing->hasTrial($currentOrganization),
-                'trial_until' => $billing->getTrialUntil($currentOrganization)?->toIso8601ZuluString(),
-                'is_blocked' => $billing->isBlocked($currentOrganization),
+                'has_trial'        => $billing->hasTrial($currentOrganization),
+                'trial_until'      => $billing->getTrialUntil($currentOrganization)?->toIso8601ZuluString(),
+                'is_blocked'       => $billing->isBlocked($currentOrganization),
             ] : null,
             'flash' => [
                 'message' => fn () => $request->session()->get('message'),

@@ -13,19 +13,19 @@ use Illuminate\Support\Carbon;
 use Laravel\Passport\Token as PassportToken;
 
 /**
- * @property string $id
- * @property null|string $user_id
- * @property string $client_id
- * @property null|string $name
+ * @property string        $id
+ * @property null|string   $user_id
+ * @property string        $client_id
+ * @property null|string   $name
  * @property array<string> $scopes
- * @property bool $revoked
- * @property Carbon|null $reminder_sent_at
- * @property Carbon|null $expired_info_sent_at
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $expires_at
- * @property-read Client|null $client
- * @property-read User|null $user
+ * @property bool          $revoked
+ * @property Carbon|null   $reminder_sent_at
+ * @property Carbon|null   $expired_info_sent_at
+ * @property Carbon|null   $created_at
+ * @property Carbon|null   $updated_at
+ * @property Carbon|null   $expires_at
+ * @property Client|null   $client
+ * @property User|null     $user
  *
  * @method Builder<Token> isApiToken(bool $isApiToken = true)
  */
@@ -48,7 +48,7 @@ class Token extends PassportToken
     /**
      * Get the user that the token belongs to.
      *
-     * @deprecated Will be removed in a future Laravel version.
+     * @deprecated will be removed in a future Laravel version
      *
      * @return BelongsTo<User, $this>
      */
@@ -59,6 +59,26 @@ class Token extends PassportToken
     }
 
     /**
+     * @param Builder<static> $query
+     *
+     * @return Builder<static>
+     */
+    public function scopeIsApiToken(Builder $query, bool $isApiToken = true): Builder
+    {
+        if ($isApiToken) {
+            return $query->whereHas('client', static function (Builder $query): void {
+                /* @var Builder<Client> $query */
+                $query->whereJsonContains('grant_types', 'personal_access');
+            });
+        } else {
+            return $query->whereHas('client', static function (Builder $query): void {
+                /* @var Builder<Client> $query */
+                $query->whereJsonDoesntContain('grant_types', 'personal_access');
+            });
+        }
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -66,31 +86,11 @@ class Token extends PassportToken
     protected function casts(): array
     {
         return [
-            'scopes' => 'array',
-            'revoked' => 'bool',
-            'expires_at' => 'datetime',
-            'reminder_sent_at' => 'datetime',
+            'scopes'               => 'array',
+            'revoked'              => 'bool',
+            'expires_at'           => 'datetime',
+            'reminder_sent_at'     => 'datetime',
             'expired_info_sent_at' => 'datetime',
         ];
-    }
-
-    /**
-     * @param  Builder<static>  $query
-     * @return Builder<static>
-     */
-    public function scopeIsApiToken(Builder $query, bool $isApiToken = true): Builder
-    {
-        if ($isApiToken) {
-            return $query->whereHas('client', function (Builder $query): void {
-                /** @var Builder<Client> $query */
-                $query->whereJsonContains('grant_types', 'personal_access');
-            });
-        } else {
-            return $query->whereHas('client', function (Builder $query): void {
-                /** @var Builder<Client> $query */
-                $query->whereJsonDoesntContain('grant_types', 'personal_access');
-            });
-        }
-
     }
 }

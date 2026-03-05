@@ -10,7 +10,7 @@ enum TimeEntryRoundingType: string
 {
     use LaravelEnumHelper;
 
-    case Up = 'up';
-    case Down = 'down';
+    case Up      = 'up';
+    case Down    = 'down';
     case Nearest = 'nearest';
 }

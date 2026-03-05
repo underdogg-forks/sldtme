@@ -18,13 +18,13 @@ class RemovePlaceholder
     public function handle(TeamMemberAdded $event): void
     {
         $memberService = app(MemberService::class);
-        $member = Member::query()
+        $member        = Member::query()
             ->whereBelongsTo($event->team, 'organization')
             ->whereBelongsTo($event->user, 'user')
             ->firstOrFail();
         $placeholders = Member::query()
-            ->whereHas('user', function (Builder $query) use ($event): void {
-                /** @var Builder<User> $query */
+            ->whereHas('user', static function (Builder $query) use ($event): void {
+                /* @var Builder<User> $query */
                 $query->where('is_placeholder', '=', true)
                     ->where('email', '=', $event->user->email);
             })

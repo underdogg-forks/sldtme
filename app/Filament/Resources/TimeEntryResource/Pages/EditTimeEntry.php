@@ -22,7 +22,8 @@ class EditTimeEntry extends EditRecord
     }
 
     /**
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
+     *
      * @return array<string, mixed>
      */
     protected function mutateFormDataBeforeSave(array $data): array
@@ -31,7 +32,7 @@ class EditTimeEntry extends EditRecord
             /** @var Member|null $member */
             $member = Member::query()->find($data['member_id']);
             if ($member !== null) {
-                $data['user_id'] = $member->user_id;
+                $data['user_id']         = $member->user_id;
                 $data['organization_id'] = $member->organization_id;
             }
         }

@@ -20,8 +20,8 @@ class ClockifyProjectsImporterTest extends ImporterTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $timezone = 'Europe/Vienna';
-        $importer = new ClockifyProjectsImporter;
+        $timezone     = 'Europe/Vienna';
+        $importer     = new ClockifyProjectsImporter();
         $importer->init($organization);
         $data = Storage::disk('testfiles')->get('clockify_projects_import_test_1.csv');
 
@@ -36,12 +36,12 @@ class ClockifyProjectsImporterTest extends ImporterTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $timezone = 'Europe/Vienna';
-        $importer = new ClockifyProjectsImporter;
+        $timezone     = 'Europe/Vienna';
+        $importer     = new ClockifyProjectsImporter();
         $importer->init($organization);
         $data = Storage::disk('testfiles')->get('clockify_projects_import_test_1.csv');
         $importer->importData($data, $timezone);
-        $importer = new ClockifyProjectsImporter;
+        $importer = new ClockifyProjectsImporter();
         $importer->init($organization);
 
         // Act

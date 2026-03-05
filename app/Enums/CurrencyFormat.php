@@ -11,7 +11,7 @@ enum CurrencyFormat: string
     use LaravelEnumHelper;
 
     case ISOCodeBeforeWithSpace = 'iso-code-before-with-space';
-    case ISOCodeAfterWithSpace = 'iso-code-after-with-space';
+    case ISOCodeAfterWithSpace  = 'iso-code-after-with-space';
 
     case SymbolBefore = 'symbol-before';
 
@@ -28,7 +28,7 @@ enum CurrencyFormat: string
     {
         $selectArray = [];
         foreach (self::values() as $value) {
-            $selectArray[(string) $value] = (string) __('enum.currency_format.'.$value);
+            $selectArray[(string) $value] = (string) __('enum.currency_format.' . $value);
         }
 
         return $selectArray;

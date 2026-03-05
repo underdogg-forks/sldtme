@@ -18,19 +18,12 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(HandleInertiaRequests::class)]
 class HandleInertiaRequestsMiddlewareTest extends MiddlewareTestAbstract
 {
-    private function createTestRoute(): string
-    {
-        return Route::get('/test-route', function () {
-            return Inertia::render('Welcome');
-        })->middleware([StartSession::class, HandleInertiaRequests::class])->uri;
-    }
-
     public function test_adds_billing_information_to_shared_data_of_inertia_requests(): void
     {
         // Arrange
-        $user = $this->createUserWithPermission();
+        $user  = $this->createUserWithPermission();
         $route = $this->createTestRoute();
-        $this->mock(BillingContract::class, function (MockInterface $mock): void {
+        $this->mock(BillingContract::class, static function (MockInterface $mock): void {
             $mock->shouldReceive('hasSubscription')->andReturn(false);
             $mock->shouldReceive('hasTrial')->andReturn(false);
             $mock->shouldReceive('getTrialUntil')->andReturn(null);
@@ -42,21 +35,22 @@ class HandleInertiaRequestsMiddlewareTest extends MiddlewareTestAbstract
         $response = $this->get($route);
 
         // Assert
-        $response->assertInertia(fn (Assert $page) => $page
-            ->where('billing.has_subscription', false)
-            ->where('billing.has_trial', false)
-            ->where('billing.trial_until', null)
-            ->where('billing.is_blocked', false)
+        $response->assertInertia(
+            fn (Assert $page) => $page
+                ->where('billing.has_subscription', false)
+                ->where('billing.has_trial', false)
+                ->where('billing.trial_until', null)
+                ->where('billing.is_blocked', false)
         );
     }
 
     public function test_adds_billing_information_to_shared_data_of_inertia_requests_with_active_trial(): void
     {
         // Arrange
-        $user = $this->createUserWithPermission();
-        $route = $this->createTestRoute();
+        $user       = $this->createUserWithPermission();
+        $route      = $this->createTestRoute();
         $trialUntil = Carbon::now()->addDays(10);
-        $this->mock(BillingContract::class, function (MockInterface $mock) use ($trialUntil): void {
+        $this->mock(BillingContract::class, static function (MockInterface $mock) use ($trialUntil): void {
             $mock->shouldReceive('hasSubscription')->andReturn(false);
             $mock->shouldReceive('hasTrial')->andReturn(true);
             $mock->shouldReceive('getTrialUntil')->andReturn($trialUntil);
@@ -68,11 +62,19 @@ class HandleInertiaRequestsMiddlewareTest extends MiddlewareTestAbstract
         $response = $this->get($route);
 
         // Assert
-        $response->assertInertia(fn (Assert $page) => $page
-            ->where('billing.has_subscription', false)
-            ->where('billing.has_trial', true)
-            ->where('billing.trial_until', $trialUntil->toIso8601ZuluString())
-            ->where('billing.is_blocked', false)
+        $response->assertInertia(
+            fn (Assert $page) => $page
+                ->where('billing.has_subscription', false)
+                ->where('billing.has_trial', true)
+                ->where('billing.trial_until', $trialUntil->toIso8601ZuluString())
+                ->where('billing.is_blocked', false)
         );
+    }
+
+    private function createTestRoute(): string
+    {
+        return Route::get('/test-route', static function () {
+            return Inertia::render('Welcome');
+        })->middleware([StartSession::class, HandleInertiaRequests::class])->uri;
     }
 }

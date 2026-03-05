@@ -31,7 +31,7 @@ class DashboardEndpointTest extends EndpointTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $user = User::factory()->forCurrentOrganization($organization)->create();
+        $user         = User::factory()->forCurrentOrganization($organization)->create();
         $organization->users()->attach($user, ['role' => Role::Employee->value]);
         $this->actingAs($user);
 

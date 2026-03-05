@@ -18,35 +18,18 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(CheckOrganizationBlocked::class)]
 class CheckOrganizationBlockedMiddlewareTest extends MiddlewareTestAbstract
 {
-    private function createTestRoute(): void
-    {
-        Route::get('/test-route/{organization}', function (Organization $organization) {
-            return response()->json(['message' => 'Test route', 'id' => $organization->getKey()]);
-        })->middleware([StartSession::class, SubstituteBindings::class, CheckOrganizationBlocked::class]);
-
-    }
-
-    private function createTestRouteNoModelBinding(): string
-    {
-        $route = Route::get('/test-route', function () {
-            return response()->json(['message' => 'Test route']);
-        })->middleware([StartSession::class, SubstituteBindings::class, CheckOrganizationBlocked::class]);
-
-        return $route->uri;
-    }
-
     public function test_request_fails_if_organization_is_blocked_by_the_billing_system(): void
     {
         // Arrange
         $user = $this->createUserWithPermission();
         $this->createTestRoute();
-        $this->mock(BillingContract::class, function (MockInterface $mock): void {
+        $this->mock(BillingContract::class, static function (MockInterface $mock): void {
             $mock->shouldReceive('isBlocked')->andReturn(true)->once();
         });
         Passport::actingAs($user->user);
 
         // Act
-        $response = $this->get('/test-route/'.$user->organization->getKey());
+        $response = $this->get('/test-route/' . $user->organization->getKey());
 
         // Assert
         $response->assertStatus(400);
@@ -58,13 +41,13 @@ class CheckOrganizationBlockedMiddlewareTest extends MiddlewareTestAbstract
         // Arrange
         $user = $this->createUserWithPermission();
         $this->createTestRoute();
-        $this->mock(BillingContract::class, function (MockInterface $mock): void {
+        $this->mock(BillingContract::class, static function (MockInterface $mock): void {
             $mock->shouldReceive('isBlocked')->never();
         });
         Passport::actingAs($user->user);
 
         // Act
-        $response = $this->get('/test-route/'.Str::uuid());
+        $response = $this->get('/test-route/' . Str::uuid());
 
         // Assert
         $response->assertStatus(404);
@@ -73,9 +56,9 @@ class CheckOrganizationBlockedMiddlewareTest extends MiddlewareTestAbstract
     public function test_request_fails_on_route_without_organization_model_binding(): void
     {
         // Arrange
-        $user = $this->createUserWithPermission();
+        $user  = $this->createUserWithPermission();
         $route = $this->createTestRouteNoModelBinding();
-        $this->mock(BillingContract::class, function (MockInterface $mock): void {
+        $this->mock(BillingContract::class, static function (MockInterface $mock): void {
             $mock->shouldReceive('isBlocked')->never();
         });
         Passport::actingAs($user->user);
@@ -92,16 +75,32 @@ class CheckOrganizationBlockedMiddlewareTest extends MiddlewareTestAbstract
         // Arrange
         $user = $this->createUserWithPermission();
         $this->createTestRoute();
-        $this->mock(BillingContract::class, function (MockInterface $mock): void {
+        $this->mock(BillingContract::class, static function (MockInterface $mock): void {
             $mock->shouldReceive('isBlocked')->andReturn(false)->once();
         });
         Passport::actingAs($user->user);
 
         // Act
-        $response = $this->get('/test-route/'.$user->organization->getKey());
+        $response = $this->get('/test-route/' . $user->organization->getKey());
 
         // Assert
         $response->assertStatus(200);
         $response->assertJson(['message' => 'Test route', 'id' => $user->organization->getKey()]);
+    }
+
+    private function createTestRoute(): void
+    {
+        Route::get('/test-route/{organization}', static function (Organization $organization) {
+            return response()->json(['message' => 'Test route', 'id' => $organization->getKey()]);
+        })->middleware([StartSession::class, SubstituteBindings::class, CheckOrganizationBlocked::class]);
+    }
+
+    private function createTestRouteNoModelBinding(): string
+    {
+        $route = Route::get('/test-route', static function () {
+            return response()->json(['message' => 'Test route']);
+        })->middleware([StartSession::class, SubstituteBindings::class, CheckOrganizationBlocked::class]);
+
+        return $route->uri;
     }
 }

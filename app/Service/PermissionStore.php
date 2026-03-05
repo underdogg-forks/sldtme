@@ -35,15 +35,15 @@ class PermissionStore
 
     public function userHas(Organization $organization, User $user, string $permission): bool
     {
-        if (! isset($this->permissionCache[$user->getKey().'|'.$organization->getKey()])) {
-            if (! $user->belongsToTeam($organization)) {
+        if ( ! isset($this->permissionCache[$user->getKey() . '|' . $organization->getKey()])) {
+            if ( ! $user->belongsToTeam($organization)) {
                 return false;
             }
 
-            $permissions = $this->getPermissionsByUser($organization, $user);
-            $this->permissionCache[$user->getKey().'|'.$organization->getKey()] = $permissions;
+            $permissions                                                            = $this->getPermissionsByUser($organization, $user);
+            $this->permissionCache[$user->getKey() . '|' . $organization->getKey()] = $permissions;
         } else {
-            $permissions = $this->permissionCache[$user->getKey().'|'.$organization->getKey()];
+            $permissions = $this->permissionCache[$user->getKey() . '|' . $organization->getKey()];
         }
 
         return in_array($permission, $permissions, true);
@@ -52,9 +52,23 @@ class PermissionStore
     /**
      * @return array<string>
      */
+    public function getPermissions(Organization $organization): array
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+        if ($user === null) {
+            return [];
+        }
+
+        return $this->getPermissionsByUser($organization, $user);
+    }
+
+    /**
+     * @return array<string>
+     */
     private function getPermissionsByUser(Organization $organization, User $user): array
     {
-        if (! $user->belongsToTeam($organization)) {
+        if ( ! $user->belongsToTeam($organization)) {
             return [];
         }
 
@@ -84,19 +98,5 @@ class PermissionStore
         }
 
         return $permissions;
-    }
-
-    /**
-     * @return array<string>
-     */
-    public function getPermissions(Organization $organization): array
-    {
-        /** @var User|null $user */
-        $user = Auth::user();
-        if ($user === null) {
-            return [];
-        }
-
-        return $this->getPermissionsByUser($organization, $user);
     }
 }

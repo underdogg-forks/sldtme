@@ -18,16 +18,8 @@ use Illuminate\Http\JsonResponse;
 
 class TagController extends Controller
 {
-    protected function checkPermission(Organization $organization, string $permission, ?Tag $tag = null): void
-    {
-        parent::checkPermission($organization, $permission);
-        if ($tag !== null && $tag->organization_id !== $organization->getKey()) {
-            throw new AuthorizationException('Tag does not belong to organization');
-        }
-    }
-
     /**
-     * Get tags
+     * Get tags.
      *
      * @return TagCollection<TagResource>
      *
@@ -48,7 +40,7 @@ class TagController extends Controller
     }
 
     /**
-     * Create tag
+     * Create tag.
      *
      * @throws AuthorizationException
      *
@@ -58,7 +50,7 @@ class TagController extends Controller
     {
         $this->checkPermission($organization, 'tags:create');
 
-        $tag = new Tag;
+        $tag       = new Tag();
         $tag->name = $request->input('name');
         $tag->organization()->associate($organization);
         $tag->save();
@@ -67,7 +59,7 @@ class TagController extends Controller
     }
 
     /**
-     * Update tag
+     * Update tag.
      *
      * @throws AuthorizationException
      *
@@ -84,7 +76,7 @@ class TagController extends Controller
     }
 
     /**
-     * Delete tag
+     * Delete tag.
      *
      * @throws AuthorizationException|EntityStillInUseApiException
      *
@@ -101,5 +93,13 @@ class TagController extends Controller
         $tag->delete();
 
         return response()->json(null, 204);
+    }
+
+    protected function checkPermission(Organization $organization, string $permission, ?Tag $tag = null): void
+    {
+        parent::checkPermission($organization, $permission);
+        if ($tag !== null && $tag->organization_id !== $organization->getKey()) {
+            throw new AuthorizationException('Tag does not belong to organization');
+        }
     }
 }

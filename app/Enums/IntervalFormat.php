@@ -10,7 +10,7 @@ enum IntervalFormat: string
 {
     use LaravelEnumHelper;
 
-    case Decimal = 'decimal';
+    case Decimal      = 'decimal';
     case HoursMinutes = 'hours-minutes';
 
     case HoursMinutesColonSeparated = 'hours-minutes-colon-separated';
@@ -24,7 +24,7 @@ enum IntervalFormat: string
     {
         $selectArray = [];
         foreach (self::values() as $value) {
-            $selectArray[(string) $value] = (string) __('enum.interval_format.'.$value);
+            $selectArray[(string) $value] = (string) __('enum.interval_format.' . $value);
         }
 
         return $selectArray;

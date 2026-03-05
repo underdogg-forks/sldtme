@@ -20,7 +20,7 @@ class TimeEntryFilter
     private Builder $builder;
 
     /**
-     * @param  Builder<TimeEntry>  $builder
+     * @param Builder<TimeEntry> $builder
      */
     public function __construct(Builder $builder)
     {
@@ -105,7 +105,7 @@ class TimeEntryFilter
     }
 
     /**
-     * @param  array<string>|null  $memberIds
+     * @param array<string>|null $memberIds
      */
     public function addMemberIdsFilter(?array $memberIds): self
     {
@@ -144,7 +144,7 @@ class TimeEntryFilter
     }
 
     /**
-     * @param  array<string>|null  $clientIds
+     * @param array<string>|null $clientIds
      */
     public function addClientIdsFilter(?array $clientIds): self
     {
@@ -152,7 +152,7 @@ class TimeEntryFilter
             return $this;
         }
         $includeNone = in_array(self::NONE_VALUE, $clientIds, true);
-        $clientIds = array_values(array_filter($clientIds, fn (string $id): bool => $id !== self::NONE_VALUE));
+        $clientIds   = array_values(array_filter($clientIds, fn (string $id): bool => $id !== self::NONE_VALUE));
 
         $this->builder->where(function (Builder $builder) use ($clientIds, $includeNone): void {
             if (count($clientIds) > 0) {
@@ -167,7 +167,7 @@ class TimeEntryFilter
     }
 
     /**
-     * @param  array<string>|null  $projectIds
+     * @param array<string>|null $projectIds
      */
     public function addProjectIdsFilter(?array $projectIds): self
     {
@@ -175,7 +175,7 @@ class TimeEntryFilter
             return $this;
         }
         $includeNone = in_array(self::NONE_VALUE, $projectIds, true);
-        $projectIds = array_values(array_filter($projectIds, fn (string $id): bool => $id !== self::NONE_VALUE));
+        $projectIds  = array_values(array_filter($projectIds, fn (string $id): bool => $id !== self::NONE_VALUE));
 
         $this->builder->where(function (Builder $builder) use ($projectIds, $includeNone): void {
             if (count($projectIds) > 0) {
@@ -190,7 +190,7 @@ class TimeEntryFilter
     }
 
     /**
-     * @param  array<string>|null  $tagIds
+     * @param array<string>|null $tagIds
      */
     public function addTagIdsFilter(?array $tagIds): self
     {
@@ -198,7 +198,7 @@ class TimeEntryFilter
             return $this;
         }
         $includeNone = in_array(self::NONE_VALUE, $tagIds, true);
-        $tagIds = array_values(array_filter($tagIds, fn (string $id): bool => $id !== self::NONE_VALUE));
+        $tagIds      = array_values(array_filter($tagIds, fn (string $id): bool => $id !== self::NONE_VALUE));
 
         $this->builder->where(function (Builder $builder) use ($tagIds, $includeNone): void {
             foreach ($tagIds as $tagId) {
@@ -215,7 +215,7 @@ class TimeEntryFilter
     }
 
     /**
-     * @param  array<string>|null  $taskIds
+     * @param array<string>|null $taskIds
      */
     public function addTaskIdsFilter(?array $taskIds): self
     {
@@ -223,7 +223,7 @@ class TimeEntryFilter
             return $this;
         }
         $includeNone = in_array(self::NONE_VALUE, $taskIds, true);
-        $taskIds = array_values(array_filter($taskIds, fn (string $id): bool => $id !== self::NONE_VALUE));
+        $taskIds     = array_values(array_filter($taskIds, fn (string $id): bool => $id !== self::NONE_VALUE));
 
         $this->builder->where(function (Builder $builder) use ($taskIds, $includeNone): void {
             if (count($taskIds) > 0) {

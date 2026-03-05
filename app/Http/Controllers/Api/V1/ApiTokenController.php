@@ -14,11 +14,12 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 class ApiTokenController extends Controller
 {
     /**
-     * List all api token of the currently authenticated user
+     * List all api token of the currently authenticated user.
      *
      * This endpoint is independent of organization.
      *
@@ -31,8 +32,8 @@ class ApiTokenController extends Controller
         $user = $this->user();
 
         $tokens = $user->tokens()
-            ->whereHas('client', function (Builder $query): void {
-                /** @var Builder<Client> $query */
+            ->whereHas('client', static function (Builder $query): void {
+                /* @var Builder<Client> $query */
                 $query->whereJsonContains('grant_types', 'personal_access');
             })
             ->orderBy('created_at', 'desc')
@@ -42,7 +43,7 @@ class ApiTokenController extends Controller
     }
 
     /**
-     * Create a new api token for the currently authenticated user
+     * Create a new api token for the currently authenticated user.
      *
      * The response will contain the access token that can be used to send authenticated API requests.
      * Please note that the access token is only shown in this response and cannot be retrieved later.
@@ -62,10 +63,10 @@ class ApiTokenController extends Controller
             $tokenModel = $token->getToken();
 
             return new ApiTokenWithAccessTokenResource($tokenModel, $token->accessToken);
-        } catch (\RuntimeException $exception) {
+        } catch (RuntimeException $exception) {
             report($exception);
             if (Str::contains($exception->getMessage(), ['Personal access client not found'])) {
-                throw new PersonalAccessClientIsNotConfiguredException;
+                throw new PersonalAccessClientIsNotConfiguredException();
             }
 
             throw $exception;
@@ -73,7 +74,7 @@ class ApiTokenController extends Controller
     }
 
     /**
-     * Revoke an api token
+     * Revoke an api token.
      *
      * @operationId revokeApiToken
      *
@@ -87,7 +88,7 @@ class ApiTokenController extends Controller
         if ($apiToken->user_id !== $user->getKey()) {
             throw new AuthorizationException('API token does not belong to user');
         }
-        if (! ($apiToken->client?->hasGrantType('personal_access') ?? false)) {
+        if ( ! ($apiToken->client?->hasGrantType('personal_access') ?? false)) {
             throw new AuthorizationException('API token is not a personal access token');
         }
 
@@ -97,7 +98,7 @@ class ApiTokenController extends Controller
     }
 
     /**
-     * Delete an api token
+     * Delete an api token.
      *
      * @operationId deleteApiToken
      *
@@ -110,7 +111,7 @@ class ApiTokenController extends Controller
         if ($apiToken->user_id !== $user->getKey()) {
             throw new AuthorizationException('API token does not belong to user');
         }
-        if (! ($apiToken->client?->hasGrantType('personal_access') ?? false)) {
+        if ( ! ($apiToken->client?->hasGrantType('personal_access') ?? false)) {
             throw new AuthorizationException('API token is not a personal access token');
         }
 

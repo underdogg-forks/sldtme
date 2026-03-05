@@ -32,9 +32,9 @@ class MemberServiceTest extends TestCaseWithDatabase
     public function test_change_ownership_fails_if_member_is_not_part_of_organization(): void
     {
         // Arrange
-        $organization = Organization::factory()->create();
+        $organization      = Organization::factory()->create();
         $otherOrganization = Organization::factory()->create();
-        $newOwner = Member::factory()->forOrganization($otherOrganization)->create();
+        $newOwner          = Member::factory()->forOrganization($otherOrganization)->create();
 
         // Act
         $this->expectException(InvalidArgumentException::class);
@@ -42,16 +42,16 @@ class MemberServiceTest extends TestCaseWithDatabase
 
         // Assert
         $this->assertDatabaseHas(Organization::class, [
-            'id' => $organization->getKey(),
+            'id'      => $organization->getKey(),
             'user_id' => null,
         ]);
     }
 
     public function test_change_ownership_changes_ownership_to_new_member(): void
     {
-        $organization = Organization::factory()->create();
-        $newOwner = User::factory()->create();
-        $oldOwner = User::factory()->create();
+        $organization   = Organization::factory()->create();
+        $newOwner       = User::factory()->create();
+        $oldOwner       = User::factory()->create();
         $newOwnerMember = Member::factory()->forUser($newOwner)->forOrganization($organization)->role(Role::Admin)->create();
         $oldOwnerMember = Member::factory()->forUser($oldOwner)->forOrganization($organization)->role(Role::Owner)->create();
 
@@ -67,18 +67,18 @@ class MemberServiceTest extends TestCaseWithDatabase
     public function test_make_member_to_placeholder_creates_new_user_based_on_member_and_changes_member_to_placeholder(): void
     {
         // Arrange
-        $user = User::factory()->create();
-        $organization = Organization::factory()->create();
-        $member = Member::factory()->forOrganization($organization)->forUser($user)->role(Role::Employee)->create();
-        $timeEntry = TimeEntry::factory()->forOrganization($organization)->forMember($member)->create();
-        $project = Project::factory()->forOrganization($organization)->create();
+        $user          = User::factory()->create();
+        $organization  = Organization::factory()->create();
+        $member        = Member::factory()->forOrganization($organization)->forUser($user)->role(Role::Employee)->create();
+        $timeEntry     = TimeEntry::factory()->forOrganization($organization)->forMember($member)->create();
+        $project       = Project::factory()->forOrganization($organization)->create();
         $projectMember = ProjectMember::factory()->forProject($project)->forMember($member)->create();
         // Note: create other user, organization, member, time entry and project member to check that they are not changed
-        $otherUser = User::factory()->create();
-        $otherOrganization = Organization::factory()->create();
-        $otherMember = Member::factory()->forOrganization($otherOrganization)->forUser($otherUser)->role(Role::Employee)->create();
-        $otherTimeEntry = TimeEntry::factory()->forOrganization($otherOrganization)->forMember($otherMember)->create();
-        $otherProject = Project::factory()->forOrganization($otherOrganization)->create();
+        $otherUser          = User::factory()->create();
+        $otherOrganization  = Organization::factory()->create();
+        $otherMember        = Member::factory()->forOrganization($otherOrganization)->forUser($otherUser)->role(Role::Employee)->create();
+        $otherTimeEntry     = TimeEntry::factory()->forOrganization($otherOrganization)->forMember($otherMember)->create();
+        $otherProject       = Project::factory()->forOrganization($otherOrganization)->create();
         $otherProjectMember = ProjectMember::factory()->forProject($otherProject)->forMember($otherMember)->create();
 
         // Act
@@ -116,8 +116,8 @@ class MemberServiceTest extends TestCaseWithDatabase
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $user = User::factory()->forCurrentOrganization($organization)->create();
-        $member = Member::factory()->forOrganization($organization)->forUser($user)->role(Role::Employee)->create();
+        $user         = User::factory()->forCurrentOrganization($organization)->create();
+        $member       = Member::factory()->forOrganization($organization)->forUser($user)->role(Role::Employee)->create();
 
         // Act
         $this->memberService->makeMemberToPlaceholder($member);
@@ -132,11 +132,11 @@ class MemberServiceTest extends TestCaseWithDatabase
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $user = User::factory()->forCurrentOrganization($organization)->create();
-        $member = Member::factory()->forOrganization($organization)->forUser($user)->role(Role::Employee)->create();
+        $user         = User::factory()->forCurrentOrganization($organization)->create();
+        $member       = Member::factory()->forOrganization($organization)->forUser($user)->role(Role::Employee)->create();
 
         $otherOrganization = Organization::factory()->create();
-        $otherMember = Member::factory()->forOrganization($otherOrganization)->forUser($user)->role(Role::Employee)->create();
+        $otherMember       = Member::factory()->forOrganization($otherOrganization)->forUser($user)->role(Role::Employee)->create();
 
         // Act
         $this->memberService->makeMemberToPlaceholder($member);
@@ -150,14 +150,14 @@ class MemberServiceTest extends TestCaseWithDatabase
     public function test_assign_organization_entities_to_different_member_without_any_entries(): void
     {
         // Arrange
-        $organization = Organization::factory()->create();
-        $project = Project::factory()->forOrganization($organization)->create();
-        $otherUser = User::factory()->create();
-        $fromUser = User::factory()->create();
-        $toUser = User::factory()->create();
+        $organization    = Organization::factory()->create();
+        $project         = Project::factory()->forOrganization($organization)->create();
+        $otherUser       = User::factory()->create();
+        $fromUser        = User::factory()->create();
+        $toUser          = User::factory()->create();
         $otherUserMember = Member::factory()->forOrganization($organization)->forUser($otherUser)->create();
-        $fromUserMember = Member::factory()->forOrganization($organization)->forUser($fromUser)->create();
-        $toUserMember = Member::factory()->forOrganization($organization)->forUser($toUser)->create();
+        $fromUserMember  = Member::factory()->forOrganization($organization)->forUser($fromUser)->create();
+        $toUserMember    = Member::factory()->forOrganization($organization)->forUser($toUser)->create();
         TimeEntry::factory()->forOrganization($organization)->forMember($otherUserMember)->createMany(3);
         TimeEntry::factory()->forOrganization($organization)->forMember($fromUserMember)->createMany(3);
         ProjectMember::factory()->forProject($project)->forMember($otherUserMember)->create();
@@ -185,14 +185,14 @@ class MemberServiceTest extends TestCaseWithDatabase
     public function test_assign_organization_entities_to_different_member_with_entries(): void
     {
         // Arrange
-        $organization = Organization::factory()->create();
-        $project = Project::factory()->forOrganization($organization)->create();
-        $otherUser = User::factory()->create();
-        $fromUser = User::factory()->create();
-        $toUser = User::factory()->create();
+        $organization    = Organization::factory()->create();
+        $project         = Project::factory()->forOrganization($organization)->create();
+        $otherUser       = User::factory()->create();
+        $fromUser        = User::factory()->create();
+        $toUser          = User::factory()->create();
         $otherUserMember = Member::factory()->forOrganization($organization)->forUser($otherUser)->create();
-        $fromUserMember = Member::factory()->forOrganization($organization)->forUser($fromUser)->create();
-        $toUserMember = Member::factory()->forOrganization($organization)->forUser($toUser)->create();
+        $fromUserMember  = Member::factory()->forOrganization($organization)->forUser($fromUser)->create();
+        $toUserMember    = Member::factory()->forOrganization($organization)->forUser($toUser)->create();
         TimeEntry::factory()->forOrganization($organization)->forMember($otherUserMember)->createMany(3);
         TimeEntry::factory()->forOrganization($organization)->forMember($fromUserMember)->createMany(3);
         TimeEntry::factory()->forOrganization($organization)->forMember($toUserMember)->createMany(3);
@@ -226,13 +226,13 @@ class MemberServiceTest extends TestCaseWithDatabase
 
         $this->assertDatabaseCount(ProjectMember::class, 2);
         $this->assertDatabaseHas(ProjectMember::class, [
-            'project_id' => $project->id,
-            'member_id' => $toUserMember->id,
+            'project_id'    => $project->id,
+            'member_id'     => $toUserMember->id,
             'billable_rate' => 3,
         ]);
         $this->assertDatabaseHas(ProjectMember::class, [
-            'project_id' => $project->id,
-            'member_id' => $otherUserMember->id,
+            'project_id'    => $project->id,
+            'member_id'     => $otherUserMember->id,
             'billable_rate' => 1,
         ]);
     }

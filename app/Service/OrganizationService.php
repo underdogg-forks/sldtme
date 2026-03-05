@@ -26,9 +26,8 @@ class OrganizationService
         ?IntervalFormat $intervalFormat = null,
         ?TimeFormat $timeFormat = null,
     ): Organization {
-
-        $organization = new Organization;
-        $organization->name = $name;
+        $organization                = new Organization();
+        $organization->name          = $name;
         $organization->personal_team = $personalOrganization;
         if ($currency === null) {
             $currency = config('app.localization.default_currency');
@@ -58,7 +57,8 @@ class OrganizationService
         $organization->save();
 
         $organization->users()->attach(
-            $owner, [
+            $owner,
+            [
                 'role' => Role::Owner->value,
             ]
         );

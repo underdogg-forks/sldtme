@@ -53,13 +53,13 @@ class DetailedWithDataReportResource extends BaseResource
     private array $historyData;
 
     /**
-     * @param  Data  $data
-     * @param  Data  $historyData
+     * @param Data $data
+     * @param Data $historyData
      */
     public function __construct(Report $resource, array $data, array $historyData)
     {
         parent::__construct($resource);
-        $this->data = $data;
+        $this->data        = $data;
         $this->historyData = $historyData;
     }
 
@@ -73,39 +73,39 @@ class DetailedWithDataReportResource extends BaseResource
         $currencyService = app(CurrencyService::class);
 
         return [
-            /** @var string $name Name */
+            /* @var string $name Name */
             'name' => $this->resource->name,
-            /** @var string|null $email Description */
+            /* @var string|null $email Description */
             'description' => $this->resource->description,
-            /** @var string|null $public_until Date until the report is public */
+            /* @var string|null $public_until Date until the report is public */
             'public_until' => $this->formatDateTime($this->resource->public_until),
-            /** @var string $currency Currency code (ISO 4217) */
+            /* @var string $currency Currency code (ISO 4217) */
             'currency' => $this->resource->organization->currency,
-            /** @var NumberFormat $number_format Number format */
+            /* @var NumberFormat $number_format Number format */
             'number_format' => $this->resource->organization->number_format->value,
-            /** @var CurrencyFormat $currency_format Currency format */
+            /* @var CurrencyFormat $currency_format Currency format */
             'currency_format' => $this->resource->organization->currency_format->value,
-            /** @var string $currency_symbol Currency symbol */
+            /* @var string $currency_symbol Currency symbol */
             'currency_symbol' => $currencyService->getCurrencySymbol($this->resource->organization->currency),
-            /** @var DateFormat $date_format Date format */
+            /* @var DateFormat $date_format Date format */
             'date_format' => $this->resource->organization->date_format->value,
-            /** @var IntervalFormat $interval_format Interval format */
+            /* @var IntervalFormat $interval_format Interval format */
             'interval_format' => $this->resource->organization->interval_format->value,
-            /** @var TimeFormat $time_format Time format */
+            /* @var TimeFormat $time_format Time format */
             'time_format' => $this->resource->organization->time_format->value,
-            'properties' => [
-                /** @var string $group Type of first grouping */
+            'properties'  => [
+                /* @var string $group Type of first grouping */
                 'group' => $this->resource->properties->group->value,
-                /** @var string $sub_group Type of second grouping */
+                /* @var string $sub_group Type of second grouping */
                 'sub_group' => $this->resource->properties->subGroup->value,
-                /** @var string $history_group Type of grouping of the historic aggregation (time chart) */
+                /* @var string $history_group Type of grouping of the historic aggregation (time chart) */
                 'history_group' => $this->resource->properties->historyGroup->value,
-                /** @var string $start Start date of the report */
+                /* @var string $start Start date of the report */
                 'start' => $this->formatDateTime($this->resource->properties->start),
-                /** @var string $end End date of the report */
+                /* @var string $end End date of the report */
                 'end' => $this->formatDateTime($this->resource->properties->end),
             ],
-            /** @var array{
+            /* @var array{
              *        grouped_type: string|null,
              *        grouped_data: null|array<array{
              *            key: string|null,
@@ -129,7 +129,7 @@ class DetailedWithDataReportResource extends BaseResource
              *  } $data Aggregated data
              */
             'data' => $this->data,
-            /** @var array{
+            /* @var array{
              *        grouped_type: string|null,
              *        grouped_data: null|array<array{
              *            key: string|null,

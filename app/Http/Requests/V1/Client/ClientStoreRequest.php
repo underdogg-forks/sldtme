@@ -29,8 +29,8 @@ class ClientStoreRequest extends BaseFormRequest
                 'string',
                 'min:1',
                 'max:255',
-                UniqueEloquent::make(Client::class, 'name', function (Builder $builder): Builder {
-                    /** @var Builder<Client> $builder */
+                UniqueEloquent::make(Client::class, 'name', static function (Builder $builder): Builder {
+                    /* @var Builder<Client> $builder */
                     return $builder->whereBelongsTo($this->organization, 'organization');
                 })->withCustomTranslation('validation.client_name_already_exists'),
             ],

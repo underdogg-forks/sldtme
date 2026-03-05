@@ -36,7 +36,6 @@ class ProjectMembersRelationManager extends RelationManager
                     ->sortable(),
             ])
             ->filters([
-                //
             ])
             ->headerActions([
             ])

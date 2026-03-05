@@ -18,7 +18,7 @@ class MemberMadeToPlaceholder
 
     public function __construct(Member $member, Organization $organization)
     {
-        $this->member = $member;
+        $this->member       = $member;
         $this->organization = $organization;
     }
 }

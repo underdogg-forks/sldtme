@@ -7,8 +7,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
@@ -29,7 +28,7 @@ return new class extends Migration
                     ->whereColumn('oauth_access_tokens.client_id', 'oauth_clients.id');
             })
             ->delete();
-        Schema::table('oauth_access_tokens', function (Blueprint $table): void {
+        Schema::table('oauth_access_tokens', static function (Blueprint $table): void {
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
@@ -55,7 +54,7 @@ return new class extends Migration
                     ->whereColumn('oauth_auth_codes.client_id', 'oauth_clients.id');
             })
             ->delete();
-        Schema::table('oauth_auth_codes', function (Blueprint $table): void {
+        Schema::table('oauth_auth_codes', static function (Blueprint $table): void {
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
@@ -75,14 +74,14 @@ return new class extends Migration
                     ->whereColumn('oauth_clients.user_id', 'users.id');
             })
             ->delete();
-        Schema::table('oauth_clients', function (Blueprint $table): void {
+        Schema::table('oauth_clients', static function (Blueprint $table): void {
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
                 ->onDelete('restrict')
                 ->onUpdate('cascade');
         });
-        Schema::table('oauth_personal_access_clients', function (Blueprint $table): void {
+        Schema::table('oauth_personal_access_clients', static function (Blueprint $table): void {
             $table->foreign('client_id')
                 ->references('id')
                 ->on('oauth_clients')
@@ -96,18 +95,18 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('oauth_access_tokens', function (Blueprint $table): void {
+        Schema::table('oauth_access_tokens', static function (Blueprint $table): void {
             $table->dropForeign(['user_id']);
             $table->dropForeign(['client_id']);
         });
-        Schema::table('oauth_auth_codes', function (Blueprint $table): void {
+        Schema::table('oauth_auth_codes', static function (Blueprint $table): void {
             $table->dropForeign(['user_id']);
             $table->dropForeign(['client_id']);
         });
-        Schema::table('oauth_clients', function (Blueprint $table): void {
+        Schema::table('oauth_clients', static function (Blueprint $table): void {
             $table->dropForeign(['user_id']);
         });
-        Schema::table('oauth_personal_access_clients', function (Blueprint $table): void {
+        Schema::table('oauth_personal_access_clients', static function (Blueprint $table): void {
             $table->dropForeign(['client_id']);
         });
     }

@@ -36,6 +36,26 @@ abstract class TestCase extends BaseTestCase
         // $this->travelTo(Carbon::now()->timezone('Europe/Vienna')->setHour(0)->setMinute(59)->setSecond(0));
     }
 
+    protected function tearDown(): void
+    {
+        // Note: It is necessary to clear the permission cache after each test, since the "scoped singletons" are not reset between tests.
+        app(PermissionStore::class)->clear();
+        parent::tearDown();
+    }
+
+    /**
+     * Set the current time to the given time.
+     * This method fixes a bug, that setting the test now with Carbon::setTestNow() with a Carbon instance that has a timezone set, will not work as expected.
+     * IT will also set the timezone for model casts with type "datetime" to the timezone and not use the timezone configured in the configuration "app.timezone".
+     *
+     * @param Carbon|CarbonImmutable $date
+     * @param callable|null          $callback
+     */
+    public function travelTo($date, $callback = null): void
+    {
+        parent::travelTo($date->utc());
+    }
+
     protected function mockPrivateStorage(): void
     {
         Storage::fake(config('filesystems.default'));
@@ -46,34 +66,14 @@ abstract class TestCase extends BaseTestCase
         Storage::fake(config('filesystems.public'));
     }
 
-    protected function tearDown(): void
-    {
-        // Note: It is necessary to clear the permission cache after each test, since the "scoped singletons" are not reset between tests.
-        app(PermissionStore::class)->clear();
-        parent::tearDown();
-    }
-
     protected function assertEqualsIdsOfEloquentCollection(array $ids, Collection $models): void
     {
         $this->assertEqualsCanonicalizing($ids, $models->pluck('id')->toArray());
     }
 
-    /**
-     * Set the current time to the given time.
-     * This method fixes a bug, that setting the test now with Carbon::setTestNow() with a Carbon instance that has a timezone set, will not work as expected.
-     * IT will also set the timezone for model casts with type "datetime" to the timezone and not use the timezone configured in the configuration "app.timezone".
-     *
-     * @param  Carbon|CarbonImmutable  $date
-     * @param  callable|null  $callback
-     */
-    public function travelTo($date, $callback = null): void
-    {
-        parent::travelTo($date->utc());
-    }
-
     protected function assertBillableRateServiceIsUnused(): void
     {
-        $this->mock(BillableRateService::class, function (MockInterface $mock): void {
+        $this->mock(BillableRateService::class, static function (MockInterface $mock): void {
             $mock->shouldNotReceive('updateTimeEntriesBillableRateForProjectMember');
             $mock->shouldNotReceive('updateTimeEntriesBillableRateForProject');
             $mock->shouldNotReceive('updateTimeEntriesBillableRateForMember');
@@ -83,7 +83,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function actAsOrganizationWithSubscription(): void
     {
-        $this->mock(BillingContract::class, function (MockInterface $mock): void {
+        $this->mock(BillingContract::class, static function (MockInterface $mock): void {
             $mock->shouldReceive('hasSubscription')->andReturn(true);
             $mock->shouldReceive('hasTrial')->andReturn(false);
             $mock->shouldReceive('getTrialUntil')->andReturn(null);
@@ -93,7 +93,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function actAsOrganizationWithoutSubscriptionAndWithoutTrial(): void
     {
-        $this->mock(BillingContract::class, function (MockInterface $mock): void {
+        $this->mock(BillingContract::class, static function (MockInterface $mock): void {
             $mock->shouldReceive('hasSubscription')->andReturn(false);
             $mock->shouldReceive('hasTrial')->andReturn(false);
             $mock->shouldReceive('getTrialUntil')->andReturn(null);

@@ -11,6 +11,7 @@ use Illuminate\Http\File;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use League\Csv\Writer;
+use LogicException;
 use Spatie\TemporaryDirectory\TemporaryDirectory;
 
 /**
@@ -18,16 +19,18 @@ use Spatie\TemporaryDirectory\TemporaryDirectory;
  */
 abstract class CsvExport
 {
+    /**
+     * @var string[]
+     */
+    public const array HEADER = [];
+
+    protected const string CARBON_FORMAT = 'Y-m-d\TH:i:sP';
+
     private string $disk;
 
     private string $filename;
 
     private int $chunk;
-
-    /**
-     * @var string[]
-     */
-    public const array HEADER = [];
 
     /**
      * @var Builder<T>
@@ -36,23 +39,21 @@ abstract class CsvExport
 
     private string $folderPath;
 
-    protected const string CARBON_FORMAT = 'Y-m-d\TH:i:sP';
-
     /**
-     * @param  Builder<T>  $builder
+     * @param Builder<T> $builder
      */
     public function __construct(string $disk, string $folderPath, string $filename, Builder $builder, int $chunk)
     {
-
-        $this->disk = $disk;
-        $this->filename = $filename;
-        $this->chunk = $chunk;
-        $this->builder = $builder;
+        $this->disk       = $disk;
+        $this->filename   = $filename;
+        $this->chunk      = $chunk;
+        $this->builder    = $builder;
         $this->folderPath = $folderPath;
     }
 
     /**
-     * @param  T  $model
+     * @param T $model
+     *
      * @return array<string, string|float|Carbon|null>
      */
     abstract public function mapRow(Model $model): array;
@@ -65,16 +66,16 @@ abstract class CsvExport
     public function export(): void
     {
         $tempDirectory = TemporaryDirectory::make();
-        $writer = Writer::createFromPath($tempDirectory->path($this->filename), 'w+');
+        $writer        = Writer::createFromPath($tempDirectory->path($this->filename), 'w+');
         $writer->setDelimiter(',');
         $writer->setEnclosure('"');
         $writer->setEscape('');
         $writer->insertOne(static::HEADER);
 
-        $this->builder->chunk($this->chunk, function (Collection $models) use ($writer): void {
+        $this->builder->chunk($this->chunk, static function (Collection $models) use ($writer): void {
             foreach ($models as $model) {
                 $data = $this->mapRow($model);
-                $row = $this->convertRow($data);
+                $row  = $this->convertRow($data);
                 $this->validateRow($row);
 
                 $writer->insertOne(array_values($row));
@@ -85,7 +86,8 @@ abstract class CsvExport
     }
 
     /**
-     * @param  array<string, string|float|Carbon|null>  $data
+     * @param array<string, string|float|Carbon|null> $data
+     *
      * @return array<string, string>
      */
     private function convertRow(array $data): array
@@ -107,12 +109,12 @@ abstract class CsvExport
     }
 
     /**
-     * @param  array<string, string>  $row
+     * @param array<string, string> $row
      */
     private function validateRow(array $row): void
     {
         if (array_keys($row) !== static::HEADER) {
-            throw new \LogicException('Invalid row');
+            throw new LogicException('Invalid row');
         }
     }
 }

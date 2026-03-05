@@ -13,6 +13,7 @@ use App\Models\TimeEntry;
 use App\Models\User;
 use App\Service\UserService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
@@ -32,14 +33,14 @@ class UserServiceTest extends TestCase
     public function test_assign_organization_entities_to_different_user(): void
     {
         // Arrange
-        $organization = Organization::factory()->create();
-        $project = Project::factory()->forOrganization($organization)->create();
-        $otherUser = User::factory()->create();
-        $fromUser = User::factory()->create();
-        $toUser = User::factory()->create();
+        $organization    = Organization::factory()->create();
+        $project         = Project::factory()->forOrganization($organization)->create();
+        $otherUser       = User::factory()->create();
+        $fromUser        = User::factory()->create();
+        $toUser          = User::factory()->create();
         $otherUserMember = Member::factory()->forOrganization($organization)->forUser($otherUser)->create();
-        $fromUserMember = Member::factory()->forOrganization($organization)->forUser($fromUser)->create();
-        $toUserMember = Member::factory()->forOrganization($organization)->forUser($toUser)->create();
+        $fromUserMember  = Member::factory()->forOrganization($organization)->forUser($fromUser)->create();
+        $toUserMember    = Member::factory()->forOrganization($organization)->forUser($toUser)->create();
         TimeEntry::factory()->forOrganization($organization)->forMember($otherUserMember)->createMany(3);
         TimeEntry::factory()->forOrganization($organization)->forMember($fromUserMember)->createMany(3);
         ProjectMember::factory()->forProject($project)->forMember($otherUserMember)->create();
@@ -61,8 +62,8 @@ class UserServiceTest extends TestCase
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $newOwner = User::factory()->create();
-        $oldOwner = User::factory()->create();
+        $newOwner     = User::factory()->create();
+        $oldOwner     = User::factory()->create();
         $organization->users()->attach($oldOwner->getKey(), [
             'role' => Role::Owner->value,
         ]);
@@ -83,8 +84,8 @@ class UserServiceTest extends TestCase
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $newOwner = User::factory()->create();
-        $oldOwner = User::factory()->create();
+        $newOwner     = User::factory()->create();
+        $oldOwner     = User::factory()->create();
         $organization->users()->attach($oldOwner->getKey(), [
             'role' => Role::Owner->value,
         ]);
@@ -92,7 +93,7 @@ class UserServiceTest extends TestCase
         // Act
         try {
             $this->userService->changeOwnership($organization, $newOwner);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             $this->assertSame('User is not a member of the organization', $e->getMessage());
         }
     }
@@ -100,8 +101,8 @@ class UserServiceTest extends TestCase
     public function test_make_sure_user_has_current_organization_sets_current_organization_for_user_if_null(): void
     {
         // Arrange
-        $user = User::factory()->create();
-        $organization = Organization::factory()->create();
+        $user              = User::factory()->create();
+        $organization      = Organization::factory()->create();
         $otherOrganization = Organization::factory()->create();
         Member::factory()->forUser($user)->forOrganization($organization)->create();
         $user->current_team_id = null;
@@ -117,7 +118,7 @@ class UserServiceTest extends TestCase
     public function make_sure_user_has_at_least_one_organization_creates_organization_for_user_if_there_are_not_member_of_one(): void
     {
         // Arrange
-        $user = User::factory()->create();
+        $user         = User::factory()->create();
         $organization = Organization::factory()->create();
 
         // Act
@@ -128,7 +129,7 @@ class UserServiceTest extends TestCase
         $this->assertSame(1, $user->organizations()->count());
         $newOrganization = $user->organizations()->first();
         $this->assertNotSame($organization->getKey(), $newOrganization->getKey());
-        $this->assertSame($user->name."'s Organization", $newOrganization->name);
+        $this->assertSame($user->name . "'s Organization", $newOrganization->name);
         $this->assertTrue($newOrganization->personal_team);
         $this->assertSame($user->getKey(), $newOrganization->user_id);
         $newMember = Member::whereBelongsTo($user)->whereBelongsTo($newOrganization)->firstOrFail();

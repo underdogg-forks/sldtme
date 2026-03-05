@@ -21,7 +21,7 @@ class ProjectModelTest extends ModelTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $project = Project::factory()->forOrganization($organization)->create();
+        $project      = Project::factory()->forOrganization($organization)->create();
 
         // Act
         $project->refresh();
@@ -35,7 +35,7 @@ class ProjectModelTest extends ModelTestAbstract
     public function test_it_can_belong_to_a_client(): void
     {
         // Arrange
-        $client = Client::factory()->create();
+        $client  = Client::factory()->create();
         $project = Project::factory()->forClient($client)->create();
 
         // Act
@@ -64,7 +64,7 @@ class ProjectModelTest extends ModelTestAbstract
     {
         // Arrange
         $project = Project::factory()->create();
-        $tasks = Task::factory()->forProject($project)->createMany(3);
+        $tasks   = Task::factory()->forProject($project)->createMany(3);
 
         // Act
         $project->refresh();
@@ -95,15 +95,15 @@ class ProjectModelTest extends ModelTestAbstract
     public function test_scope_visible_by_user_filters_so_that_only_public_projects_or_projects_where_the_user_is_member_are_shown(): void
     {
         // Arrange
-        $member = Member::factory()->create();
-        $projectPrivate = Project::factory()->isPrivate()->create();
-        $projectPublic = Project::factory()->isPublic()->create();
+        $member                  = Member::factory()->create();
+        $projectPrivate          = Project::factory()->isPrivate()->create();
+        $projectPublic           = Project::factory()->isPublic()->create();
         $projectPrivateButMember = Project::factory()->isPrivate()->create();
         ProjectMember::factory()->forProject($projectPrivateButMember)->forMember($member)->create();
 
         // Act
         $projectsVisible = Project::query()->visibleByEmployee($member->user)->get();
-        $allProjects = Project::query()->get();
+        $allProjects     = Project::query()->get();
 
         // Assert
         $this->assertEqualsIdsOfEloquentCollection([
@@ -120,7 +120,7 @@ class ProjectModelTest extends ModelTestAbstract
     public function test_computed_spent_time_returns_the_sum_of_all_time_entries_excl_running_timers(): void
     {
         // Arrange
-        $project = Project::factory()->create();
+        $project      = Project::factory()->create();
         $otherProject = Project::factory()->create();
         TimeEntry::factory()->forProject($project)->startWithDuration(now(), 10)->create();
         TimeEntry::factory()->forProject($project)->startWithDuration(now(), 10)->create();
@@ -139,7 +139,7 @@ class ProjectModelTest extends ModelTestAbstract
     public function test_computed_spent_time_returns_already_computed_value_if_present(): void
     {
         // Arrange
-        $project = Project::factory()->create();
+        $project      = Project::factory()->create();
         $otherProject = Project::factory()->create();
         TimeEntry::factory()->forProject($project)->startWithDuration(now(), 10)->create();
         TimeEntry::factory()->forProject($project)->startWithDuration(now(), 10)->create();
@@ -187,7 +187,7 @@ class ProjectModelTest extends ModelTestAbstract
     public function test_project_can_store_big_amounts_of_spent_time(): void
     {
         // Arrange
-        $project = Project::factory()->create();
+        $project   = Project::factory()->create();
         $spentTime = 100 * 365 * 24 * 60 * 60; // 100 years in seconds
 
         // Act

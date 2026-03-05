@@ -36,10 +36,7 @@ class JetstreamServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
-    {
-        //
-    }
+    public function register(): void {}
 
     /**
      * Bootstrap any application services.
@@ -62,12 +59,12 @@ class JetstreamServiceProvider extends ServiceProvider
         app()->singleton(ValidateTeamDeletion::class, ValidateOrganizationDeletion::class);
         Fortify::registerView(function () {
             return Inertia::render('Auth/Register', [
-                'terms_url' => config('auth.terms_url'),
+                'terms_url'          => config('auth.terms_url'),
                 'privacy_policy_url' => config('auth.privacy_policy_url'),
                 'newsletter_consent' => config('auth.newsletter_consent'),
             ]);
         });
-        Gate::define('removeTeamMember', function (User $user, Organization $team) {
+        Gate::define('removeTeamMember', static function (User $user, Organization $team) {
             return false;
         });
     }
@@ -285,7 +282,7 @@ class JetstreamServiceProvider extends ServiceProvider
                 function (Request $request, array $data): array {
                     return array_merge($data, [
                         'timezones' => $this->app->get(TimezoneService::class)->getSelectOptions(),
-                        'weekdays' => Weekday::toSelectArray(),
+                        'weekdays'  => Weekday::toSelectArray(),
                     ]);
                 }
             )
@@ -294,36 +291,36 @@ class JetstreamServiceProvider extends ServiceProvider
                 function (Request $request, array $data): array {
                     /** @var Organization $teamModel */
                     $teamModel = $data['team'];
-                    $owner = $teamModel->owner;
+                    $owner     = $teamModel->owner;
 
                     return array_merge($data, [
                         'team' => [
-                            'id' => $teamModel->getKey(),
-                            'name' => $teamModel->name,
+                            'id'       => $teamModel->getKey(),
+                            'name'     => $teamModel->name,
                             'currency' => $teamModel->currency,
-                            'owner' => [
-                                'id' => $owner->getKey(),
-                                'name' => $owner->name,
-                                'email' => $owner->email,
+                            'owner'    => [
+                                'id'                => $owner->getKey(),
+                                'name'              => $owner->name,
+                                'email'             => $owner->email,
                                 'profile_photo_url' => $owner->profile_photo_url,
                             ],
                             'users' => $teamModel->users->map(function (User $user): array {
                                 return [
-                                    'id' => $user->getKey(),
-                                    'name' => $user->name,
-                                    'email' => $user->email,
+                                    'id'                => $user->getKey(),
+                                    'name'              => $user->name,
+                                    'email'             => $user->email,
                                     'profile_photo_url' => $user->profile_photo_url,
-                                    'membership' => [
-                                        'id' => $user->membership->id,
+                                    'membership'        => [
+                                        'id'   => $user->membership->id,
                                         'role' => $user->membership->role,
                                     ],
                                 ];
                             }),
                             'team_invitations' => $teamModel->teamInvitations->map(function (OrganizationInvitation $invitation): array {
                                 return [
-                                    'id' => $invitation->getKey(),
+                                    'id'    => $invitation->getKey(),
                                     'email' => $invitation->email,
-                                    'role' => $invitation->role,
+                                    'role'  => $invitation->role,
                                 ];
                             }),
                         ],

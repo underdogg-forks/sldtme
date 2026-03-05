@@ -81,22 +81,22 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
     public function test_show_returns_detailed_information_about_the_report(): void
     {
         // Arrange
-        $timezone = 'Europe/Vienna';
-        $reportDto = new ReportPropertiesDto;
-        $organization = Organization::factory()->create();
-        $reportDto->start = now()->subDays(2);
-        $reportDto->end = now();
-        $reportDto->group = TimeEntryAggregationType::Project;
-        $reportDto->subGroup = TimeEntryAggregationType::Task;
+        $timezone                = 'Europe/Vienna';
+        $reportDto               = new ReportPropertiesDto();
+        $organization            = Organization::factory()->create();
+        $reportDto->start        = now()->subDays(2);
+        $reportDto->end          = now();
+        $reportDto->group        = TimeEntryAggregationType::Project;
+        $reportDto->subGroup     = TimeEntryAggregationType::Task;
         $reportDto->historyGroup = TimeEntryAggregationTypeInterval::Day;
-        $reportDto->weekStart = Weekday::Monday;
-        $reportDto->timezone = $timezone;
-        $report = Report::factory()->forOrganization($organization)->public()->create([
+        $reportDto->weekStart    = Weekday::Monday;
+        $reportDto->timezone     = $timezone;
+        $report                  = Report::factory()->forOrganization($organization)->public()->create([
             'public_until' => null,
-            'properties' => $reportDto,
+            'properties'   => $reportDto,
         ]);
         $project = Project::factory()->forOrganization($organization)->create();
-        $task1 = Task::factory()->forOrganization($organization)->forProject($project)->create([
+        $task1   = Task::factory()->forOrganization($organization)->forProject($project)->create([
             'id' => '1b0f1b32-0def-4932-8829-b68f52161987',
         ]);
         $task2 = Task::factory()->forOrganization($organization)->forProject($project)->create([
@@ -116,108 +116,108 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
         // Assert
         $response->assertOk();
         $response->assertExactJson([
-            'name' => $report->name,
-            'description' => $report->description,
-            'public_until' => $report->public_until?->toIso8601ZuluString(),
-            'currency' => $organization->currency,
-            'number_format' => $organization->number_format,
+            'name'            => $report->name,
+            'description'     => $report->description,
+            'public_until'    => $report->public_until?->toIso8601ZuluString(),
+            'currency'        => $organization->currency,
+            'number_format'   => $organization->number_format,
             'interval_format' => $organization->interval_format,
             'currency_format' => $organization->currency_format,
             'currency_symbol' => $currencyService->getCurrencySymbol($organization->currency),
-            'time_format' => $organization->time_format,
-            'date_format' => $organization->date_format,
-            'properties' => [
-                'group' => $reportDto->group->value,
-                'sub_group' => $reportDto->subGroup->value,
+            'time_format'     => $organization->time_format,
+            'date_format'     => $organization->date_format,
+            'properties'      => [
+                'group'         => $reportDto->group->value,
+                'sub_group'     => $reportDto->subGroup->value,
                 'history_group' => $reportDto->historyGroup->value,
-                'start' => $reportDto->start->toIso8601ZuluString(),
-                'end' => $reportDto->end->toIso8601ZuluString(),
+                'start'         => $reportDto->start->toIso8601ZuluString(),
+                'end'           => $reportDto->end->toIso8601ZuluString(),
             ],
             'data' => [
-                'seconds' => 300,
-                'cost' => 0,
+                'seconds'      => 300,
+                'cost'         => 0,
                 'grouped_type' => TimeEntryAggregationType::Project->value,
                 'grouped_data' => [
                     [
-                        'key' => $project->id,
-                        'seconds' => 200,
-                        'cost' => 0,
+                        'key'          => $project->id,
+                        'seconds'      => 200,
+                        'cost'         => 0,
                         'grouped_type' => TimeEntryAggregationType::Task->value,
                         'grouped_data' => [
                             [
-                                'key' => $task1->id,
-                                'seconds' => 100,
-                                'cost' => 0,
+                                'key'          => $task1->id,
+                                'seconds'      => 100,
+                                'cost'         => 0,
                                 'grouped_type' => null,
                                 'grouped_data' => null,
-                                'description' => $task1->name,
-                                'color' => null,
+                                'description'  => $task1->name,
+                                'color'        => null,
                             ],
                             [
-                                'key' => $task2->id,
-                                'seconds' => 100,
-                                'cost' => 0,
+                                'key'          => $task2->id,
+                                'seconds'      => 100,
+                                'cost'         => 0,
                                 'grouped_type' => null,
                                 'grouped_data' => null,
-                                'description' => $task2->name,
-                                'color' => null,
+                                'description'  => $task2->name,
+                                'color'        => null,
                             ],
                         ],
                         'description' => $project->name,
-                        'color' => $project->color,
+                        'color'       => $project->color,
                     ],
                     [
-                        'key' => null,
-                        'seconds' => 100,
-                        'cost' => 0,
+                        'key'          => null,
+                        'seconds'      => 100,
+                        'cost'         => 0,
                         'grouped_type' => TimeEntryAggregationType::Task->value,
                         'grouped_data' => [
                             [
-                                'key' => null,
-                                'seconds' => 100,
-                                'cost' => 0,
+                                'key'          => null,
+                                'seconds'      => 100,
+                                'cost'         => 0,
                                 'grouped_type' => null,
                                 'grouped_data' => null,
-                                'description' => null,
-                                'color' => null,
+                                'description'  => null,
+                                'color'        => null,
                             ],
                         ],
                         'description' => null,
-                        'color' => null,
+                        'color'       => null,
                     ],
                 ],
             ],
             'history_data' => [
-                'seconds' => 300,
-                'cost' => 0,
+                'seconds'      => 300,
+                'cost'         => 0,
                 'grouped_type' => TimeEntryAggregationTypeInterval::Day->value,
                 'grouped_data' => [
                     [
-                        'key' => now()->timezone($timezone)->subDays(2)->toDateString(),
-                        'seconds' => 0,
-                        'cost' => 0,
+                        'key'          => now()->timezone($timezone)->subDays(2)->toDateString(),
+                        'seconds'      => 0,
+                        'cost'         => 0,
                         'grouped_type' => null,
                         'grouped_data' => null,
-                        'description' => null,
-                        'color' => null,
+                        'description'  => null,
+                        'color'        => null,
                     ],
                     [
-                        'key' => now()->timezone($timezone)->subDays(1)->toDateString(),
-                        'seconds' => 300,
-                        'cost' => 0,
+                        'key'          => now()->timezone($timezone)->subDays(1)->toDateString(),
+                        'seconds'      => 300,
+                        'cost'         => 0,
                         'grouped_type' => null,
                         'grouped_data' => null,
-                        'description' => null,
-                        'color' => null,
+                        'description'  => null,
+                        'color'        => null,
                     ],
                     [
-                        'key' => now()->timezone($timezone)->toDateString(),
-                        'seconds' => 0,
-                        'cost' => 0,
+                        'key'          => now()->timezone($timezone)->toDateString(),
+                        'seconds'      => 0,
+                        'cost'         => 0,
                         'grouped_type' => null,
                         'grouped_data' => null,
-                        'description' => null,
-                        'color' => null,
+                        'description'  => null,
+                        'color'        => null,
                     ],
                 ],
             ],
@@ -239,8 +239,8 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
         // Assert
         $response->assertOk();
         $response->assertJsonFragment([
-            'name' => $report->name,
-            'description' => $report->description,
+            'name'         => $report->name,
+            'description'  => $report->description,
             'public_until' => $report->public_until?->toIso8601ZuluString(),
         ]);
     }
@@ -248,15 +248,15 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
     public function test_show_returns_detailed_information_about_the_report_with_all_available_filters(): void
     {
         // Arrange
-        $organization = Organization::factory()->create();
-        $client = Client::factory()->forOrganization($organization)->create();
-        $otherClient = Client::factory()->forOrganization($organization)->create();
-        $project = Project::factory()->forClient($client)->forOrganization($organization)->create();
-        $otherProject = Project::factory()->forOrganization($organization)->create();
+        $organization           = Organization::factory()->create();
+        $client                 = Client::factory()->forOrganization($organization)->create();
+        $otherClient            = Client::factory()->forOrganization($organization)->create();
+        $project                = Project::factory()->forClient($client)->forOrganization($organization)->create();
+        $otherProject           = Project::factory()->forOrganization($organization)->create();
         $otherProjectWithClient = Project::factory()->forClient($client)->forOrganization($organization)->create();
-        $task = Task::factory()->forOrganization($organization)->forProject($project)->create();
-        $tag = Tag::factory()->forOrganization($organization)->create();
-        $otherTag = Tag::factory()->forOrganization($organization)->create();
+        $task                   = Task::factory()->forOrganization($organization)->forProject($project)->create();
+        $tag                    = Tag::factory()->forOrganization($organization)->create();
+        $otherTag               = Tag::factory()->forOrganization($organization)->create();
 
         // Match for all filters
         TimeEntry::factory()->forOrganization($organization)
@@ -277,16 +277,16 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
             ->startWithDuration(now()->subDay(), 100)
             ->create();
 
-        $reportDto = new ReportPropertiesDto;
-        $reportDto->start = now()->subDays(2);
-        $reportDto->end = now();
-        $reportDto->group = TimeEntryAggregationType::Project;
-        $reportDto->subGroup = TimeEntryAggregationType::Task;
+        $reportDto               = new ReportPropertiesDto();
+        $reportDto->start        = now()->subDays(2);
+        $reportDto->end          = now();
+        $reportDto->group        = TimeEntryAggregationType::Project;
+        $reportDto->subGroup     = TimeEntryAggregationType::Task;
         $reportDto->historyGroup = TimeEntryAggregationTypeInterval::Day;
-        $reportDto->weekStart = Weekday::Monday;
-        $reportDto->timezone = 'Europe/Vienna';
-        $reportDto->active = false;
-        $reportDto->billable = true;
+        $reportDto->weekStart    = Weekday::Monday;
+        $reportDto->timezone     = 'Europe/Vienna';
+        $reportDto->active       = false;
+        $reportDto->billable     = true;
         $reportDto->setMemberIds(null);
         $reportDto->setClientIds([$client->getKey()]);
         $reportDto->setProjectIds([$project->getKey()]);
@@ -294,7 +294,7 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
         $reportDto->setTaskIds([$task->getKey()]);
         $report = Report::factory()->forOrganization($organization)->public()->create([
             'public_until' => null,
-            'properties' => $reportDto,
+            'properties'   => $reportDto,
         ]);
 
         // Act
@@ -305,24 +305,24 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
         // Assert
         $response->assertOk();
         $response->assertJson([
-            'name' => $report->name,
-            'description' => $report->description,
+            'name'         => $report->name,
+            'description'  => $report->description,
             'public_until' => $report->public_until?->toIso8601ZuluString(),
-            'properties' => [
-                'group' => $reportDto->group->value,
-                'sub_group' => $reportDto->subGroup->value,
+            'properties'   => [
+                'group'         => $reportDto->group->value,
+                'sub_group'     => $reportDto->subGroup->value,
                 'history_group' => $reportDto->historyGroup->value,
-                'start' => $reportDto->start->toIso8601ZuluString(),
-                'end' => $reportDto->end->toIso8601ZuluString(),
+                'start'         => $reportDto->start->toIso8601ZuluString(),
+                'end'           => $reportDto->end->toIso8601ZuluString(),
             ],
             'data' => [
-                'seconds' => 100,
-                'cost' => 0,
+                'seconds'      => 100,
+                'cost'         => 0,
                 'grouped_type' => TimeEntryAggregationType::Project->value,
             ],
             'history_data' => [
-                'seconds' => 100,
-                'cost' => 0,
+                'seconds'      => 100,
+                'cost'         => 0,
                 'grouped_type' => TimeEntryAggregationTypeInterval::Day->value,
             ],
         ]);
@@ -331,12 +331,12 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
     public function test_if_the_resources_behind_the_filters_no_longer_exist_the_report_ignores_those_filters_but_this_does_not_increase_the_visible_data(): void
     {
         // Arrange
-        $timezone = 'Europe/Vienna';
+        $timezone     = 'Europe/Vienna';
         $organization = Organization::factory()->create();
-        $client = Client::factory()->forOrganization($organization)->create();
-        $project = Project::factory()->forClient($client)->forOrganization($organization)->create();
-        $task = Task::factory()->forOrganization($organization)->forProject($project)->create();
-        $tag = Tag::factory()->forOrganization($organization)->create();
+        $client       = Client::factory()->forOrganization($organization)->create();
+        $project      = Project::factory()->forClient($client)->forOrganization($organization)->create();
+        $task         = Task::factory()->forOrganization($organization)->forProject($project)->create();
+        $tag          = Tag::factory()->forOrganization($organization)->create();
 
         TimeEntry::factory()->forOrganization($organization)
             ->forTask($task)
@@ -346,14 +346,14 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
                 'tags' => [$tag->getKey()],
             ]);
 
-        $reportDto = new ReportPropertiesDto;
-        $reportDto->start = now()->subDays(2);
-        $reportDto->end = now();
-        $reportDto->group = TimeEntryAggregationType::Project;
-        $reportDto->subGroup = TimeEntryAggregationType::Task;
+        $reportDto               = new ReportPropertiesDto();
+        $reportDto->start        = now()->subDays(2);
+        $reportDto->end          = now();
+        $reportDto->group        = TimeEntryAggregationType::Project;
+        $reportDto->subGroup     = TimeEntryAggregationType::Task;
         $reportDto->historyGroup = TimeEntryAggregationTypeInterval::Day;
-        $reportDto->weekStart = Weekday::Monday;
-        $reportDto->timezone = $timezone;
+        $reportDto->weekStart    = Weekday::Monday;
+        $reportDto->timezone     = $timezone;
         $reportDto->setMemberIds([Str::uuid()->toString()]);
         $reportDto->setClientIds([Str::uuid()->toString()]);
         $reportDto->setProjectIds([Str::uuid()->toString()]);
@@ -361,7 +361,7 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
         $reportDto->setTaskIds([Str::uuid()->toString()]);
         $report = Report::factory()->forOrganization($organization)->public()->create([
             'public_until' => null,
-            'properties' => $reportDto,
+            'properties'   => $reportDto,
         ]);
 
         // Act
@@ -372,53 +372,53 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
         // Assert
         $response->assertOk();
         $response->assertJson([
-            'name' => $report->name,
-            'description' => $report->description,
+            'name'         => $report->name,
+            'description'  => $report->description,
             'public_until' => $report->public_until?->toIso8601ZuluString(),
-            'properties' => [
-                'group' => $reportDto->group->value,
-                'sub_group' => $reportDto->subGroup->value,
+            'properties'   => [
+                'group'         => $reportDto->group->value,
+                'sub_group'     => $reportDto->subGroup->value,
                 'history_group' => $reportDto->historyGroup->value,
-                'start' => $reportDto->start->toIso8601ZuluString(),
-                'end' => $reportDto->end->toIso8601ZuluString(),
+                'start'         => $reportDto->start->toIso8601ZuluString(),
+                'end'           => $reportDto->end->toIso8601ZuluString(),
             ],
             'data' => [
-                'seconds' => 0,
-                'cost' => 0,
+                'seconds'      => 0,
+                'cost'         => 0,
                 'grouped_type' => TimeEntryAggregationType::Project->value,
                 'grouped_data' => [],
             ],
             'history_data' => [
-                'seconds' => 0,
-                'cost' => 0,
+                'seconds'      => 0,
+                'cost'         => 0,
                 'grouped_type' => TimeEntryAggregationTypeInterval::Day->value,
                 'grouped_data' => [
                     [
-                        'key' => now()->timezone($timezone)->subDays(2)->toDateString(),
-                        'seconds' => 0,
-                        'cost' => 0,
+                        'key'          => now()->timezone($timezone)->subDays(2)->toDateString(),
+                        'seconds'      => 0,
+                        'cost'         => 0,
                         'grouped_type' => null,
                         'grouped_data' => null,
-                        'description' => null,
-                        'color' => null,
+                        'description'  => null,
+                        'color'        => null,
                     ],
                     [
-                        'key' => now()->timezone($timezone)->subDays(1)->toDateString(),
-                        'seconds' => 0,
-                        'cost' => 0,
+                        'key'          => now()->timezone($timezone)->subDays(1)->toDateString(),
+                        'seconds'      => 0,
+                        'cost'         => 0,
                         'grouped_type' => null,
                         'grouped_data' => null,
-                        'description' => null,
-                        'color' => null,
+                        'description'  => null,
+                        'color'        => null,
                     ],
                     [
-                        'key' => now()->timezone($timezone)->toDateString(),
-                        'seconds' => 0,
-                        'cost' => 0,
+                        'key'          => now()->timezone($timezone)->toDateString(),
+                        'seconds'      => 0,
+                        'cost'         => 0,
                         'grouped_type' => null,
                         'grouped_data' => null,
-                        'description' => null,
-                        'color' => null,
+                        'description'  => null,
+                        'color'        => null,
                     ],
                 ],
             ],
@@ -429,7 +429,7 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $project = Project::factory()->forOrganization($organization)->create();
+        $project      = Project::factory()->forOrganization($organization)->create();
 
         // Entry with project (should be excluded)
         TimeEntry::factory()->forOrganization($organization)
@@ -441,18 +441,18 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
             ->startWithDuration(now()->subDay(), 200)
             ->create();
 
-        $reportDto = new ReportPropertiesDto;
-        $reportDto->start = now()->subDays(2);
-        $reportDto->end = now();
-        $reportDto->group = TimeEntryAggregationType::Project;
-        $reportDto->subGroup = TimeEntryAggregationType::Task;
+        $reportDto               = new ReportPropertiesDto();
+        $reportDto->start        = now()->subDays(2);
+        $reportDto->end          = now();
+        $reportDto->group        = TimeEntryAggregationType::Project;
+        $reportDto->subGroup     = TimeEntryAggregationType::Task;
         $reportDto->historyGroup = TimeEntryAggregationTypeInterval::Day;
-        $reportDto->weekStart = Weekday::Monday;
-        $reportDto->timezone = 'Europe/Vienna';
+        $reportDto->weekStart    = Weekday::Monday;
+        $reportDto->timezone     = 'Europe/Vienna';
         $reportDto->setProjectIds([TimeEntryFilter::NONE_VALUE]);
         $report = Report::factory()->forOrganization($organization)->public()->create([
             'public_until' => null,
-            'properties' => $reportDto,
+            'properties'   => $reportDto,
         ]);
 
         // Act
@@ -464,8 +464,8 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
         $response->assertOk();
         $response->assertJson([
             'data' => [
-                'seconds' => 200,
-                'cost' => 0,
+                'seconds'      => 200,
+                'cost'         => 0,
                 'grouped_type' => TimeEntryAggregationType::Project->value,
             ],
         ]);
@@ -475,8 +475,8 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $projectA = Project::factory()->forOrganization($organization)->create();
-        $projectB = Project::factory()->forOrganization($organization)->create();
+        $projectA     = Project::factory()->forOrganization($organization)->create();
+        $projectB     = Project::factory()->forOrganization($organization)->create();
 
         // Entry with project A (should be included)
         TimeEntry::factory()->forOrganization($organization)
@@ -493,18 +493,18 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
             ->startWithDuration(now()->subDay(), 200)
             ->create();
 
-        $reportDto = new ReportPropertiesDto;
-        $reportDto->start = now()->subDays(2);
-        $reportDto->end = now();
-        $reportDto->group = TimeEntryAggregationType::Project;
-        $reportDto->subGroup = TimeEntryAggregationType::Task;
+        $reportDto               = new ReportPropertiesDto();
+        $reportDto->start        = now()->subDays(2);
+        $reportDto->end          = now();
+        $reportDto->group        = TimeEntryAggregationType::Project;
+        $reportDto->subGroup     = TimeEntryAggregationType::Task;
         $reportDto->historyGroup = TimeEntryAggregationTypeInterval::Day;
-        $reportDto->weekStart = Weekday::Monday;
-        $reportDto->timezone = 'Europe/Vienna';
+        $reportDto->weekStart    = Weekday::Monday;
+        $reportDto->timezone     = 'Europe/Vienna';
         $reportDto->setProjectIds([$projectA->getKey(), TimeEntryFilter::NONE_VALUE]);
         $report = Report::factory()->forOrganization($organization)->public()->create([
             'public_until' => null,
-            'properties' => $reportDto,
+            'properties'   => $reportDto,
         ]);
 
         // Act
@@ -516,8 +516,8 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
         $response->assertOk();
         $response->assertJson([
             'data' => [
-                'seconds' => 300,
-                'cost' => 0,
+                'seconds'      => 300,
+                'cost'         => 0,
                 'grouped_type' => TimeEntryAggregationType::Project->value,
             ],
         ]);
@@ -527,8 +527,8 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $project = Project::factory()->forOrganization($organization)->create();
-        $task = Task::factory()->forOrganization($organization)->forProject($project)->create();
+        $project      = Project::factory()->forOrganization($organization)->create();
+        $task         = Task::factory()->forOrganization($organization)->forProject($project)->create();
 
         // Entry with task (should be excluded)
         TimeEntry::factory()->forOrganization($organization)
@@ -541,18 +541,18 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
             ->startWithDuration(now()->subDay(), 200)
             ->create();
 
-        $reportDto = new ReportPropertiesDto;
-        $reportDto->start = now()->subDays(2);
-        $reportDto->end = now();
-        $reportDto->group = TimeEntryAggregationType::Project;
-        $reportDto->subGroup = TimeEntryAggregationType::Task;
+        $reportDto               = new ReportPropertiesDto();
+        $reportDto->start        = now()->subDays(2);
+        $reportDto->end          = now();
+        $reportDto->group        = TimeEntryAggregationType::Project;
+        $reportDto->subGroup     = TimeEntryAggregationType::Task;
         $reportDto->historyGroup = TimeEntryAggregationTypeInterval::Day;
-        $reportDto->weekStart = Weekday::Monday;
-        $reportDto->timezone = 'Europe/Vienna';
+        $reportDto->weekStart    = Weekday::Monday;
+        $reportDto->timezone     = 'Europe/Vienna';
         $reportDto->setTaskIds([TimeEntryFilter::NONE_VALUE]);
         $report = Report::factory()->forOrganization($organization)->public()->create([
             'public_until' => null,
-            'properties' => $reportDto,
+            'properties'   => $reportDto,
         ]);
 
         // Act
@@ -564,8 +564,8 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
         $response->assertOk();
         $response->assertJson([
             'data' => [
-                'seconds' => 200,
-                'cost' => 0,
+                'seconds'      => 200,
+                'cost'         => 0,
                 'grouped_type' => TimeEntryAggregationType::Project->value,
             ],
         ]);
@@ -574,8 +574,8 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
     public function test_show_returns_only_entries_without_client_when_none_client_filter_is_set(): void
     {
         // Arrange
-        $organization = Organization::factory()->create();
-        $client = Client::factory()->forOrganization($organization)->create();
+        $organization      = Organization::factory()->create();
+        $client            = Client::factory()->forOrganization($organization)->create();
         $projectWithClient = Project::factory()->forClient($client)->forOrganization($organization)->create();
 
         // Entry with client (should be excluded)
@@ -588,18 +588,18 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
             ->startWithDuration(now()->subDay(), 200)
             ->create();
 
-        $reportDto = new ReportPropertiesDto;
-        $reportDto->start = now()->subDays(2);
-        $reportDto->end = now();
-        $reportDto->group = TimeEntryAggregationType::Project;
-        $reportDto->subGroup = TimeEntryAggregationType::Task;
+        $reportDto               = new ReportPropertiesDto();
+        $reportDto->start        = now()->subDays(2);
+        $reportDto->end          = now();
+        $reportDto->group        = TimeEntryAggregationType::Project;
+        $reportDto->subGroup     = TimeEntryAggregationType::Task;
         $reportDto->historyGroup = TimeEntryAggregationTypeInterval::Day;
-        $reportDto->weekStart = Weekday::Monday;
-        $reportDto->timezone = 'Europe/Vienna';
+        $reportDto->weekStart    = Weekday::Monday;
+        $reportDto->timezone     = 'Europe/Vienna';
         $reportDto->setClientIds([TimeEntryFilter::NONE_VALUE]);
         $report = Report::factory()->forOrganization($organization)->public()->create([
             'public_until' => null,
-            'properties' => $reportDto,
+            'properties'   => $reportDto,
         ]);
 
         // Act
@@ -611,8 +611,8 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
         $response->assertOk();
         $response->assertJson([
             'data' => [
-                'seconds' => 200,
-                'cost' => 0,
+                'seconds'      => 200,
+                'cost'         => 0,
                 'grouped_type' => TimeEntryAggregationType::Project->value,
             ],
         ]);
@@ -622,7 +622,7 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
     {
         // Arrange
         $organization = Organization::factory()->create();
-        $tag = Tag::factory()->forOrganization($organization)->create();
+        $tag          = Tag::factory()->forOrganization($organization)->create();
 
         // Entry with tag (should be excluded)
         TimeEntry::factory()->forOrganization($organization)
@@ -635,18 +635,18 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
             ->startWithDuration(now()->subDay(), 200)
             ->create();
 
-        $reportDto = new ReportPropertiesDto;
-        $reportDto->start = now()->subDays(2);
-        $reportDto->end = now();
-        $reportDto->group = TimeEntryAggregationType::Project;
-        $reportDto->subGroup = TimeEntryAggregationType::Task;
+        $reportDto               = new ReportPropertiesDto();
+        $reportDto->start        = now()->subDays(2);
+        $reportDto->end          = now();
+        $reportDto->group        = TimeEntryAggregationType::Project;
+        $reportDto->subGroup     = TimeEntryAggregationType::Task;
         $reportDto->historyGroup = TimeEntryAggregationTypeInterval::Day;
-        $reportDto->weekStart = Weekday::Monday;
-        $reportDto->timezone = 'Europe/Vienna';
+        $reportDto->weekStart    = Weekday::Monday;
+        $reportDto->timezone     = 'Europe/Vienna';
         $reportDto->setTagIds([TimeEntryFilter::NONE_VALUE]);
         $report = Report::factory()->forOrganization($organization)->public()->create([
             'public_until' => null,
-            'properties' => $reportDto,
+            'properties'   => $reportDto,
         ]);
 
         // Act
@@ -658,8 +658,8 @@ class PublicReportEndpointTest extends ApiEndpointTestAbstract
         $response->assertOk();
         $response->assertJson([
             'data' => [
-                'seconds' => 200,
-                'cost' => 0,
+                'seconds'      => 200,
+                'cost'         => 0,
                 'grouped_type' => TimeEntryAggregationType::Project->value,
             ],
         ]);

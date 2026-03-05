@@ -17,7 +17,7 @@ class CreateUser extends CreateRecord
     protected function handleRecordCreation(array $data): User
     {
         $userService = app(UserService::class);
-        $user = $userService->createUser(
+        $user        = $userService->createUser(
             $data['name'],
             $data['email'],
             $data['password_create'],

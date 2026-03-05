@@ -12,17 +12,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(ForceHttps::class)]
 class ForceHttpsMiddlewareTest extends MiddlewareTestAbstract
 {
-    private function createTestRoute(): string
-    {
-        $uri = Route::get('/test-route', function () {
-            return [
-                'is_secure' => request()->secure(),
-            ];
-        })->middleware(ForceHttps::class)->uri;
-
-        return url($uri, [], false);
-    }
-
     public function test_if_config_app_force_https_is_true_then_the_request_will_be_modified_to_make_the_app_think_it_was_a_https_request(): void
     {
         // Arrange
@@ -77,5 +66,16 @@ class ForceHttpsMiddlewareTest extends MiddlewareTestAbstract
         // Assert
         $response->assertSuccessful();
         $response->assertJson(['is_secure' => true]);
+    }
+
+    private function createTestRoute(): string
+    {
+        $uri = Route::get('/test-route', static function () {
+            return [
+                'is_secure' => request()->secure(),
+            ];
+        })->middleware(ForceHttps::class)->uri;
+
+        return url($uri, [], false);
     }
 }

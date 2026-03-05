@@ -160,7 +160,7 @@ class ChartController extends Controller
         $user = $this->user();
 
         $showBillableRate = $this->member($organization)->role !== Role::Employee->value || $organization->employees_can_see_billable_rates;
-        if (! $showBillableRate) {
+        if ( ! $showBillableRate) {
             throw new AuthorizationException('You do not have permission to view billable rates.');
         }
 

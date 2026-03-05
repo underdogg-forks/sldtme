@@ -6,14 +6,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('oauth_device_codes', function (Blueprint $table): void {
+        Schema::create('oauth_device_codes', static function (Blueprint $table): void {
             $table->char('id', 80)->primary();
             $table->foreignId('user_id')->nullable()->index();
             $table->foreignUuid('client_id')->index();
