@@ -1,6 +1,7 @@
 name: NPM Format Check
 
-on: [push]
+on:
+  workflow_dispatch:
 
 jobs:
   format-check:
