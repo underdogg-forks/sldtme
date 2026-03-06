@@ -14,6 +14,7 @@ use App\Service\DeletionService;
 use Illuminate\Support\Facades\Config;
 use Livewire\Livewire;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Tests\Unit\Filament\FilamentTestCase;
 
@@ -31,7 +32,8 @@ class OrganizationResourceTest extends FilamentTestCase
         $this->actingAs($user);
     }
 
-    public function test_can_list_organizations(): void
+    #[Test]
+    public function it_can_list_organizations(): void
     {
         /* Arrange */
         $user          = User::factory()->create();
@@ -47,7 +49,8 @@ class OrganizationResourceTest extends FilamentTestCase
         $response->assertCanSeeTableRecords($organizations);
     }
 
-    public function test_can_see_edit_page_of_organization(): void
+    #[Test]
+    public function it_can_see_edit_page_of_organization(): void
     {
         /* Arrange */
         $organization = Organization::factory()->create();
@@ -59,7 +62,8 @@ class OrganizationResourceTest extends FilamentTestCase
         $response->assertSuccessful();
     }
 
-    public function test_can_delete_a_organization(): void
+    #[Test]
+    public function it_can_delete_a_organization(): void
     {
         /* Arrange */
         $user = $this->createUserWithPermission();
@@ -78,7 +82,8 @@ class OrganizationResourceTest extends FilamentTestCase
         $response->assertSuccessful();
     }
 
-    public function test_can_list_related_users(): void
+    #[Test]
+    public function it_can_list_related_users(): void
     {
         /* Arrange */
         $organization = Organization::factory()->create();
@@ -98,7 +103,8 @@ class OrganizationResourceTest extends FilamentTestCase
         $response->assertCanSeeTableRecords($organization->users()->get());
     }
 
-    public function test_can_list_related_invitations(): void
+    #[Test]
+    public function it_can_list_related_invitations(): void
     {
         /* Arrange */
         $organization            = Organization::factory()->create();
@@ -113,5 +119,69 @@ class OrganizationResourceTest extends FilamentTestCase
         /* Assert */
         $response->assertSuccessful();
         $response->assertCanSeeTableRecords($organizationInvitations);
+    }
+
+    #[Test]
+    public function it_can_create_organization_through_modal(): void
+    {
+        /* Arrange */
+        $user = $this->createUserWithPermission();
+
+        /* Act */
+        $response = Livewire::test(EditOrganization::class, ['record' => $user->organization->getKey()])
+            ->set('openCreateModal', true)
+            ->set('newOrganization.name', 'New Organization')
+            ->call('saveNewOrganization')
+            ->assertHasNoActionErrors();
+
+        /* Assert */
+        $response->assertSuccessful();
+        $this->assertDatabaseHas('organizations', [
+            'name'     => 'New Organization',
+            'user_id'  => $user->id,
+        ]);
+    }
+
+    #[Test]
+    public function it_can_edit_organization_through_modal(): void
+    {
+        /* Arrange */
+        $organization = Organization::factory()->create([
+            'name' => 'Old Name',
+        ]);
+
+        /* Act */
+        $response = Livewire::test(EditOrganization::class, ['record' => $organization->getKey()])
+            ->set('openEditModal', true)
+            ->set('editingOrganization.name', 'Updated Name')
+            ->call('saveEditingOrganization')
+            ->assertHasNoActionErrors();
+
+        /* Assert */
+        $response->assertSuccessful();
+        $this->assertDatabaseHas('organizations', [
+            'id'   => $organization->id,
+            'name' => 'Updated Name',
+        ]);
+    }
+
+    #[Test]
+    public function it_can_delete_organization_through_modal(): void
+    {
+        /* Arrange */
+        $user = $this->createUserWithPermission();
+        $organization = Organization::factory()->create();
+
+        /* Act */
+        $response = Livewire::test(EditOrganization::class, ['record' => $organization->getKey()])
+            ->set('openDeleteModal', true)
+            ->call('deleteOrganization')
+            ->assertHasNoActionErrors();
+
+        /* Assert */
+        $response->assertSuccessful();
+        $this->assertDatabaseMissing('organizations', [
+            'id' => $organization->id,
+        ]);
     }
 }

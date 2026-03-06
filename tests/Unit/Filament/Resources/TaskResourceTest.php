@@ -7,6 +7,7 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Support\Facades\Config;
 use Livewire\Livewire;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Tests\Unit\Filament\FilamentTestCase;
 use App\Filament\Resources\Tasks\Pages\ListTasks;
@@ -27,7 +28,8 @@ class TaskResourceTest extends FilamentTestCase
         $this->actingAs($user);
     }
 
-    public function test_can_list_tasks(): void
+    #[Test]
+    public function it_can_list_tasks(): void
     {
         /* Arrange */
         $tasks = Task::factory()->createMany(5);
@@ -40,7 +42,8 @@ class TaskResourceTest extends FilamentTestCase
         $response->assertCanSeeTableRecords($tasks);
     }
 
-    public function test_can_see_edit_page_of_task(): void
+    #[Test]
+    public function it_can_see_edit_page_of_task(): void
     {
         /* Arrange */
         $task = Task::factory()->create();
@@ -52,7 +55,8 @@ class TaskResourceTest extends FilamentTestCase
         $response->assertSuccessful();
     }
 
-    public function test_can_create_task(): void
+    #[Test]
+    public function it_can_create_task(): void
     {
         /* Arrange */
         $user = $this->createUserWithPermission();
@@ -72,7 +76,8 @@ class TaskResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('tasks', $payload);
     }
 
-    public function test_cannot_create_task_without_required_fields(): void
+    #[Test]
+    public function it_cannot_create_task_without_required_fields(): void
     {
         /* Act */
         $response = Livewire::test(CreateTask::class)
@@ -83,7 +88,8 @@ class TaskResourceTest extends FilamentTestCase
         $response->assertHasFormErrors(['name', 'organization_id']);
     }
 
-    public function test_can_edit_task(): void
+    #[Test]
+    public function it_can_edit_task(): void
     {
         /* Arrange */
         $task = Task::factory()->create();
@@ -103,7 +109,8 @@ class TaskResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('tasks', array_merge($payload, ['id' => $task->id]));
     }
 
-    public function test_cannot_edit_task_with_invalid_data(): void
+    #[Test]
+    public function it_cannot_edit_task_with_invalid_data(): void
     {
         /* Arrange */
         $task = Task::factory()->create();
@@ -121,7 +128,8 @@ class TaskResourceTest extends FilamentTestCase
         $response->assertHasFormErrors(['name', 'organization_id']);
     }
 
-    public function test_can_delete_task(): void
+    #[Test]
+    public function it_can_delete_task(): void
     {
         /* Arrange */
         $task = Task::factory()->create();
@@ -136,7 +144,8 @@ class TaskResourceTest extends FilamentTestCase
         $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
     }
 
-    public function test_table_filters_and_sorting(): void
+    #[Test]
+    public function it_table_filters_and_sorting(): void
     {
         /* Arrange */
         $user = $this->createUserWithPermission();
@@ -156,7 +165,8 @@ class TaskResourceTest extends FilamentTestCase
             ->assertSuccessful();
     }
 
-    public function test_bulk_delete_tasks(): void
+    #[Test]
+    public function it_bulk_deletes_tasks(): void
     {
         /* Arrange */
         $tasks = Task::factory(3)->create();
@@ -173,7 +183,8 @@ class TaskResourceTest extends FilamentTestCase
         }
     }
 
-    public function test_can_create_task_through_modal(): void
+    #[Test]
+    public function it_can_create_task_through_modal(): void
     {
         $user = $this->createUserWithPermission();
         $payload = [
@@ -188,7 +199,8 @@ class TaskResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('tasks', $payload);
     }
 
-    public function test_can_edit_task_through_modal(): void
+    #[Test]
+    public function it_can_edit_task_through_modal(): void
     {
         $task = Task::factory()->create();
         $payload = [
@@ -203,7 +215,8 @@ class TaskResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('tasks', array_merge($payload, ['id' => $task->id]));
     }
 
-    public function test_can_delete_task_through_modal(): void
+    #[Test]
+    public function it_can_delete_task_through_modal(): void
     {
         $task = Task::factory()->create();
         $component = Livewire::test(ListTasks::class)

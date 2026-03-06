@@ -11,6 +11,7 @@ use App\Models\Project;
 use App\Models\User;
 use Illuminate\Support\Facades\Config;
 use Livewire\Livewire;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Tests\Unit\Filament\FilamentTestCase;
 
@@ -27,7 +28,8 @@ class ProjectMemberResourceTest extends FilamentTestCase
         $this->actingAs($user);
     }
 
-    public function test_can_create_project_member_through_modal(): void
+    #[Test]
+    public function it_can_create_project_member_through_modal(): void
     {
         $user = User::factory()->create();
         $project = Project::factory()->create();
@@ -44,7 +46,8 @@ class ProjectMemberResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('project_members', $payload);
     }
 
-    public function test_can_edit_project_member_through_modal(): void
+    #[Test]
+    public function it_can_edit_project_member_through_modal(): void
     {
         $projectMember = ProjectMember::factory()->create();
         $payload = [
@@ -58,7 +61,8 @@ class ProjectMemberResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('project_members', array_merge($payload, ['id' => $projectMember->id]));
     }
 
-    public function test_can_delete_project_member_through_modal(): void
+    #[Test]
+    public function it_can_delete_project_member_through_modal(): void
     {
         $projectMember = ProjectMember::factory()->create();
         $component = Livewire::test(ListProjectMembers::class)
@@ -68,4 +72,3 @@ class ProjectMemberResourceTest extends FilamentTestCase
         $this->assertDatabaseMissing('project_members', ['id' => $projectMember->id]);
     }
 }
-

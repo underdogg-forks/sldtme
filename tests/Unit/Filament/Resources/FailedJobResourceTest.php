@@ -8,6 +8,7 @@ use App\Models\FailedJob;
 use App\Models\User;
 use Illuminate\Support\Facades\Config;
 use Livewire\Livewire;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Tests\Unit\Filament\FilamentTestCase;
 
@@ -25,7 +26,8 @@ class FailedJobResourceTest extends FilamentTestCase
         $this->actingAs($user);
     }
 
-    public function test_can_list_failed_jobs(): void
+    #[Test]
+    public function it_can_list_failed_jobs(): void
     {
         /* Arrange */
         $failedJobs = FailedJob::factory()->createMany(5);
@@ -38,13 +40,15 @@ class FailedJobResourceTest extends FilamentTestCase
         $response->assertCanSeeTableRecords($failedJobs);
     }
 
-    public function test_can_see_view_page_of_failed_job(): void
+    #[Test]
+    public function it_can_see_view_page_of_failed_job(): void
     {
         // No ViewFailedJobs page exists, so this test is not applicable.
         $this->markTestSkipped('No ViewFailedJobs page exists for FailedJobResource.');
     }
 
-    public function test_can_create_failed_job_through_modal(): void
+    #[Test]
+    public function it_can_create_failed_job_through_modal(): void
     {
         $user = User::factory()->create();
         $payload = [
@@ -64,7 +68,8 @@ class FailedJobResourceTest extends FilamentTestCase
         ]);
     }
 
-    public function test_can_edit_failed_job_through_modal(): void
+    #[Test]
+    public function it_can_edit_failed_job_through_modal(): void
     {
         $failedJob = FailedJob::factory()->create();
         $payload = [
@@ -82,7 +87,8 @@ class FailedJobResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('failed_jobs', array_merge($payload, ['id' => $failedJob->id]));
     }
 
-    public function test_can_delete_failed_job_through_modal(): void
+    #[Test]
+    public function it_can_delete_failed_job_through_modal(): void
     {
         $failedJob = FailedJob::factory()->create();
         $component = Livewire::test(ListFailedJobs::class)

@@ -10,6 +10,7 @@ use App\Models\Audit;
 use App\Models\User;
 use Illuminate\Support\Facades\Config;
 use Livewire\Livewire;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Tests\Unit\Filament\FilamentTestCase;
 
@@ -27,7 +28,8 @@ class AuditResourceTest extends FilamentTestCase
         $this->actingAs($user);
     }
 
-    public function test_can_list_audits(): void
+    #[Test]
+    public function it_can_list_audits(): void
     {
         /* Arrange */
         $user      = $this->createUserWithPermission();
@@ -41,13 +43,15 @@ class AuditResourceTest extends FilamentTestCase
         $response->assertCanSeeTableRecords($audits);
     }
 
-    public function test_can_see_view_page_of_audit(): void
+    #[Test]
+    public function it_can_see_view_page_of_audit(): void
     {
         // No ViewAudit page exists, so this test is not applicable.
         $this->markTestSkipped('No ViewAudit page exists for AuditResource.');
     }
 
-    public function test_can_create_audit(): void
+    #[Test]
+    public function it_can_create_audit(): void
     {
         /* Arrange */
         $user = $this->createUserWithPermission();
@@ -74,7 +78,8 @@ class AuditResourceTest extends FilamentTestCase
         ]);
     }
 
-    public function test_cannot_create_audit_without_required_fields(): void
+    #[Test]
+    public function it_cannot_create_audit_without_required_fields(): void
     {
         /* Act */
         $response = Livewire::test(CreateAudit::class)
@@ -85,7 +90,8 @@ class AuditResourceTest extends FilamentTestCase
         $response->assertHasFormErrors(['event', 'auditable_type', 'auditable_id', 'user_id']);
     }
 
-    public function test_can_edit_audit(): void
+    #[Test]
+    public function it_can_edit_audit(): void
     {
         /* Arrange */
         $audit = Audit::factory()->create();
@@ -109,7 +115,8 @@ class AuditResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('audits', array_merge($payload, ['id' => $audit->id]));
     }
 
-    public function test_cannot_edit_audit_with_invalid_data(): void
+    #[Test]
+    public function it_cannot_edit_audit_with_invalid_data(): void
     {
         /* Arrange */
         $audit = Audit::factory()->create();
@@ -131,7 +138,8 @@ class AuditResourceTest extends FilamentTestCase
         $response->assertHasFormErrors(['event', 'auditable_type', 'auditable_id', 'user_id']);
     }
 
-    public function test_can_delete_audit(): void
+    #[Test]
+    public function it_can_delete_audit(): void
     {
         /* Arrange */
         $audit = Audit::factory()->create();
@@ -146,7 +154,8 @@ class AuditResourceTest extends FilamentTestCase
         $this->assertDatabaseMissing('audits', ['id' => $audit->id]);
     }
 
-    public function test_can_create_audit_through_modal(): void
+    #[Test]
+    public function it_can_create_audit_through_modal(): void
     {
         $user = $this->createUserWithPermission();
         $payload = [
@@ -168,7 +177,8 @@ class AuditResourceTest extends FilamentTestCase
         ]);
     }
 
-    public function test_can_edit_audit_through_modal(): void
+    #[Test]
+    public function it_can_edit_audit_through_modal(): void
     {
         $audit = Audit::factory()->create();
         $payload = [
@@ -187,7 +197,8 @@ class AuditResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('audits', array_merge($payload, ['id' => $audit->id]));
     }
 
-    public function test_can_delete_audit_through_modal(): void
+    #[Test]
+    public function it_can_delete_audit_through_modal(): void
     {
         $audit = Audit::factory()->create();
         $component = Livewire::test(ListAudits::class)

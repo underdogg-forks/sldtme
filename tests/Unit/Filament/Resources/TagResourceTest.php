@@ -7,6 +7,7 @@ use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Support\Facades\Config;
 use Livewire\Livewire;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Tests\Unit\Filament\FilamentTestCase;
 use App\Filament\Resources\Tags\Pages\ListTags;
@@ -27,7 +28,8 @@ class TagResourceTest extends FilamentTestCase
         $this->actingAs($user);
     }
 
-    public function test_can_list_tags(): void
+    #[Test]
+    public function it_can_list_tags(): void
     {
         /* Arrange */
         $tags = Tag::factory()->createMany(5);
@@ -40,7 +42,8 @@ class TagResourceTest extends FilamentTestCase
         $response->assertCanSeeTableRecords($tags);
     }
 
-    public function test_can_see_edit_page_of_tag(): void
+    #[Test]
+    public function it_can_see_edit_page_of_tag(): void
     {
         /* Arrange */
         $tag = Tag::factory()->create();
@@ -52,7 +55,8 @@ class TagResourceTest extends FilamentTestCase
         $response->assertSuccessful();
     }
 
-    public function test_can_create_tag(): void
+    #[Test]
+    public function it_can_create_tag(): void
     {
         /* Arrange */
         $user = $this->createUserWithPermission();
@@ -72,7 +76,8 @@ class TagResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('tags', $payload);
     }
 
-    public function test_cannot_create_tag_without_required_fields(): void
+    #[Test]
+    public function it_cannot_create_tag_without_required_fields(): void
     {
         /* Act */
         $response = Livewire::test(CreateTag::class)
@@ -83,7 +88,8 @@ class TagResourceTest extends FilamentTestCase
         $response->assertHasFormErrors(['name', 'organization_id']);
     }
 
-    public function test_can_edit_tag(): void
+    #[Test]
+    public function it_can_edit_tag(): void
     {
         /* Arrange */
         $tag = Tag::factory()->create();
@@ -103,7 +109,8 @@ class TagResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('tags', array_merge($payload, ['id' => $tag->id]));
     }
 
-    public function test_cannot_edit_tag_with_invalid_data(): void
+    #[Test]
+    public function it_cannot_edit_tag_with_invalid_data(): void
     {
         /* Arrange */
         $tag = Tag::factory()->create();
@@ -121,7 +128,8 @@ class TagResourceTest extends FilamentTestCase
         $response->assertHasFormErrors(['name', 'organization_id']);
     }
 
-    public function test_can_delete_tag(): void
+    #[Test]
+    public function it_can_delete_tag(): void
     {
         /* Arrange */
         $tag = Tag::factory()->create();
@@ -136,7 +144,8 @@ class TagResourceTest extends FilamentTestCase
         $this->assertDatabaseMissing('tags', ['id' => $tag->id]);
     }
 
-    public function test_table_filters_and_sorting(): void
+    #[Test]
+    public function it_table_filters_and_sorting(): void
     {
         /* Arrange */
         $user = $this->createUserWithPermission();
@@ -156,7 +165,8 @@ class TagResourceTest extends FilamentTestCase
             ->assertSuccessful();
     }
 
-    public function test_bulk_delete_tags(): void
+    #[Test]
+    public function it_bulk_deletes_tags(): void
     {
         /* Arrange */
         $tags = Tag::factory(3)->create();
@@ -173,7 +183,8 @@ class TagResourceTest extends FilamentTestCase
         }
     }
 
-    public function test_can_create_tag_through_modal(): void
+    #[Test]
+    public function it_can_create_tag_through_modal(): void
     {
         $user = $this->createUserWithPermission();
         $payload = [
@@ -188,7 +199,8 @@ class TagResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('tags', $payload);
     }
 
-    public function test_can_edit_tag_through_modal(): void
+    #[Test]
+    public function it_can_edit_tag_through_modal(): void
     {
         $tag = Tag::factory()->create();
         $payload = [
@@ -203,7 +215,8 @@ class TagResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('tags', array_merge($payload, ['id' => $tag->id]));
     }
 
-    public function test_can_delete_tag_through_modal(): void
+    #[Test]
+    public function it_can_delete_tag_through_modal(): void
     {
         $tag = Tag::factory()->create();
         $component = Livewire::test(ListTags::class)

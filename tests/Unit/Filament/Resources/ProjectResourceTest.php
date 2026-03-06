@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\User;
 use Illuminate\Support\Facades\Config;
 use Livewire\Livewire;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Tests\Unit\Filament\FilamentTestCase;
 
@@ -27,7 +28,8 @@ class ProjectResourceTest extends FilamentTestCase
         $this->actingAs($user);
     }
 
-    public function test_can_list_projects(): void
+    #[Test]
+    public function it_can_list_projects(): void
     {
         /* Arrange */
         $projects = Project::factory()->createMany(5);
@@ -40,7 +42,8 @@ class ProjectResourceTest extends FilamentTestCase
         $response->assertCanSeeTableRecords($projects);
     }
 
-    public function test_can_see_edit_page_of_project(): void
+    #[Test]
+    public function it_can_see_edit_page_of_project(): void
     {
         /* Arrange */
         $project = Project::factory()->create();
@@ -52,7 +55,8 @@ class ProjectResourceTest extends FilamentTestCase
         $response->assertSuccessful();
     }
 
-    public function test_can_create_project(): void
+    #[Test]
+    public function it_can_create_project(): void
     {
         /* Arrange */
         $user = $this->createUserWithPermission();
@@ -72,7 +76,8 @@ class ProjectResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('projects', $payload);
     }
 
-    public function test_cannot_create_project_without_required_fields(): void
+    #[Test]
+    public function it_cannot_create_project_without_required_fields(): void
     {
         /* Act */
         $response = Livewire::test(CreateProject::class)
@@ -83,7 +88,8 @@ class ProjectResourceTest extends FilamentTestCase
         $response->assertHasFormErrors(['name', 'organization_id']);
     }
 
-    public function test_can_edit_project(): void
+    #[Test]
+    public function it_can_edit_project(): void
     {
         /* Arrange */
         $project = Project::factory()->create();
@@ -103,7 +109,8 @@ class ProjectResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('projects', array_merge($payload, ['id' => $project->id]));
     }
 
-    public function test_cannot_edit_project_with_invalid_data(): void
+    #[Test]
+    public function it_cannot_edit_project_with_invalid_data(): void
     {
         /* Arrange */
         $project = Project::factory()->create();
@@ -121,7 +128,8 @@ class ProjectResourceTest extends FilamentTestCase
         $response->assertHasFormErrors(['name', 'organization_id']);
     }
 
-    public function test_can_delete_project(): void
+    #[Test]
+    public function it_can_delete_project(): void
     {
         /* Arrange */
         $project = Project::factory()->create();
@@ -136,7 +144,8 @@ class ProjectResourceTest extends FilamentTestCase
         $this->assertDatabaseMissing('projects', ['id' => $project->id]);
     }
 
-    public function test_table_filters_and_sorting(): void
+    #[Test]
+    public function it_table_filters_and_sorting(): void
     {
         /* Arrange */
         $user = $this->createUserWithPermission();
@@ -156,7 +165,8 @@ class ProjectResourceTest extends FilamentTestCase
             ->assertSuccessful();
     }
 
-    public function test_bulk_delete_projects(): void
+    #[Test]
+    public function it_bulk_deletes_projects(): void
     {
         /* Arrange */
         $projects = Project::factory(3)->create();
@@ -173,7 +183,8 @@ class ProjectResourceTest extends FilamentTestCase
         }
     }
 
-    public function test_can_create_project_through_modal(): void
+    #[Test]
+    public function it_can_create_project_through_modal(): void
     {
         $user = $this->createUserWithPermission();
         $payload = [
@@ -188,7 +199,8 @@ class ProjectResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('projects', $payload);
     }
 
-    public function test_can_edit_project_through_modal(): void
+    #[Test]
+    public function it_can_edit_project_through_modal(): void
     {
         $project = Project::factory()->create();
         $payload = [
@@ -203,7 +215,8 @@ class ProjectResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('projects', array_merge($payload, ['id' => $project->id]));
     }
 
-    public function test_can_delete_project_through_modal(): void
+    #[Test]
+    public function it_can_delete_project_through_modal(): void
     {
         $project = Project::factory()->create();
         $component = Livewire::test(ListProjects::class)

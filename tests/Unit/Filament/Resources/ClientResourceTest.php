@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Config;
 use App\Filament\Resources\Clients;
 use Livewire\Livewire;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Tests\Unit\Filament\FilamentTestCase;
 use App\Filament\Resources\Clients\Pages\EditClient;
@@ -28,7 +29,8 @@ class ClientResourceTest extends FilamentTestCase
         $this->actingAs($user);
     }
 
-    public function test_can_list_clients(): void
+    #[Test]
+    public function it_can_list_clients(): void
     {
         /* Arrange */
         $clients = Client::factory()->createMany(5);
@@ -41,7 +43,8 @@ class ClientResourceTest extends FilamentTestCase
         $response->assertCanSeeTableRecords($clients);
     }
 
-    public function test_can_see_edit_page_of_client(): void
+    #[Test]
+    public function it_can_see_edit_page_of_client(): void
     {
         /* Arrange */
         $client = Client::factory()->create();
@@ -53,7 +56,8 @@ class ClientResourceTest extends FilamentTestCase
         $response->assertSuccessful();
     }
 
-    public function test_can_create_client(): void
+    #[Test]
+    public function it_can_create_client(): void
     {
         /* Arrange */
         $user = $this->createUserWithPermission();
@@ -73,7 +77,8 @@ class ClientResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('clients', $payload);
     }
 
-    public function test_cannot_create_client_without_required_fields(): void
+    #[Test]
+    public function it_cannot_create_client_without_required_fields(): void
     {
         /* Act */
         $response = Livewire::test(CreateClient::class)
@@ -84,7 +89,8 @@ class ClientResourceTest extends FilamentTestCase
         $response->assertHasFormErrors(['name', 'organization_id']);
     }
 
-    public function test_can_edit_client(): void
+    #[Test]
+    public function it_can_edit_client(): void
     {
         /* Arrange */
         $client = Client::factory()->create();
@@ -104,7 +110,8 @@ class ClientResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('clients', array_merge($payload, ['id' => $client->id]));
     }
 
-    public function test_cannot_edit_client_with_invalid_data(): void
+    #[Test]
+    public function it_cannot_edit_client_with_invalid_data(): void
     {
         /* Arrange */
         $client = Client::factory()->create();
@@ -122,7 +129,8 @@ class ClientResourceTest extends FilamentTestCase
         $response->assertHasFormErrors(['name', 'organization_id']);
     }
 
-    public function test_can_delete_client(): void
+    #[Test]
+    public function it_can_delete_client(): void
     {
         /* Arrange */
         $client = Client::factory()->create();
@@ -137,7 +145,8 @@ class ClientResourceTest extends FilamentTestCase
         $this->assertDatabaseMissing('clients', ['id' => $client->id]);
     }
 
-    public function test_table_filters_and_sorting(): void
+    #[Test]
+    public function it_table_filters_and_sorting(): void
     {
         /* Arrange */
         $user = $this->createUserWithPermission();
@@ -158,7 +167,8 @@ class ClientResourceTest extends FilamentTestCase
             ->assertSuccessful();
     }
 
-    public function test_bulk_delete_clients(): void
+    #[Test]
+    public function it_bulk_deletes_clients(): void
     {
         /* Arrange */
         $clients = Client::factory(3)->create();
@@ -175,7 +185,8 @@ class ClientResourceTest extends FilamentTestCase
         }
     }
 
-    public function test_can_create_client_through_modal(): void
+    #[Test]
+    public function it_can_create_client_through_modal(): void
     {
         $user = $this->createUserWithPermission();
         $payload = [
@@ -190,7 +201,8 @@ class ClientResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('clients', $payload);
     }
 
-    public function test_can_edit_client_through_modal(): void
+    #[Test]
+    public function it_can_edit_client_through_modal(): void
     {
         $client = Client::factory()->create();
         $payload = [
@@ -205,7 +217,8 @@ class ClientResourceTest extends FilamentTestCase
         $this->assertDatabaseHas('clients', array_merge($payload, ['id' => $client->id]));
     }
 
-    public function test_can_delete_client_through_modal(): void
+    #[Test]
+    public function it_can_delete_client_through_modal(): void
     {
         $client = Client::factory()->create();
         $component = Livewire::test(ListClients::class)
