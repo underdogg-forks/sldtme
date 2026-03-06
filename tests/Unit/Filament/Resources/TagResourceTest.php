@@ -172,4 +172,44 @@ class TagResourceTest extends FilamentTestCase
             $this->assertDatabaseMissing('tags', ['id' => $id]);
         }
     }
+
+    public function test_can_create_tag_through_modal(): void
+    {
+        $user = $this->createUserWithPermission();
+        $payload = [
+            'name' => 'Modal Tag',
+            'organization_id' => $user->organization->id,
+        ];
+        $component = Livewire::test(ListTags::class)
+            ->mountAction('create')
+            ->fillForm($payload)
+            ->callMountedAction();
+        $component->assertHasNoFormErrors();
+        $this->assertDatabaseHas('tags', $payload);
+    }
+
+    public function test_can_edit_tag_through_modal(): void
+    {
+        $tag = Tag::factory()->create();
+        $payload = [
+            'name' => 'Edited Modal Tag',
+            'organization_id' => $tag->organization_id,
+        ];
+        $component = Livewire::test(ListTags::class)
+            ->mountAction('edit', ['record' => $tag->id])
+            ->fillForm($payload)
+            ->callMountedAction();
+        $component->assertHasNoFormErrors();
+        $this->assertDatabaseHas('tags', array_merge($payload, ['id' => $tag->id]));
+    }
+
+    public function test_can_delete_tag_through_modal(): void
+    {
+        $tag = Tag::factory()->create();
+        $component = Livewire::test(ListTags::class)
+            ->mountAction('delete', ['record' => $tag->id])
+            ->callMountedAction();
+        $component->assertHasNoActionErrors();
+        $this->assertDatabaseMissing('tags', ['id' => $tag->id]);
+    }
 }

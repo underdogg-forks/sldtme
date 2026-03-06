@@ -174,4 +174,44 @@ class ClientResourceTest extends FilamentTestCase
             $this->assertDatabaseMissing('clients', ['id' => $id]);
         }
     }
+
+    public function test_can_create_client_through_modal(): void
+    {
+        $user = $this->createUserWithPermission();
+        $payload = [
+            'name' => 'Modal Client',
+            'organization_id' => $user->organization->id,
+        ];
+        $component = Livewire::test(ListClients::class)
+            ->mountAction('create')
+            ->fillForm($payload)
+            ->callMountedAction();
+        $component->assertHasNoFormErrors();
+        $this->assertDatabaseHas('clients', $payload);
+    }
+
+    public function test_can_edit_client_through_modal(): void
+    {
+        $client = Client::factory()->create();
+        $payload = [
+            'name' => 'Edited Modal Client',
+            'organization_id' => $client->organization_id,
+        ];
+        $component = Livewire::test(ListClients::class)
+            ->mountAction('edit', ['record' => $client->id])
+            ->fillForm($payload)
+            ->callMountedAction();
+        $component->assertHasNoFormErrors();
+        $this->assertDatabaseHas('clients', array_merge($payload, ['id' => $client->id]));
+    }
+
+    public function test_can_delete_client_through_modal(): void
+    {
+        $client = Client::factory()->create();
+        $component = Livewire::test(ListClients::class)
+            ->mountAction('delete', ['record' => $client->id])
+            ->callMountedAction();
+        $component->assertHasNoActionErrors();
+        $this->assertDatabaseMissing('clients', ['id' => $client->id]);
+    }
 }

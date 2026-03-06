@@ -172,4 +172,44 @@ class ProjectResourceTest extends FilamentTestCase
             $this->assertDatabaseMissing('projects', ['id' => $id]);
         }
     }
+
+    public function test_can_create_project_through_modal(): void
+    {
+        $user = $this->createUserWithPermission();
+        $payload = [
+            'name' => 'Modal Project',
+            'organization_id' => $user->organization->id,
+        ];
+        $component = Livewire::test(ListProjects::class)
+            ->mountAction('create')
+            ->fillForm($payload)
+            ->callMountedAction();
+        $component->assertHasNoFormErrors();
+        $this->assertDatabaseHas('projects', $payload);
+    }
+
+    public function test_can_edit_project_through_modal(): void
+    {
+        $project = Project::factory()->create();
+        $payload = [
+            'name' => 'Edited Modal Project',
+            'organization_id' => $project->organization_id,
+        ];
+        $component = Livewire::test(ListProjects::class)
+            ->mountAction('edit', ['record' => $project->id])
+            ->fillForm($payload)
+            ->callMountedAction();
+        $component->assertHasNoFormErrors();
+        $this->assertDatabaseHas('projects', array_merge($payload, ['id' => $project->id]));
+    }
+
+    public function test_can_delete_project_through_modal(): void
+    {
+        $project = Project::factory()->create();
+        $component = Livewire::test(ListProjects::class)
+            ->mountAction('delete', ['record' => $project->id])
+            ->callMountedAction();
+        $component->assertHasNoActionErrors();
+        $this->assertDatabaseMissing('projects', ['id' => $project->id]);
+    }
 }

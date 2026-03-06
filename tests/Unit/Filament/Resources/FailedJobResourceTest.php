@@ -43,4 +43,52 @@ class FailedJobResourceTest extends FilamentTestCase
         // No ViewFailedJobs page exists, so this test is not applicable.
         $this->markTestSkipped('No ViewFailedJobs page exists for FailedJobResource.');
     }
+
+    public function test_can_create_failed_job_through_modal(): void
+    {
+        $user = User::factory()->create();
+        $payload = [
+            'uuid' => 'modal-uuid',
+            'connection' => 'database',
+            'queue' => 'default',
+            'payload' => '{}',
+            'exception' => 'Test Exception',
+        ];
+        $component = Livewire::test(ListFailedJobs::class)
+            ->mountAction('create')
+            ->fillForm($payload)
+            ->callMountedAction();
+        $component->assertHasNoFormErrors();
+        $this->assertDatabaseHas('failed_jobs', [
+            'uuid' => 'modal-uuid',
+        ]);
+    }
+
+    public function test_can_edit_failed_job_through_modal(): void
+    {
+        $failedJob = FailedJob::factory()->create();
+        $payload = [
+            'uuid' => $failedJob->uuid,
+            'connection' => 'database',
+            'queue' => 'edited',
+            'payload' => '{}',
+            'exception' => 'Edited Exception',
+        ];
+        $component = Livewire::test(ListFailedJobs::class)
+            ->mountAction('edit', ['record' => $failedJob->id])
+            ->fillForm($payload)
+            ->callMountedAction();
+        $component->assertHasNoFormErrors();
+        $this->assertDatabaseHas('failed_jobs', array_merge($payload, ['id' => $failedJob->id]));
+    }
+
+    public function test_can_delete_failed_job_through_modal(): void
+    {
+        $failedJob = FailedJob::factory()->create();
+        $component = Livewire::test(ListFailedJobs::class)
+            ->mountAction('delete', ['record' => $failedJob->id])
+            ->callMountedAction();
+        $component->assertHasNoActionErrors();
+        $this->assertDatabaseMissing('failed_jobs', ['id' => $failedJob->id]);
+    }
 }

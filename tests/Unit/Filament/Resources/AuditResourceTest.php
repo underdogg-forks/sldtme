@@ -145,4 +145,55 @@ class AuditResourceTest extends FilamentTestCase
         $response->assertSuccessful();
         $this->assertDatabaseMissing('audits', ['id' => $audit->id]);
     }
+
+    public function test_can_create_audit_through_modal(): void
+    {
+        $user = $this->createUserWithPermission();
+        $payload = [
+            'event' => 'modal_created',
+            'auditable_type' => 'App\\Models\\TimeEntry',
+            'auditable_id' => 2,
+            'user_id' => $user->user->id,
+            'old_values' => [],
+            'new_values' => ['foo' => 'bar'],
+        ];
+        $component = Livewire::test(ListAudits::class)
+            ->mountAction('create')
+            ->fillForm($payload)
+            ->callMountedAction();
+        $component->assertHasNoFormErrors();
+        $this->assertDatabaseHas('audits', [
+            'event' => 'modal_created',
+            'user_id' => $user->user->id,
+        ]);
+    }
+
+    public function test_can_edit_audit_through_modal(): void
+    {
+        $audit = Audit::factory()->create();
+        $payload = [
+            'event' => 'modal_updated',
+            'auditable_type' => $audit->auditable_type,
+            'auditable_id' => $audit->auditable_id,
+            'user_id' => $audit->user_id,
+            'old_values' => $audit->old_values,
+            'new_values' => ['foo' => 'modal_baz'],
+        ];
+        $component = Livewire::test(ListAudits::class)
+            ->mountAction('edit', ['record' => $audit->id])
+            ->fillForm($payload)
+            ->callMountedAction();
+        $component->assertHasNoFormErrors();
+        $this->assertDatabaseHas('audits', array_merge($payload, ['id' => $audit->id]));
+    }
+
+    public function test_can_delete_audit_through_modal(): void
+    {
+        $audit = Audit::factory()->create();
+        $component = Livewire::test(ListAudits::class)
+            ->mountAction('delete', ['record' => $audit->id])
+            ->callMountedAction();
+        $component->assertHasNoActionErrors();
+        $this->assertDatabaseMissing('audits', ['id' => $audit->id]);
+    }
 }

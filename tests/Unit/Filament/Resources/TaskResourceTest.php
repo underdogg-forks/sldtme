@@ -172,4 +172,44 @@ class TaskResourceTest extends FilamentTestCase
             $this->assertDatabaseMissing('tasks', ['id' => $id]);
         }
     }
+
+    public function test_can_create_task_through_modal(): void
+    {
+        $user = $this->createUserWithPermission();
+        $payload = [
+            'name' => 'Modal Task',
+            'organization_id' => $user->organization->id,
+        ];
+        $component = Livewire::test(ListTasks::class)
+            ->mountAction('create')
+            ->fillForm($payload)
+            ->callMountedAction();
+        $component->assertHasNoFormErrors();
+        $this->assertDatabaseHas('tasks', $payload);
+    }
+
+    public function test_can_edit_task_through_modal(): void
+    {
+        $task = Task::factory()->create();
+        $payload = [
+            'name' => 'Edited Modal Task',
+            'organization_id' => $task->organization_id,
+        ];
+        $component = Livewire::test(ListTasks::class)
+            ->mountAction('edit', ['record' => $task->id])
+            ->fillForm($payload)
+            ->callMountedAction();
+        $component->assertHasNoFormErrors();
+        $this->assertDatabaseHas('tasks', array_merge($payload, ['id' => $task->id]));
+    }
+
+    public function test_can_delete_task_through_modal(): void
+    {
+        $task = Task::factory()->create();
+        $component = Livewire::test(ListTasks::class)
+            ->mountAction('delete', ['record' => $task->id])
+            ->callMountedAction();
+        $component->assertHasNoActionErrors();
+        $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
+    }
 }
