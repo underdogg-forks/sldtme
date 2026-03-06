@@ -1,5 +1,6 @@
 name: PHP Linting
-on: push
+on:
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:

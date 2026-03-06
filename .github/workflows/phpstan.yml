@@ -1,5 +1,6 @@
 name: Static code analysis (PHPStan)
-on: push
+on:
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -23,5 +24,3 @@ jobs:
 
       - name: "Run PHPStan"
         run: composer analyse
-
-
