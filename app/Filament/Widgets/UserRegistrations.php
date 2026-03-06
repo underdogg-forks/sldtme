@@ -13,7 +13,7 @@ class UserRegistrations extends ChartWidget
 {
     public ?string $filter = 'week';
 
-    protected ?string $heading = 'User Registrations';
+    public ?string $heading = 'User Registrations';
 
     protected static ?int $sort = 2;
 
@@ -54,7 +54,7 @@ class UserRegistrations extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => self::$heading,
+                    'label' => $this->heading,
                     'data'  => $data->map(fn (TrendValue $value) => $value->aggregate),
                 ],
             ],

@@ -13,7 +13,7 @@ class TimeEntriesImported extends ChartWidget
 {
     public ?string $filter = 'week';
 
-    protected ?string $heading = 'Time Entries Imported';
+    public ?string $heading = 'Time Entries Imported';
 
     protected static ?int $sort = 4;
 
@@ -53,7 +53,7 @@ class TimeEntriesImported extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => self::$heading,
+                    'label' => $this->heading,
                     'data'  => $data->map(fn (TrendValue $value) => $value->aggregate),
                 ],
             ],

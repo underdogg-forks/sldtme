@@ -2,10 +2,14 @@
 
 namespace App\Filament\Resources\OrganizationInvitations\Tables;
 
+use App\Service\OrganizationInvitationService;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Collection;
 
 class OrganizationInvitationsTable
 {
