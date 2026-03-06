@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\OrganizationInvitations\Tables;
 
 use App\Service\OrganizationInvitationService;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -37,7 +38,7 @@ class OrganizationInvitationsTable
             ->filters([
             ])
             ->recordActions([
-                \Filament\Actions\ActionGroup::make([
+                ActionGroup::make([
                     EditAction::make(),
                     DeleteAction::make(),
                 ]),

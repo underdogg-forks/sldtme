@@ -3,6 +3,10 @@
 namespace App\Filament\Resources\FailedJobs\Tables;
 
 use App\Models\FailedJob;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -48,10 +52,10 @@ class FailedJobsTable
                 \Filament\Actions\DeleteBulkAction::make(),
             ])
             ->recordActions([
-                \Filament\Actions\ActionGroup::make([
-                    \Filament\Actions\DeleteAction::make(),
-                    \Filament\Actions\ViewAction::make(),
-                    \Filament\Actions\Action::make('retry')
+                ActionGroup::make([
+                    DeleteAction::make(),
+                    ViewAction::make(),
+                    Action::make('retry')
                         ->icon('heroicon-o-arrow-path')
                         ->label('Retry')
                         ->requiresConfirmation()

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\TimeEntries\Tables;
 
 use App\Models\TimeEntry;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -51,7 +52,7 @@ class TimeEntriesTable
             ])
             ->defaultSort('created_at', 'desc')
             ->recordActions([
-                \Filament\Actions\ActionGroup::make([
+                ActionGroup::make([
                     EditAction::make(),
                 ]),
             ])

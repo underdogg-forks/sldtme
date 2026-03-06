@@ -11,6 +11,8 @@ use App\Service\Import\Importers\ReportDto;
 use App\Service\Import\ImportService;
 use App\Service\TimezoneService;
 use Exception;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
@@ -51,13 +53,13 @@ class OrganizationsTable
             ->filters([
             ])
             ->recordActions([
-                \Filament\Actions\ActionGroup::make([
+                ActionGroup::make([
                     EditAction::make(),
                     DeleteAction::make()
                         ->using(function (Organization $record): void {
                             app(DeletionService::class)->deleteOrganization($record);
                         }),
-                    \Filament\Actions\Action::make('Export')
+                    Action::make('Export')
                         ->icon('heroicon-o-arrow-down-tray')
                         ->action(function (Organization $record) {
                             try {
@@ -81,7 +83,7 @@ class OrganizationsTable
                                     ->send();
                             }
                         }),
-                    \Filament\Actions\Action::make('Import')
+                    Action::make('Import')
                         ->icon('heroicon-o-inbox-arrow-down')
                         ->action(function (Organization $record, array $data): void {
                             try {

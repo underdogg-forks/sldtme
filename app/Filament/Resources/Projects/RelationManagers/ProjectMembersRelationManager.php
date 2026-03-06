@@ -6,6 +6,8 @@ namespace App\Filament\Resources\Projects\RelationManagers;
 
 use App\Filament\Resources\ProjectMembers\ProjectMemberResource;
 use App\Models\ProjectMember;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -39,18 +41,20 @@ class ProjectMembersRelationManager extends RelationManager
             ->headerActions([
             ])
             ->recordActions([
-                \Filament\Actions\Action::make('view')
-                    ->icon('heroicon-o-eye')
-                    ->color('gray')
-                    ->url(fn (ProjectMember $record): string => ProjectMemberResource::getUrl('view', [
-                        'record' => $record->getKey(),
-                    ])),
-                \Filament\Actions\Action::make('edit')
-                    ->icon('heroicon-o-pencil')
-                    ->url(fn (ProjectMember $record): string => ProjectMemberResource::getUrl('edit', [
-                        'record' => $record->getKey(),
-                    ]))
-                    ->openUrlInNewTab(),
+                ActionGroup::make([
+                    Action::make('view')
+                        ->icon('heroicon-o-eye')
+                        ->color('gray')
+                        ->url(fn (ProjectMember $record): string => ProjectMemberResource::getUrl('view', [
+                            'record' => $record->getKey(),
+                        ])),
+                    Action::make('edit')
+                        ->icon('heroicon-o-pencil')
+                        ->url(fn (ProjectMember $record): string => ProjectMemberResource::getUrl('edit', [
+                            'record' => $record->getKey(),
+                        ]))
+                        ->openUrlInNewTab(),
+                ]),
             ])
             ->toolbarActions([
             ]);

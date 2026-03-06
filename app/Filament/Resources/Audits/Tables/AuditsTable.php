@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Audits\Tables;
 
+use Filament\Actions\ActionGroup;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -32,7 +33,7 @@ class AuditsTable
             ->filters([
             ])
             ->recordActions([
-                \Filament\Actions\ActionGroup::make([
+                ActionGroup::make([
                     ViewAction::make(),
                 ]),
             ])

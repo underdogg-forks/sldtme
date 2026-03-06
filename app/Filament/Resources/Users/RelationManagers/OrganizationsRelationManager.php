@@ -11,6 +11,8 @@ use App\Models\Member;
 use App\Models\Organization;
 use App\Models\User;
 use App\Service\MemberService;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\DetachAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
@@ -47,52 +49,54 @@ class OrganizationsRelationManager extends RelationManager
             ->headerActions([
             ])
             ->recordActions([
-                \Filament\Actions\Action::make('view')
-                    ->icon('heroicon-o-eye')
-                    ->color('gray')
-                    ->url(fn (Organization $record): string => OrganizationResource::getUrl('view', [
-                        'record' => $record->getKey(),
-                    ])),
-                EditAction::make()
-                    ->using(function (Organization $record, array $data): Organization {
-                        /** @var Member $member */
-                        $member = $record->getRelation('membership');
+                ActionGroup::make([
+                    Action::make('view')
+                        ->icon('heroicon-o-eye')
+                        ->color('gray')
+                        ->url(fn (Organization $record): string => OrganizationResource::getUrl('view', [
+                            'record' => $record->getKey(),
+                        ])),
+                    EditAction::make()
+                        ->using(function (Organization $record, array $data): Organization {
+                            /** @var Member $member */
+                            $member = $record->getRelation('membership');
 
-                        if ($data['role'] !== $member->role) {
+                            if ($data['role'] !== $member->role) {
+                                try {
+                                    app(MemberService::class)->changeRole($member, $record, Role::from($data['role']), true);
+                                } catch (ApiException $exception) {
+                                    Notification::make()
+                                        ->danger()
+                                        ->title('Update failed')
+                                        ->body($exception->getTranslatedMessage())
+                                        ->persistent()
+                                        ->send();
+                                }
+                            }
+                            $member->save();
+
+                            return $record;
+                        }),
+                    DetachAction::make()
+                        ->using(function (Organization $record): void {
+                            /** @var User $user */
+                            $user   = $this->getOwnerRecord();
+                            $member = Member::query()
+                                ->whereBelongsTo($user, 'user')
+                                ->whereBelongsTo($record, 'organization')
+                                ->firstOrFail();
                             try {
-                                app(MemberService::class)->changeRole($member, $record, Role::from($data['role']), true);
+                                app(MemberService::class)->removeMember($member, $record);
                             } catch (ApiException $exception) {
                                 Notification::make()
                                     ->danger()
-                                    ->title('Update failed')
+                                    ->title('Delete failed')
                                     ->body($exception->getTranslatedMessage())
                                     ->persistent()
                                     ->send();
                             }
-                        }
-                        $member->save();
-
-                        return $record;
-                    }),
-                DetachAction::make()
-                    ->using(function (Organization $record): void {
-                        /** @var User $user */
-                        $user   = $this->getOwnerRecord();
-                        $member = Member::query()
-                            ->whereBelongsTo($user, 'user')
-                            ->whereBelongsTo($record, 'organization')
-                            ->firstOrFail();
-                        try {
-                            app(MemberService::class)->removeMember($member, $record);
-                        } catch (ApiException $exception) {
-                            Notification::make()
-                                ->danger()
-                                ->title('Delete failed')
-                                ->body($exception->getTranslatedMessage())
-                                ->persistent()
-                                ->send();
-                        }
-                    }),
+                        }),
+                ]),
             ])
             ->toolbarActions([
             ]);

@@ -2,8 +2,7 @@
 
 namespace App\Filament\Resources\ProjectMembers\Tables;
 
-namespace App\Filament\Resources\ProjectMembers;
-
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -15,29 +14,6 @@ use Filament\Tables\Table;
 class ProjectMembersTable
 {
     public static function configure(Table $table): Table
-    {
-        return $schema
-            ->components([
-                TextInput::make('billable_rate')
-                    ->label('Billable rate (in Cents)')
-                    ->nullable()
-                    ->rules([
-                        'nullable',
-                        'integer',
-                        'gt:0',
-                        'max:2147483647',
-                    ])
-                    ->numeric(),
-                Select::make('user_id')
-                    ->relationship('user', 'name')
-                    ->required(),
-                Select::make('member_id')
-                    ->relationship('member', 'id')
-                    ->required(),
-            ]);
-    }
-
-    public static function table(Table $table): Table
     {
         return $table
             ->columns([
@@ -59,7 +35,7 @@ class ProjectMembersTable
             ->filters([
             ])
             ->recordActions([
-                \Filament\Actions\ActionGroup::make([
+                ActionGroup::make([
                     EditAction::make(),
                 ]),
             ])

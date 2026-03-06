@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\Reports\Tables;
 
 use App\Models\Report;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
@@ -49,9 +51,8 @@ class ReportsTable
                     ->searchable(),
             ])
             ->recordActions([
-xt
-\Filament\Actions\ActionGroup::make([
-                    \Filament\Actions\Action::make('public-view')
+                ActionGroup::make([
+                    Action::make('public-view')
                         ->label('Public')
                         ->icon('heroicon-o-eye')
                         ->color('gray')

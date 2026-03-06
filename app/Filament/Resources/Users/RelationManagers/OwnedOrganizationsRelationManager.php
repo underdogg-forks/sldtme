@@ -6,6 +6,8 @@ namespace App\Filament\Resources\Users\RelationManagers;
 
 use App\Filament\Resources\Organizations\OrganizationResource;
 use App\Models\Organization;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -36,18 +38,20 @@ class OwnedOrganizationsRelationManager extends RelationManager
             ->headerActions([
             ])
             ->recordActions([
-                \Filament\Actions\Action::make('view')
-                    ->icon('heroicon-o-eye')
-                    ->color('gray')
-                    ->url(fn (Organization $record): string => OrganizationResource::getUrl('view', [
-                        'record' => $record->getKey(),
-                    ])),
-                \Filament\Actions\Action::make('edit')
-                    ->icon('heroicon-o-pencil')
-                    ->url(fn (Organization $record): string => OrganizationResource::getUrl('edit', [
-                        'record' => $record->getKey(),
-                    ]))
-                    ->openUrlInNewTab(),
+                ActionGroup::make([
+                    Action::make('view')
+                        ->icon('heroicon-o-eye')
+                        ->color('gray')
+                        ->url(fn (Organization $record): string => OrganizationResource::getUrl('view', [
+                            'record' => $record->getKey(),
+                        ])),
+                    Action::make('edit')
+                        ->icon('heroicon-o-pencil')
+                        ->url(fn (Organization $record): string => OrganizationResource::getUrl('edit', [
+                            'record' => $record->getKey(),
+                        ]))
+                        ->openUrlInNewTab(),
+                ]),
             ])
             ->toolbarActions([
             ]);

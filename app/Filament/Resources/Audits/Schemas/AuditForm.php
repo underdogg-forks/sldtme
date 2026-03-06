@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\Audits\Schemas;
 
-namespace App\Filament\Resources\Audits;
-
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
