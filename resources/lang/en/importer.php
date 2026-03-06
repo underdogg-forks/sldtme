@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 return [
     'clockify_time_entries' => [
         'name'        => 'Clockify Time Entries',

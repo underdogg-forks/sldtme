@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Console\Commands\Test;
 
 use Illuminate\Console\Command;

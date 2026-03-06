@@ -1,45 +1,94 @@
+# =============================
+# Node.js
+# =============================
+node_modules/
+dist/
 /yarn.lock
-/.phpunit.cache
-node_modules
-dist
-/public/build
-/public/hot
-/public/storage
-/public/css
-/public/js
-/public/vendor
-/lang/vendor
-/storage/*.key
-/vendor
-.env
-.env.backup
+yarn-error.log
+npm-debug.log
+
+# =============================
+# PHP / Composer
+# =============================
+vendor/
+composer.lock
 .phpunit.result.cache
+.phpunit.cache
+/_ide_helper.php
+/.phpstorm.meta.php
 Homestead.json
 Homestead.yaml
 auth.json
-npm-debug.log
-yarn-error.log
-/.fleet
-/.idea
-/.vscode
+.env
+.env.*
+.env.backup
+
+# =============================
+# Laravel
+# =============================
+/storage/*.key
+/storage/app/
+/storage/framework/
+/storage/logs/
+/public/storage
+/public/build/
+/public/hot/
+/public/css/
+/public/js/
+/public/vendor/
+/lang/vendor/
+
+# =============================
+# IDEs & Editors
+# =============================
+/.idea/
+/.vscode/
+/.fleet/
+
+# =============================
+# Test & Coverage
+# =============================
 /test-results/
+/coverage/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
-/coverage
-/extensions
+
+# =============================
+# Extensions
+# =============================
 !/extensions/.gitkeep
 !/extensions/extensions_autoload.php
-/auth.json
-/modules_statuses.json
-/k8s
-/_ide_helper.php
-/.phpstorm.meta.php
-/.rnd
 
-/caddy
-/frankenphp
+# =============================
+# Deployment & Build
+# =============================
+/caddy/
+/frankenphp/
 /public/frankenphp-worker.php
-/data
-/config/caddy
-/config/composer
+/data/
+/config/caddy/
+/config/composer/
+
+# =============================
+# Kubernetes & Docker
+# =============================
+/k8s/
+
+# =============================
+# Miscellaneous
+# =============================
+modules_statuses.json
+
+# =============================
+# System Files
+# =============================
+.DS_Store
+Thumbs.db
+.rnd
+
+# =============================
+# Exceptions: Keep these files
+# =============================
+!/extensions/.gitkeep
+!/extensions/extensions_autoload.php

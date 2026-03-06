@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Extensions\Scramble;
 
 use App\Http\Resources\PaginatedResourceCollection;

@@ -1,10 +1,10 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Call to static method debug\(\) on an unknown class Log\.$#'
+			message: '#^Call to static method query\(\) on an unknown class App\\Console\\Commands\\Auth\\Token\.$#'
 			identifier: class.notFound
-			count: 1
-			path: app/Actions/Fortify/CreateNewUser.php
+			count: 2
+			path: app/Console/Commands/Auth/AuthSendReminderForExpiringApiTokensCommand.php
 
 		-
 			message: '#^Undefined variable\: \$this$#'
@@ -25,130 +25,70 @@ parameters:
 			path: app/Console/Commands/TimeEntry/TimeEntrySendStillRunningMailsCommand.php
 
 		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 1
-			path: app/Http/Requests/V1/Client/ClientStoreRequest.php
-
-		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 1
-			path: app/Http/Requests/V1/Client/ClientUpdateRequest.php
-
-		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 1
-			path: app/Http/Requests/V1/Member/MemberMergeIntoRequest.php
-
-		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 3
-			path: app/Http/Requests/V1/Project/ProjectStoreRequest.php
-
-		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 3
-			path: app/Http/Requests/V1/Project/ProjectUpdateRequest.php
-
-		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 1
-			path: app/Http/Requests/V1/ProjectMember/ProjectMemberStoreRequest.php
-
-		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 1
-			path: app/Http/Requests/V1/Tag/TagStoreRequest.php
-
-		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 1
-			path: app/Http/Requests/V1/Tag/TagUpdateRequest.php
-
-		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 2
-			path: app/Http/Requests/V1/Task/TaskIndexRequest.php
-
-		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 2
-			path: app/Http/Requests/V1/Task/TaskStoreRequest.php
-
-		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 1
-			path: app/Http/Requests/V1/Task/TaskUpdateRequest.php
-
-		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 7
-			path: app/Http/Requests/V1/TimeEntry/TimeEntryAggregateExportRequest.php
-
-		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 7
-			path: app/Http/Requests/V1/TimeEntry/TimeEntryAggregateRequest.php
-
-		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 6
-			path: app/Http/Requests/V1/TimeEntry/TimeEntryIndexExportRequest.php
-
-		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 6
-			path: app/Http/Requests/V1/TimeEntry/TimeEntryIndexRequest.php
-
-		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 8
-			path: app/Http/Requests/V1/TimeEntry/TimeEntryStoreRequest.php
-
-		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 8
-			path: app/Http/Requests/V1/TimeEntry/TimeEntryUpdateMultipleRequest.php
-
-		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 8
-			path: app/Http/Requests/V1/TimeEntry/TimeEntryUpdateRequest.php
-
-		-
-			message: '#^Undefined variable\: \$this$#'
-			identifier: variable.undefined
-			count: 1
-			path: app/Providers/RouteServiceProvider.php
-
-		-
-			message: '#^Call to static method warning\(\) on an unknown class Log\.$#'
+			message: '#^Class App\\Http\\Resources\\PaginatedResourceCollection not found\.$#'
 			identifier: class.notFound
-			count: 4
-			path: app/Service/ApiService.php
+			count: 1
+			path: app/Extensions/Scramble/PaginatedResourceCollectionTypeToSchema.php
+
+		-
+			message: '#^Class App\\Http\\Resources\\V1\\TimeEntry\\TimeEntryCollection not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Extensions/Scramble/PaginatedResourceCollectionTypeToSchema.php
+
+		-
+			message: '#^Parameter \$event of method App\\Listeners\\RemovePlaceholder\:\:handle\(\) has invalid type App\\Listeners\\TeamMemberAdded\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Listeners/RemovePlaceholder.php
+
+		-
+			message: '#^Parameter \$token of method App\\Mail\\AuthApiTokenExpirationReminderMail\:\:__construct\(\) has invalid type App\\Mail\\Token\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Mail/AuthApiTokenExpirationReminderMail.php
+
+		-
+			message: '#^Property App\\Mail\\AuthApiTokenExpirationReminderMail\:\:\$token has unknown class App\\Mail\\Token as its type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Mail/AuthApiTokenExpirationReminderMail.php
+
+		-
+			message: '#^Parameter \$token of method App\\Mail\\AuthApiTokenExpiredMail\:\:__construct\(\) has invalid type App\\Models\\Passport\\Token\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Mail/AuthApiTokenExpiredMail.php
+
+		-
+			message: '#^Property App\\Mail\\AuthApiTokenExpiredMail\:\:\$token has unknown class App\\Models\\Passport\\Token as its type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Mail/AuthApiTokenExpiredMail.php
+
+		-
+			message: '#^Call to static method findRole\(\) on an unknown class App\\Traits\\Jetstream\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Models/User.php
+
+		-
+			message: '#^Instantiated class App\\Traits\\OwnerRole not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/User.php
 
 		-
 			message: '#^Undefined variable\: \$this$#'
 			identifier: variable.undefined
 			count: 8
 			path: app/Service/Import/Importers/DefaultImporter.php
+
+		-
+			message: '#^Call to static method findRole\(\) on an unknown class App\\Service\\Jetstream\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Service/PermissionStore.php
 
 		-
 			message: '#^Undefined variable\: \$this$#'

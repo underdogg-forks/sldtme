@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Service;
 
 use App\Models\Audit;
@@ -14,7 +12,7 @@ use App\Models\TimeEntry;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Http;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class ApiService

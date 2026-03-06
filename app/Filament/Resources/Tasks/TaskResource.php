@@ -17,8 +17,7 @@ class TaskResource extends Resource
 {
     protected static ?string $model = Task::class;
 
-    //protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-list-bullet';
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedListBullet;
 
     protected static string|UnitEnum|null $navigationGroup = 'Timetracking';
 

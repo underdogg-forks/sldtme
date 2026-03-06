@@ -4,8 +4,8 @@ namespace App\Filament\Http\Responses;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Livewire\Features\SupportRedirects\Redirector;
-use Log;
 
 class LoginResponse implements \Filament\Auth\Http\Responses\Contracts\LoginResponse
 {

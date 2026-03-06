@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Filament\Resources\Users\Actions;
 
 use App\Exceptions\Api\ApiException;

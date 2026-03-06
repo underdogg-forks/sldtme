@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Audits;
 
 use App\Filament\Resources\Audits\Pages\ListAudits;
+use App\Filament\Resources\Audits\Schemas\AuditForm;
 use App\Filament\Resources\Audits\Tables\AuditsTable;
 use App\Models\Audit;
 use BackedEnum;
@@ -16,9 +17,7 @@ class AuditResource extends Resource
 {
     protected static ?string $model = Audit::class;
 
-    //protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-archive-box';
-
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedArchiveBox;
 
     protected static string|UnitEnum|null $navigationGroup = 'System';
 

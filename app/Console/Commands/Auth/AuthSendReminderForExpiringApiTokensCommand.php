@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Console\Commands\Auth;
 
 use App\Mail\AuthApiTokenExpirationReminderMail;
 use App\Mail\AuthApiTokenExpiredMail;
-use App\Models\Passport\Token;
+//use App\Models\Passport\Token;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;

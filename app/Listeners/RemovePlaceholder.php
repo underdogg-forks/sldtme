@@ -1,14 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Listeners;
 
 use App\Models\Member;
 use App\Models\User;
 use App\Service\MemberService;
 use Illuminate\Database\Eloquent\Builder;
-use Laravel\Jetstream\Events\TeamMemberAdded;
+
+//use Laravel\Jetstream\Events\TeamMemberAdded;
 
 class RemovePlaceholder
 {

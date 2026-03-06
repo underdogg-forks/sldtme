@@ -1,14 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Service;
 
+use App\Enums\Role;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Jetstream\Jetstream;
-use Laravel\Jetstream\Role;
+
+//use Laravel\Jetstream\Jetstream;
+//use Laravel\Jetstream\Role;
 
 class PermissionStore
 {

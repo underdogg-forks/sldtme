@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\Reports\Schemas;
 
-use App\Models\Report;
-use App\Service\Dto\ReportPropertiesDto;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -46,6 +44,7 @@ class ReportForm
                         if ($state === null || $record === null) {
                             return '';
                         }
+
                         // If $state is a DTO, get the raw original, otherwise fallback
                         return $record->getRawOriginal('properties') ?? '';
                     })

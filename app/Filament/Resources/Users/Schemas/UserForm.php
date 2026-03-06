@@ -85,7 +85,7 @@ class UserForm
                         $currencies = ISOCurrencyProvider::getInstance()->getAvailableCurrencies();
                         $select     = [];
                         foreach ($currencies as $currency) {
-                            $currencyCode = $currency->getCurrencyCode();
+                            $currencyCode          = $currency->getCurrencyCode();
                             $select[$currencyCode] = $currency->getName() . ' (' . $currencyCode . ')';
                         }
 

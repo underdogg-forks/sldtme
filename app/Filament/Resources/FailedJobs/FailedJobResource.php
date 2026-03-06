@@ -20,8 +20,7 @@ class FailedJobResource extends Resource
 {
     protected static ?string $model = FailedJob::class;
 
-    //protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-exclamation-circle';
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedExclamationCircle;
 
     protected static string|UnitEnum|null $navigationGroup = 'System';
 

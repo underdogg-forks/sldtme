@@ -16,7 +16,7 @@ class ProjectMemberResource extends Resource
 {
     protected static ?string $model = ProjectMember::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPaperAirplane;
 
     protected static bool $shouldRegisterNavigation = false;
 

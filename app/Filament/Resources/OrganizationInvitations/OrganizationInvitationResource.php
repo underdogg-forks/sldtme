@@ -19,8 +19,7 @@ class OrganizationInvitationResource extends Resource
 
     protected static ?string $label = 'Invitations';
 
-    //protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-user-plus';
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserPlus;
 
     protected static string|UnitEnum|null $navigationGroup = 'Users';
 

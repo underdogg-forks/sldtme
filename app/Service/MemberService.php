@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Service;
 
 use App\Enums\Role;
@@ -36,7 +34,7 @@ class MemberService
     public function addMember(User $user, Organization $organization, Role $role, bool $asSuperAdmin = false): Member
     {
         if ( ! $asSuperAdmin) {
-            AddingTeamMember::dispatch($organization, $user);
+            //AddingTeamMember::dispatch($organization, $user);
         }
 
         $member = new Member();
@@ -51,7 +49,7 @@ class MemberService
         });
 
         if ( ! $asSuperAdmin) {
-            TeamMemberAdded::dispatch($organization, $user);
+            //TeamMemberAdded::dispatch($organization, $user);
         }
 
         return $member;

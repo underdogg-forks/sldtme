@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Service;
 
 use App\Enums\Role;
@@ -36,7 +34,7 @@ class InvitationService
             throw new InvitationForTheEmailAlreadyExistsApiException();
         }
 
-        InvitingTeamMember::dispatch($organization, $email, $role->value);
+        //InvitingTeamMember::dispatch($organization, $email, $role->value);
 
         $invitation        = new OrganizationInvitation();
         $invitation->email = $email;
