@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Filament\Resources;
+namespace Unit\Filament\Resources;
 
 use App\Filament\Resources\Tags\TagResource;
 use App\Models\Tag;
@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Config;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Tests\Unit\Filament\FilamentTestCase;
+use App\Filament\Resources\Tags\Pages\ListTags;
+use App\Filament\Resources\Tags\Pages\EditTag;
+use App\Filament\Resources\Tags\Pages\CreateTag;
 
 #[UsesClass(TagResource::class)]
 class TagResourceTest extends FilamentTestCase
@@ -30,7 +33,7 @@ class TagResourceTest extends FilamentTestCase
         $tags = Tag::factory()->createMany(5);
 
         /* Act */
-        $response = Livewire::test(Tags\Pages\ListTags::class);
+        $response = Livewire::test(ListTags::class);
 
         /* Assert */
         $response->assertSuccessful();
@@ -43,9 +46,130 @@ class TagResourceTest extends FilamentTestCase
         $tag = Tag::factory()->create();
 
         /* Act */
-        $response = Livewire::test(Tags\Pages\EditTag::class, ['record' => $tag->getKey()]);
+        $response = Livewire::test(EditTag::class, ['record' => $tag->getKey()]);
 
         /* Assert */
         $response->assertSuccessful();
+    }
+
+    public function test_can_create_tag(): void
+    {
+        /* Arrange */
+        $user = $this->createUserWithPermission();
+        $payload = [
+            'name' => 'Test Tag',
+            'organization_id' => $user->organization->id,
+        ];
+
+        /* Act */
+        $response = Livewire::test(CreateTag::class)
+            ->fillForm($payload)
+            ->call('create');
+
+        /* Assert */
+        $response->assertHasNoFormErrors();
+        $response->assertSuccessful();
+        $this->assertDatabaseHas('tags', $payload);
+    }
+
+    public function test_cannot_create_tag_without_required_fields(): void
+    {
+        /* Act */
+        $response = Livewire::test(CreateTag::class)
+            ->fillForm([])
+            ->call('create');
+
+        /* Assert */
+        $response->assertHasFormErrors(['name', 'organization_id']);
+    }
+
+    public function test_can_edit_tag(): void
+    {
+        /* Arrange */
+        $tag = Tag::factory()->create();
+        $payload = [
+            'name' => 'Updated Tag',
+            'organization_id' => $tag->organization_id,
+        ];
+
+        /* Act */
+        $response = Livewire::test(EditTag::class, ['record' => $tag->getKey()])
+            ->fillForm($payload)
+            ->call('save');
+
+        /* Assert */
+        $response->assertHasNoFormErrors();
+        $response->assertSuccessful();
+        $this->assertDatabaseHas('tags', array_merge($payload, ['id' => $tag->id]));
+    }
+
+    public function test_cannot_edit_tag_with_invalid_data(): void
+    {
+        /* Arrange */
+        $tag = Tag::factory()->create();
+        $payload = [
+            'name' => '',
+            'organization_id' => null,
+        ];
+
+        /* Act */
+        $response = Livewire::test(EditTag::class, ['record' => $tag->getKey()])
+            ->fillForm($payload)
+            ->call('save');
+
+        /* Assert */
+        $response->assertHasFormErrors(['name', 'organization_id']);
+    }
+
+    public function test_can_delete_tag(): void
+    {
+        /* Arrange */
+        $tag = Tag::factory()->create();
+
+        /* Act */
+        $response = Livewire::test(EditTag::class, ['record' => $tag->getKey()])
+            ->callAction('delete');
+
+        /* Assert */
+        $response->assertHasNoActionErrors();
+        $response->assertSuccessful();
+        $this->assertDatabaseMissing('tags', ['id' => $tag->id]);
+    }
+
+    public function test_table_filters_and_sorting(): void
+    {
+        /* Arrange */
+        $user = $this->createUserWithPermission();
+        $orgA = $user->organization;
+        $orgB = \App\Models\Organization::factory()->create();
+        $tagA = Tag::factory()->for($orgA)->create(['name' => 'Alpha']);
+        $tagB = Tag::factory()->for($orgB)->create(['name' => 'Beta']);
+
+        /* Act & Assert */
+        $response = Livewire::test(ListTags::class)
+            ->filterTable('organization', $orgA->id)
+            ->assertCanSeeTableRecords([$tagA])
+            ->assertCanNotSeeTableRecords([$tagB]);
+
+        Livewire::test(ListTags::class)
+            ->sortTable('name', 'desc')
+            ->assertSuccessful();
+    }
+
+    public function test_bulk_delete_tags(): void
+    {
+        /* Arrange */
+        $tags = Tag::factory(3)->create();
+        $ids = $tags->pluck('id')->toArray();
+
+        /* Act */
+        $response = Livewire::test(ListTags::class)
+            ->callAction('delete', $ids);
+
+        /* Assert */
+        $response->assertSuccessful();
+        foreach ($ids as $id) {
+            $this->assertDatabaseMissing('tags', ['id' => $id]);
+        }
     }
 }
