@@ -174,9 +174,3 @@
 body {
     background-color: var(--theme-color-default-background);
 }
-
-@layer base {
-    body {
-        @apply bg-background text-foreground;
-    }
-}
